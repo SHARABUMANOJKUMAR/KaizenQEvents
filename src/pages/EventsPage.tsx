@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { eventService } from '../services';
 import type { Event, EventCategory, EventStatus, EventTab } from '../types';
-import { Input, Button, SectionHeader } from '../components/ui';
+import { Input, Button } from '../components/ui';
 import { EventGrid, CategoryFilter } from '../components/events/EventGrid';
 import { cn } from '../utils';
 

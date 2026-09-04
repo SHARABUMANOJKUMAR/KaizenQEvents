@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Search, MapPin, ArrowRight, Users, Zap, Heart, TrendingUp,
+  Search, ArrowRight, Users, Zap, Heart, TrendingUp,
   ChevronRight, Globe
 } from 'lucide-react';
-import { Button, SectionHeader, Input, EmptyState } from '../components/ui';
+import { Button, SectionHeader, Input } from '../components/ui';
 import { EventGrid, CategoryFilter } from '../components/events/EventGrid';
 import { CommunityCard } from '../components/community/CommunityCard';
 import { eventService, communityService } from '../services';
 import type { Event, Community, EventCategory } from '../types';
-import { cn } from '../utils';
 
 // ============================================================
 // HERO SECTION
@@ -290,7 +289,6 @@ const CTASection: React.FC = () => {
 // ============================================================
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState<Event[]>([]);
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
@@ -302,7 +300,6 @@ const HomePage: React.FC = () => {
       eventService.getAll(),
       communityService.getAll(),
     ]).then(([evts, coms]) => {
-      setEvents(evts);
       setFilteredEvents(evts);
       setCommunities(coms.slice(0, 4));
       setLoading(false);
