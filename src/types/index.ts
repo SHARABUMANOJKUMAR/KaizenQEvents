@@ -128,3 +128,17 @@ export interface SearchFilters {
   status: EventStatus | 'All';
   tab: EventTab;
 }
+
+export interface UserProfile {
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  authProvider: 'google' | 'email';
+  college?: string;
+  branch?: string;
+  phone?: string;
+  year?: string;
+  createdAt: string;
+}
+

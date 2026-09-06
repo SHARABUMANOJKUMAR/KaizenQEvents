@@ -24,6 +24,25 @@ export function formatShortDate(dateStr: string): string {
   });
 }
 
+// Format date range (e.g. "21 – 23 Sep 2026")
+export function formatDateRange(startDateStr: string, endDateStr?: string): string {
+  if (!endDateStr || startDateStr === endDateStr) {
+    return formatShortDate(startDateStr);
+  }
+  const start = new Date(startDateStr);
+  const end = new Date(endDateStr);
+  const startMonth = start.toLocaleDateString('en-IN', { month: 'short' });
+  const endMonth = end.toLocaleDateString('en-IN', { month: 'short' });
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+  const year = end.getFullYear();
+
+  if (startMonth === endMonth) {
+    return `${startDay} – ${endDay} ${startMonth} ${year}`;
+  }
+  return `${startDay} ${startMonth} – ${endDay} ${endMonth} ${year}`;
+}
+
 // Format just month + day
 export function formatMonthDay(dateStr: string): { month: string; day: string } {
   const date = new Date(dateStr);

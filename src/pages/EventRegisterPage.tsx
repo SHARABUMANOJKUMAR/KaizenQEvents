@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft, Calendar, Clock, MapPin, CheckCircle2,
-  User, Mail, Phone, GraduationCap, Building, BookOpen, Settings, Sparkles
+  User, Mail, Phone, GraduationCap, Building, BookOpen, Settings, Sparkles, ExternalLink, ShieldCheck
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
 import type { Event } from '../types';
 import { Button, Badge, Skeleton, EmptyState } from '../components/ui';
-import { formatDate } from '../utils';
+import { formatDateRange } from '../utils';
+import { useAuth } from '../context/AuthContext';
 
 const YEAR_OPTIONS = [
   '1st Year',
@@ -23,6 +24,7 @@ const YEAR_OPTIONS = [
 const EventRegisterPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
+  const { user, isLoggedIn } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,17 +33,29 @@ const EventRegisterPage: React.FC = () => {
   const [ticketId, setTicketId] = useState('');
 
   // Form State
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [year, setYear] = useState('3rd Year');
-  const [college, setCollege] = useState('');
-  const [branch, setBranch] = useState('');
+  const [fullName, setFullName] = useState(user?.displayName || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [year, setYear] = useState(user?.year || '3rd Year');
+  const [college, setCollege] = useState(user?.college || '');
+  const [branch, setBranch] = useState(user?.branch || '');
 
   // Google Sheet Webhook URL State
   const [webhookUrl, setWebhookUrlState] = useState('');
   const [showConfig, setShowConfig] = useState(false);
   const [savedUrlMsg, setSavedUrlMsg] = useState(false);
+
+  // Auto populate user info if user state updates
+  useEffect(() => {
+    if (user) {
+      if (user.displayName && !fullName) setFullName(user.displayName);
+      if (user.email && !email) setEmail(user.email);
+      if (user.phone && !phone) setPhone(user.phone);
+      if (user.college && !college) setCollege(user.college);
+      if (user.branch && !branch) setBranch(user.branch);
+      if (user.year && !year) setYear(user.year);
+    }
+  }, [user]);
 
   useEffect(() => {
     setLoading(true);
@@ -130,31 +144,49 @@ const EventRegisterPage: React.FC = () => {
         {/* Header Event Card Summary */}
         <div className="bg-white rounded-2xl border border-[#E8EAED] p-6 shadow-sm mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Badge label={event.category} variant="blue" />
-              <span className="text-xs font-semibold text-[#34A853] bg-[#E6F4EA] px-2 py-0.5 rounded-full">
-                {event.status}
+              {event.id === 'evt-001' ? (
+                <span className="text-xs font-bold bg-[#FFF8E1] text-[#B78103] px-2.5 py-0.5 rounded-full border border-[#FFE082]">
+                  3 Days Bootcamp
+                </span>
+              ) : (
+                <span className="text-xs font-bold bg-[#E8F5E9] text-[#2E7D32] px-2.5 py-0.5 rounded-full border border-[#C8E6C9]">
+                  5 Days Bootcamp
+                </span>
+              )}
+              <span className="text-xs font-semibold text-[#34A853] bg-[#E6F4EA] px-2.5 py-0.5 rounded-full">
+                Online Mode
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A2E]">{event.title}</h1>
+            {event.speakers && event.speakers.length > 0 && (
+              <p className="text-xs text-[#5F6368] font-medium">
+                Instructor: <strong className="text-[#1A1A2E]">{event.speakers[0].name}</strong> ({event.speakers[0].designation})
+              </p>
+            )}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#5F6368] pt-1">
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1 font-medium text-[#1A1A2E]">
                 <Calendar size={13} className="text-[#4285F4]" />
-                {formatDate(event.date)}
+                {formatDateRange(event.date, event.endDate)}
               </span>
               <span className="flex items-center gap-1">
                 <Clock size={13} className="text-[#FBBC04]" />
-                {event.time} – {event.endTime}
+                Evening {event.time} – {event.endTime}
               </span>
-              <span className="flex items-center gap-1">
-                <MapPin size={13} className="text-[#EA4335]" />
-                {event.city}, {event.state}
+              <span className="flex items-center gap-1 font-medium text-[#34A853]">
+                <MapPin size={13} className="text-[#34A853]" />
+                Online Live (Google Meet / Zoom)
               </span>
             </div>
           </div>
           <img
             src={event.imageUrl}
             alt={event.title}
+            width="80"
+            height="80"
+            loading="lazy"
+            decoding="async"
             className="w-20 h-20 rounded-xl object-cover shrink-0 hidden sm:block border border-[#E8EAED]"
           />
         </div>
@@ -254,7 +286,7 @@ const EventRegisterPage: React.FC = () => {
         ) : (
           /* Registration Form */
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6">
-            <div className="border-b border-[#E8EAED] pb-4 flex justify-between items-center">
+            <div className="border-b border-[#E8EAED] pb-4 flex justify-between items-center flex-wrap gap-2">
               <div>
                 <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
                 <p className="text-xs text-[#5F6368]">Please fill in your basic details to complete registration.</p>
@@ -269,19 +301,52 @@ const EventRegisterPage: React.FC = () => {
               </button>
             </div>
 
+            {/* Signed-in user notification bar */}
+            {isLoggedIn && user ? (
+              <div className="bg-[#E6F4EA] border border-[#34A853]/30 rounded-xl p-3.5 flex items-center justify-between text-xs text-[#137333]">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck size={16} className="text-[#34A853] shrink-0" />
+                  <span>
+                    Logged in as <strong>{user.displayName}</strong> ({user.email}) via {user.authProvider === 'google' ? 'Google Authentication' : 'Email'}. Details auto-filled!
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#EBF3FF] border border-[#4285F4]/30 rounded-xl p-3.5 flex items-center justify-between text-xs text-[#1A73E8]">
+                <span>Want to auto-fill your details? Sign in with Google or Email.</span>
+                <button
+                  type="button"
+                  onClick={() => navigate('/login', { state: { from: `/events/${event.id}/register` } })}
+                  className="font-bold text-[#4285F4] hover:underline shrink-0 ml-2"
+                >
+                  Sign In →
+                </button>
+              </div>
+            )}
+
             {/* Collapsible Google Sheet Webhook Configuration */}
             {showConfig && (
               <div className="bg-[#EEF4FE] border border-[#4285F4]/30 rounded-xl p-4 text-xs space-y-3 fade-in">
                 <div className="flex items-center justify-between font-semibold text-[#1A1A2E]">
                   <span className="flex items-center gap-1.5 text-[#4285F4]">
                     <Sparkles size={15} />
-                    Google Sheet Webhook for "{event.title}"
+                    Google Sheet & Service Account Settings for "{event.title}"
                   </span>
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM/edit?gid=1020517039#gid=1020517039"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[#4285F4] hover:underline text-[11px]"
+                  >
+                    Open Master Google Sheet <ExternalLink size={12} />
+                  </a>
                 </div>
                 <p className="text-[#5F6368] leading-relaxed">
-                  Paste the Google Apps Script Web App URL for this specific bootcamp sheet below. Registrations for this event will post directly into this sheet.
+                  Linked Master Google Sheet ID: <code className="bg-white px-1.5 py-0.5 rounded font-mono text-[#1A1A2E]">1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM</code>
+                  <br />
+                  Service Account Email: <code className="bg-white px-1.5 py-0.5 rounded font-mono text-[#1A1A2E]">kqe-backend@shaivika-lms-ai.iam.gserviceaccount.com</code>
                 </p>
-                <form onSubmit={handleSaveWebhook} className="flex gap-2">
+                <form onSubmit={handleSaveWebhook} className="flex gap-2 pt-1">
                   <input
                     type="url"
                     value={webhookUrl}

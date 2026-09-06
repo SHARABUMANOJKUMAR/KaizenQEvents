@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Clock } from 'lucide-react';
 import type { Event } from '../../types';
 import { Badge, StatusBadge, Button } from '../ui';
-import { formatShortDate, truncate } from '../../utils';
+import { formatDateRange, truncate } from '../../utils';
 import { cn } from '../../utils';
 
 interface EventCardProps {
@@ -42,8 +42,11 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
         <img
           src={event.imageUrl}
           alt={event.title}
+          width="480"
+          height="270"
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           loading="lazy"
+          decoding="async"
         />
         {/* Status badge on image */}
         <div className="absolute top-3 right-3">
@@ -53,8 +56,19 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
 
       {/* Card body */}
       <div className="p-5 flex flex-col flex-1 gap-3">
-        {/* Category */}
-        <Badge label={event.category} variant={badgeColor} />
+        {/* Category & Duration */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Badge label={event.category} variant={badgeColor} />
+          {event.id === 'evt-001' ? (
+            <span className="text-[10px] font-bold bg-[#FFF8E1] text-[#B78103] px-2 py-0.5 rounded-md border border-[#FFE082]">
+              3 Days Bootcamp
+            </span>
+          ) : (
+            <span className="text-[10px] font-bold bg-[#E8F5E9] text-[#2E7D32] px-2 py-0.5 rounded-md border border-[#C8E6C9]">
+              5 Days Bootcamp
+            </span>
+          )}
+        </div>
 
         {/* Title */}
         <h3 className="text-base font-bold text-[#1A1A2E] leading-snug line-clamp-2">
@@ -66,19 +80,27 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
           {truncate(event.shortDescription, 100)}
         </p>
 
+        {/* Instructor info if available */}
+        {event.speakers && event.speakers.length > 0 && (
+          <div className="flex items-center gap-2 pt-1 border-t border-[#F1F3F4] text-xs">
+            <span className="text-[#9AA0A6] font-medium">Instructor:</span>
+            <span className="font-bold text-[#1A1A2E]">{event.speakers[0].name}</span>
+          </div>
+        )}
+
         {/* Meta info */}
         <div className="space-y-1.5 text-xs text-[#5F6368]">
           <div className="flex items-center gap-1.5">
-            <MapPin size={12} className="shrink-0 text-[#9AA0A6]" />
-            <span>{event.city}, {event.state}</span>
+            <MapPin size={12} className="shrink-0 text-[#34A853]" />
+            <span className="font-semibold text-[#2E7D32]">Online Live Workshop (Google Meet / Zoom)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Calendar size={12} className="shrink-0 text-[#9AA0A6]" />
-            <span>{formatShortDate(event.date)}</span>
+            <Calendar size={12} className="shrink-0 text-[#4285F4]" />
+            <span className="font-medium text-[#1A1A2E]">{formatDateRange(event.date, event.endDate)}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Clock size={12} className="shrink-0 text-[#9AA0A6]" />
-            <span>{event.time}{event.endTime ? ` – ${event.endTime}` : ''}</span>
+            <Clock size={12} className="shrink-0 text-[#EA4335]" />
+            <span>Evening {event.time}{event.endTime ? ` – ${event.endTime}` : ''}</span>
           </div>
         </div>
 

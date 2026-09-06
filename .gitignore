@@ -8,9 +8,15 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+backend/node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+backend/credentials/service-account.json
+backend/credentials/*.json
+!backend/credentials/service-account.template.json
 
 # Editor directories and files
 .vscode/*

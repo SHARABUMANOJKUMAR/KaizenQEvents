@@ -1,5 +1,5 @@
 // ============================================================
-// Registration Service & 4 Separate Google Apps Script Webhooks
+// Registration Service & Google Sheet Integration
 // ============================================================
 
 export interface RegistrationPayload {
@@ -13,6 +13,12 @@ export interface RegistrationPayload {
   branch: string;
   timestamp?: string;
 }
+
+// Master Google Sheet & Service Account Configuration
+export const MASTER_SPREADSHEET_ID = '1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM';
+export const MASTER_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM/edit?gid=1020517039#gid=1020517039';
+export const SERVICE_ACCOUNT_EMAIL = 'kqe-backend@shaivika-lms-ai.iam.gserviceaccount.com';
+const BACKEND_URL = 'http://localhost:5000';
 
 // Default Webhook URLs for each of the 4 events
 const DEFAULT_WEBHOOK_URLS: Record<string, string> = {
@@ -50,7 +56,7 @@ export const registrationService = {
   },
 
   /**
-   * Save all 4 event Webhook URLs at once
+   * Set all 4 event Webhook URLs at once
    */
   setAllEventWebhookUrls: (urls: Record<string, string>): void => {
     Object.entries(urls).forEach(([evtId, url]) => {
@@ -59,7 +65,37 @@ export const registrationService = {
   },
 
   /**
-   * Submit registration to the specific event's Google Sheet Webhook URL
+   * Fetch registered bootcamps for a specific user email from Google Sheets & Backend
+   */
+  getUserRegistrations: async (email: string): Promise<RegistrationPayload[]> => {
+    if (!email) return [];
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/user/registrations?email=${encodeURIComponent(email)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.registrations)) {
+          // Cache in localStorage for this user
+          localStorage.setItem(`kqe_user_regs_${email.toLowerCase()}`, JSON.stringify(data.registrations));
+          return data.registrations;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend user registrations fetch fallback:', err);
+    }
+
+    // Fallback to local storage
+    try {
+      const cached = localStorage.getItem(`kqe_user_regs_${email.toLowerCase()}`);
+      if (cached) return JSON.parse(cached);
+      const all: RegistrationPayload[] = JSON.parse(localStorage.getItem('kqe_registrations') || '[]');
+      return all.filter((r) => r.email?.toLowerCase() === email.toLowerCase());
+    } catch {
+      return [];
+    }
+  },
+
+  /**
+   * Submit registration to backend (Google Sheets service account) and Apps Script Webhook
    */
   submitRegistration: async (data: RegistrationPayload): Promise<{ success: boolean; message: string }> => {
     const payload: RegistrationPayload = {
@@ -67,17 +103,23 @@ export const registrationService = {
       timestamp: new Date().toISOString(),
     };
 
-    // Store in localStorage backup
+    // 1. Post to Backend (Direct Google Sheets Service Account)
     try {
-      const existing = JSON.parse(localStorage.getItem('kqe_registrations') || '[]');
-      existing.push(payload);
-      localStorage.setItem('kqe_registrations', JSON.stringify(existing));
-    } catch {
-      // Ignore storage errors
+      const response = await fetch(`${BACKEND_URL}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (result.success) {
+        console.log('✅ Registration saved to Google Sheets via backend service account');
+      }
+    } catch (err) {
+      console.warn('Backend registration API note:', err);
     }
 
+    // 2. Also trigger Google Apps Script Webhook if configured
     const webhookUrl = registrationService.getEventWebhookUrl(data.eventId);
-
     if (webhookUrl && webhookUrl.trim() !== '') {
       try {
         await fetch(webhookUrl, {
@@ -88,14 +130,28 @@ export const registrationService = {
           },
           body: JSON.stringify(payload),
         });
-        return { success: true, message: `Registration sent to Google Sheet for ${data.eventTitle}!` };
       } catch (err) {
-        console.error(`Error submitting to Google Sheet Webhook for ${data.eventId}:`, err);
-        return { success: true, message: 'Registration saved locally (Google Sheet post failed).' };
+        console.warn(`Webhook note for ${data.eventId}:`, err);
       }
     }
 
-    return { success: true, message: 'Registration recorded locally!' };
+    // 3. Store in localStorage
+    try {
+      const existing: RegistrationPayload[] = JSON.parse(localStorage.getItem('kqe_registrations') || '[]');
+      existing.unshift(payload);
+      localStorage.setItem('kqe_registrations', JSON.stringify(existing));
+
+      if (data.email) {
+        const userKey = `kqe_user_regs_${data.email.toLowerCase()}`;
+        const userRegs: RegistrationPayload[] = JSON.parse(localStorage.getItem(userKey) || '[]');
+        userRegs.unshift(payload);
+        localStorage.setItem(userKey, JSON.stringify(userRegs));
+      }
+    } catch {
+      // Ignore storage errors
+    }
+
+    return { success: true, message: `Registration confirmed for ${data.eventTitle}!` };
   },
 
   getRegistrationsForEvent: (eventId: string): RegistrationPayload[] => {

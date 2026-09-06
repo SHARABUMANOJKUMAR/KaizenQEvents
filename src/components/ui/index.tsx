@@ -311,10 +311,21 @@ export const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 'md', className
     xl: 'w-20 h-20',
   };
 
+  const pixelMap = {
+    sm: 32,
+    md: 40,
+    lg: 56,
+    xl: 80,
+  };
+
   return (
     <img
       src={src}
       alt={alt}
+      width={pixelMap[size]}
+      height={pixelMap[size]}
+      loading="lazy"
+      decoding="async"
       className={cn('rounded-full object-cover shrink-0', sizes[size], className)}
     />
   );

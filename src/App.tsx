@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
 import { Skeleton } from './components/ui';
+import { AuthProvider } from './context/AuthContext';
 
 // Lazy-load pages for better performance
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -12,6 +13,7 @@ const OrganizersPage = lazy(() => import('./pages/OrganizersPage'));
 const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 
 // Page loading fallback
 const PageLoader: React.FC = () => (
@@ -28,89 +30,101 @@ const PageLoader: React.FC = () => (
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<div className="min-h-screen"><PageLoader /></div>}>
-        <Routes>
-          {/* Login page — no layout wrapper */}
-          <Route path="/login" element={<LoginPage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Suspense fallback={<div className="min-h-screen"><PageLoader /></div>}>
+          <Routes>
+            {/* Login page — no layout wrapper */}
+            <Route path="/login" element={<LoginPage />} />
 
-          {/* All other pages use MainLayout */}
-          <Route
-            path="/"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <HomePage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/events"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <EventsPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/events/:eventId"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <EventDetailPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/events/:eventId/register"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <EventRegisterPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/organizers"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <OrganizersPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/communities"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <CommunitiesPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <MainLayout>
-                <Suspense fallback={<PageLoader />}>
-                  <AboutPage />
-                </Suspense>
-              </MainLayout>
-            }
-          />
+            {/* All other pages use MainLayout */}
+            <Route
+              path="/"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <HomePage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <EventsPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/events/:eventId"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <EventDetailPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/events/:eventId/register"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <EventRegisterPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <DashboardPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/organizers"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <OrganizersPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/communities"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <CommunitiesPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <AboutPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
 
-          {/* 404 redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+            {/* 404 redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 
