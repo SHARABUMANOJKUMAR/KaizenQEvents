@@ -135,8 +135,6 @@ const EventDetailPage: React.FC = () => {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [registered, setRegistered] = useState(false);
-  const [registering, setRegistering] = useState(false);
   const [shareToast, setShareToast] = useState(false);
   const stickyRef = useRef<HTMLDivElement>(null);
 
@@ -155,12 +153,8 @@ const EventDetailPage: React.FC = () => {
   }, [eventId]);
 
   const handleRegister = () => {
-    if (registered) return;
-    setRegistering(true);
-    setTimeout(() => {
-      setRegistering(false);
-      setRegistered(true);
-    }, 1200);
+    if (!event) return;
+    navigate(`/events/${event.id}/register`);
   };
 
   const handleShare = () => {
@@ -191,18 +185,14 @@ const EventDetailPage: React.FC = () => {
 
   const RegisterButton: React.FC<{ fullWidth?: boolean; large?: boolean }> = ({ fullWidth, large }) => (
     <Button
-      variant={registered ? 'ghost' : 'primary'}
+      variant="primary"
       size={large ? 'lg' : 'md'}
       fullWidth={fullWidth}
-      loading={registering}
       disabled={event.status === 'Closed'}
       onClick={handleRegister}
       id="register-now-btn"
-      leftIcon={registered ? <CheckCircle2 size={18} className="text-[#34A853]" /> : undefined}
     >
-      {registered
-        ? 'Registered!'
-        : event.status === 'Closed'
+      {event.status === 'Closed'
         ? 'Registration Closed'
         : event.status === 'Waitlist'
         ? 'Join Waitlist'

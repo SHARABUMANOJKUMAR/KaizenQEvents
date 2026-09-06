@@ -7,6 +7,7 @@ import { Skeleton } from './components/ui';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const EventsPage = lazy(() => import('./pages/EventsPage'));
 const EventDetailPage = lazy(() => import('./pages/EventDetailPage'));
+const EventRegisterPage = lazy(() => import('./pages/EventRegisterPage'));
 const OrganizersPage = lazy(() => import('./pages/OrganizersPage'));
 const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
@@ -60,6 +61,16 @@ const App: React.FC = () => {
               <MainLayout>
                 <Suspense fallback={<PageLoader />}>
                   <EventDetailPage />
+                </Suspense>
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/events/:eventId/register"
+            element={
+              <MainLayout>
+                <Suspense fallback={<PageLoader />}>
+                  <EventRegisterPage />
                 </Suspense>
               </MainLayout>
             }
