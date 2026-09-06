@@ -6,12 +6,13 @@ import {
   BookOpen, Gift, User2, Building2
 } from 'lucide-react';
 import { eventService } from '../services';
+import { registrationService } from '../services/registration';
 import type { Event, ScheduleItem as ScheduleItemType, Discussion } from '../types';
 import {
   Button, Badge, StatusBadge, Avatar, Divider, Skeleton, EmptyState
 } from '../components/ui';
 import { SpeakerCard } from '../components/organizer/OrganizerCard';
-import { formatDate, formatShortDate, cn } from '../utils';
+import { formatShortDate, formatDateRange, cn } from '../utils';
 
 // Inline brand icons
 const TwitterShareIcon = () => (
@@ -163,8 +164,12 @@ const EventDetailPage: React.FC = () => {
     setTimeout(() => setShareToast(false), 2500);
   };
 
+  const registeredCount = event
+    ? Math.max(1, (event.currentAttendees || 1) + (registrationService.getRegistrationsForEvent(event.id).length > 1 ? registrationService.getRegistrationsForEvent(event.id).length - 1 : 0))
+    : 1;
+
   const attendancePct = event
-    ? Math.round(((event.currentAttendees || 0) / (event.maxAttendees || 1)) * 100)
+    ? Math.max(1, Math.round((registeredCount / (event.maxAttendees || 1)) * 100))
     : 0;
 
   if (loading) return <DetailSkeleton />;
@@ -214,6 +219,11 @@ const EventDetailPage: React.FC = () => {
         <img
           src={event.bannerUrl}
           alt={`${event.title} banner`}
+          width="1200"
+          height="360"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="w-full object-cover"
           style={{ height: 360 }}
         />
@@ -244,24 +254,38 @@ const EventDetailPage: React.FC = () => {
 
             {/* Title block */}
             <div className="pb-6">
-              <Badge label={event.category} variant="blue" className="mb-3" />
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                <Badge label={event.category} variant="blue" />
+                {event.id === 'evt-001' ? (
+                  <span className="text-xs font-bold bg-[#FFF8E1] text-[#B78103] px-2.5 py-1 rounded-lg border border-[#FFE082]">
+                    3 Days Bootcamp
+                  </span>
+                ) : (
+                  <span className="text-xs font-bold bg-[#E8F5E9] text-[#2E7D32] px-2.5 py-1 rounded-lg border border-[#C8E6C9]">
+                    5 Days Bootcamp
+                  </span>
+                )}
+                <span className="text-xs font-bold bg-[#EBF3FF] text-[#4285F4] px-2.5 py-1 rounded-lg">
+                  Online Mode
+                </span>
+              </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A2E] leading-tight mb-4">
                 {event.title}
               </h1>
 
               {/* Meta */}
               <div className="flex flex-wrap gap-4 text-sm text-[#5F6368]">
-                <span className="flex items-center gap-1.5">
-                  <MapPin size={14} className="text-[#9AA0A6]" />
-                  {event.city}, {event.state}
+                <span className="flex items-center gap-1.5 font-semibold text-[#2E7D32]">
+                  <MapPin size={14} className="text-[#34A853]" />
+                  Online Live Workshop (Google Meet / Zoom)
+                </span>
+                <span className="flex items-center gap-1.5 font-medium text-[#1A1A2E]">
+                  <Calendar size={14} className="text-[#4285F4]" />
+                  {formatDateRange(event.date, event.endDate)}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-[#9AA0A6]" />
-                  {formatDate(event.date)}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Clock size={14} className="text-[#9AA0A6]" />
-                  {event.time}{event.endTime ? ` – ${event.endTime}` : ''}
+                  <Clock size={14} className="text-[#EA4335]" />
+                  Evening {event.time}{event.endTime ? ` – ${event.endTime}` : ''}
                 </span>
               </div>
 
@@ -415,7 +439,7 @@ const EventDetailPage: React.FC = () => {
                 <div>
                   <div className="mb-1">
                     <p className="text-xs font-semibold text-[#9AA0A6] uppercase tracking-wide mb-1">When</p>
-                    <p className="font-semibold text-[#1A1A2E]">{formatDate(event.date)}</p>
+                    <p className="font-semibold text-[#1A1A2E]">{formatDateRange(event.date, event.endDate)}</p>
                     <p className="text-sm text-[#5F6368]">{event.time}{event.endTime ? ` – ${event.endTime}` : ''}</p>
                   </div>
                   <div className="mt-4">
@@ -466,8 +490,8 @@ const EventDetailPage: React.FC = () => {
             <div className="py-8 text-center space-y-3">
               <h2 className="text-xl font-bold text-[#1A1A2E]">Ready to join?</h2>
               <p className="text-sm text-[#5F6368]">
-                {event.maxAttendees && event.currentAttendees
-                  ? `${event.maxAttendees - event.currentAttendees} seats remaining`
+                {event.maxAttendees
+                  ? `${Math.max(0, event.maxAttendees - registeredCount)} seats remaining`
                   : 'Secure your spot today.'}
               </p>
               <RegisterButton large />
@@ -480,20 +504,20 @@ const EventDetailPage: React.FC = () => {
               <div className="border border-[#E8EAED] rounded-2xl p-6 bg-white shadow-sm">
                 <h3 className="font-bold text-[#1A1A2E] mb-4">Registration</h3>
 
-                {/* Attendance progress */}
-                {event.maxAttendees && event.currentAttendees !== undefined && (
+                {/* Attendance progress (Real-Time Count) */}
+                {event.maxAttendees && (
                   <div className="mb-5">
                     <div className="flex justify-between text-xs text-[#5F6368] mb-1.5">
-                      <span>{event.currentAttendees} registered</span>
+                      <span className="font-semibold text-[#1A1A2E]">{registeredCount} {registeredCount === 1 ? 'member registered' : 'registered'}</span>
                       <span>{event.maxAttendees} capacity</span>
                     </div>
                     <div className="w-full bg-[#E8EAED] rounded-full h-2">
                       <div
                         className="bg-[#4285F4] h-2 rounded-full transition-all"
-                        style={{ width: `${Math.min(attendancePct, 100)}%` }}
+                        style={{ width: `${Math.max(1, Math.min(attendancePct, 100))}%` }}
                       />
                     </div>
-                    <p className="text-xs text-[#9AA0A6] mt-1">{attendancePct}% filled</p>
+                    <p className="text-xs text-[#9AA0A6] mt-1">{attendancePct}% filled • Real-time count</p>
                   </div>
                 )}
 

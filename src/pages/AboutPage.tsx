@@ -23,21 +23,21 @@ const AboutPage: React.FC = () => {
       icon: <Users size={24} className="text-[#EA4335]" />,
       title: 'Our Community',
       color: '#FFEBEE',
-      content: 'KQE brings together over 6,000 developers, students, founders and tech professionals across 12+ cities in India. Our community chapters are led by passionate local organizers who understand their community\'s unique needs and opportunities.',
+      content: 'KQE brings together 10+ developers, students, founders and tech professionals across Andhra Pradesh and Telangana. Our community chapters are led by passionate local organizers who understand their community\'s unique needs and opportunities.',
     },
     {
       icon: <Globe size={24} className="text-[#FBBC04]" />,
       title: 'Our Vision',
       color: '#FFF8E1',
-      content: 'We envision a future where every young developer in India — from Pulivendula to Patna — has access to the same quality of mentorship, learning and community that drives innovation in the world\'s leading tech hubs.',
+      content: 'We envision a future where every young developer in India — from Pulivendula to Bengaluru — has access to high-quality hands-on mentorship, learning and community that drives innovation.',
     },
   ];
 
   const stats = [
-    { value: '6,000+', label: 'Community Members' },
-    { value: '120+', label: 'Events Hosted' },
-    { value: '12+', label: 'Cities' },
-    { value: '50+', label: 'Speakers' },
+    { value: '10+', label: 'Community Members' },
+    { value: '4', label: 'Bootcamps Hosted' },
+    { value: '2', label: 'States & Cities' },
+    { value: '8+', label: 'Speakers & Mentors' },
   ];
 
   return (

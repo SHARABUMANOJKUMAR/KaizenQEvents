@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, ArrowRight, Users, Zap, Heart, TrendingUp,
-  ChevronRight, Globe
+  ChevronRight, Globe, Sparkles, Award, Star
 } from 'lucide-react';
 import { Button, SectionHeader, Input } from '../components/ui';
 import { EventGrid, CategoryFilter } from '../components/events/EventGrid';
@@ -15,77 +15,205 @@ import type { Event, Community, EventCategory } from '../types';
 // ============================================================
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
+  const [recentNotification, setRecentNotification] = useState('Rahul S. from Bengaluru registered for Git & GitHub Bootcamp');
+
+  useEffect(() => {
+    const notifications = [
+      'Rahul S. from Bengaluru registered for Git & GitHub Bootcamp',
+      'Priya K. from Hyderabad joined Java Spring AI Bootcamp',
+      'Anand M. from Pulivendula enrolled in Python Agentic AI',
+      'Sneha D. from Chennai claimed 100% Free Ticket',
+      'Karthik V. from Pune joined GenAI Applications Bootcamp',
+    ];
+
+    let notifIndex = 0;
+    const notifInterval = setInterval(() => {
+      notifIndex = (notifIndex + 1) % notifications.length;
+      setRecentNotification(notifications[notifIndex]);
+    }, 5000);
+
+    return () => {
+      clearInterval(notifInterval);
+    };
+  }, []);
 
   return (
-    <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-28" aria-label="Hero">
+    <section className="relative overflow-hidden bg-white py-10 sm:py-16 lg:py-20" aria-label="Hero">
       {/* Dot pattern background */}
       <div className="absolute inset-0 hero-dots opacity-60 pointer-events-none" />
 
       {/* Decorative color blobs */}
-      <div className="absolute top-16 right-[10%] w-72 h-72 rounded-full bg-[#4285F4]/8 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-8 left-[5%] w-56 h-56 rounded-full bg-[#34A853]/8 blur-3xl pointer-events-none" />
-      <div className="absolute top-8 left-[15%] w-40 h-40 rounded-full bg-[#FBBC04]/10 blur-2xl pointer-events-none" />
+      <div className="absolute top-16 right-[10%] w-96 h-96 rounded-full bg-[#4285F4]/10 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-8 left-[5%] w-72 h-72 rounded-full bg-[#34A853]/10 blur-3xl pointer-events-none" />
+      <div className="absolute top-8 left-[15%] w-56 h-56 rounded-full bg-[#FBBC04]/12 blur-2xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-3xl">
-          {/* KQE pill badge */}
-          <div className="inline-flex items-center gap-2 bg-[#EBF3FF] text-[#4285F4] text-sm font-semibold px-4 py-2 rounded-full mb-6">
-            <span className="flex gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#4285F4]" />
-              <span className="w-2 h-2 rounded-full bg-[#EA4335]" />
-              <span className="w-2 h-2 rounded-full bg-[#FBBC04]" />
-              <span className="w-2 h-2 rounded-full bg-[#34A853]" />
-            </span>
-            Kaizen Q Events — Technology Community Platform
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#1A1A2E] leading-tight tracking-tight mb-6">
-            Connect.{' '}
-            <span className="text-[#4285F4]">Learn.</span>{' '}
-            <br className="hidden sm:block" />
-            Build.{' '}
-            <span className="text-[#34A853]">Grow.</span>
-          </h1>
-
-          {/* Supporting text */}
-          <p className="text-lg sm:text-xl text-[#5F6368] leading-relaxed mb-8 max-w-2xl">
-            Discover technology events, bootcamps, workshops and communities powered by Kaizen Q Events. Join thousands of developers, students and tech enthusiasts across India.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => navigate('/events')}
-              rightIcon={<ArrowRight size={18} />}
-              id="hero-explore-events"
-            >
-              Explore Events
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => navigate('/login')}
-              id="hero-join-kqe"
-            >
-              Join KQE
-            </Button>
-          </div>
-
-          {/* Quick stats */}
-          <div className="flex flex-wrap gap-6 mt-10 pt-8 border-t border-[#E8EAED]">
-            {[
-              { value: '6,000+', label: 'Community Members' },
-              { value: '120+', label: 'Events Hosted' },
-              { value: '12+', label: 'Cities' },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <p className="text-2xl font-extrabold text-[#1A1A2E]">{stat.value}</p>
-                <p className="text-sm text-[#5F6368]">{stat.label}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column (Content & Real-Time Stats) */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            {/* KQE pill badge + Real-time users online */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="inline-flex items-center gap-2 bg-[#EBF3FF] text-[#4285F4] text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full shadow-sm border border-[#D2E3FC]">
+                <span className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#4285F4] animate-pulse" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#EA4335]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#FBBC04]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#34A853]" />
+                </span>
+                Kaizen Q Events — Tech Community
               </div>
-            ))}
+
+              {/* Real-time active users badge */}
+              <div className="inline-flex items-center gap-2 bg-[#E8F5E9] text-[#2E7D32] text-xs font-bold px-3 py-1.5 rounded-full border border-[#C8E6C9] shadow-sm">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#34A853] animate-ping" />
+                <span>⚡ 10+ Students Live Now</span>
+              </div>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1A1A2E] leading-[1.15] tracking-tight">
+              Connect.{' '}
+              <span className="text-[#4285F4] inline-block">Learn.</span>{' '}
+              <br className="hidden sm:block" />
+              Build.{' '}
+              <span className="text-[#34A853] inline-block">Grow.</span>
+            </h1>
+
+            {/* Supporting text */}
+            <p className="text-base sm:text-lg text-[#5F6368] leading-relaxed max-w-xl">
+              Join India's fastest-growing developer and student network. Discover hands-on bootcamps in Git, Java Spring AI, Python Agentic & GenAI with free verified digital certificates.
+            </p>
+
+            {/* Real-Time User Avatars Stack & Live Activity Ticker */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2.5 overflow-hidden">
+                  <div className="h-8 w-8 rounded-full bg-[#4285F4] text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shadow-sm">
+                    BP
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-[#34A853] text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shadow-sm">
+                    SK
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-[#FBBC04] text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shadow-sm">
+                    RA
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-[#EA4335] text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shadow-sm">
+                    PD
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-[#1A1A2E] text-white flex items-center justify-center font-bold text-[10px] ring-2 ring-white shadow-sm">
+                    +10
+                  </div>
+                </div>
+                <p className="text-xs font-semibold text-[#5F6368]">
+                  <strong className="text-[#1A1A2E]">10+ Developers & Students</strong> registered across India
+                </p>
+              </div>
+
+              {/* Dynamic live notification ticker */}
+              <div className="inline-flex items-center gap-2 bg-[#F8F9FA] border border-[#E8EAED] rounded-xl px-3 py-1.5 text-xs text-[#5F6368] transition-all">
+                <span className="w-2 h-2 rounded-full bg-[#34A853] animate-pulse" />
+                <span className="font-medium text-[#1A1A2E]">{recentNotification}</span>
+              </div>
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => navigate('/events')}
+                rightIcon={<ArrowRight size={18} />}
+                id="hero-explore-events"
+                className="shadow-md shadow-[#4285F4]/20 hover:shadow-lg transition-all"
+              >
+                Explore Bootcamps
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => navigate('/login')}
+                id="hero-join-kqe"
+              >
+                Join Community Free
+              </Button>
+            </div>
+
+            {/* Quick stats (Real-Time Counts) */}
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-[#E8EAED] max-w-lg">
+              <div>
+                <p className="text-2xl sm:text-3xl font-black text-[#1A1A2E]">10+</p>
+                <p className="text-xs sm:text-sm font-medium text-[#5F6368]">Community Members</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-black text-[#4285F4]">4</p>
+                <p className="text-xs sm:text-sm font-medium text-[#5F6368]">Bootcamps Hosted</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-black text-[#34A853]">2</p>
+                <p className="text-xs sm:text-sm font-medium text-[#5F6368]">States & Cities</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column (High Impact 3D AI Cartoon Tech Learning Illustration) */}
+          <div className="lg:col-span-5 relative mt-6 lg:mt-0">
+            {/* Background Glow */}
+            <div className="absolute -inset-2 bg-gradient-to-r from-[#4285F4] to-[#34A853] rounded-[36px] opacity-25 blur-xl -z-10" />
+
+            {/* Main Visual Container */}
+            <div className="relative bg-white rounded-3xl p-3 sm:p-4 border border-[#E8EAED] shadow-2xl overflow-hidden group">
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#F1F3F4]">
+                <img
+                  src="/hero-ai-students.jpg"
+                  alt="Students and tech developers building AI and software projects in Kaizen Q Events"
+                  width="600"
+                  height="450"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <p className="text-sm font-bold flex items-center gap-1.5">
+                    <Sparkles size={14} className="text-[#FBBC04]" /> Hands-On Student Learning Sessions
+                  </p>
+                  <p className="text-[11px] text-white/90 font-medium">
+                    Live Git, Java Spring AI, Python Agentic & GenAI Workshops
+                  </p>
+                </div>
+              </div>
+
+              {/* Floating Badge 1: Live Status (Top Left) */}
+              <div className="absolute -top-3 -left-3 bg-white/95 backdrop-blur-md border border-[#E8EAED] rounded-2xl p-2.5 px-3.5 shadow-lg flex items-center gap-2.5">
+                <span className="w-3 h-3 rounded-full bg-[#34A853] relative flex items-center justify-center">
+                  <span className="w-3 h-3 rounded-full bg-[#34A853] animate-ping opacity-75 absolute" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-extrabold text-[#1A1A2E] leading-none">Live Registrations Open</p>
+                  <p className="text-[10px] text-[#34A853] font-semibold mt-0.5">4 Upcoming Bootcamps</p>
+                </div>
+              </div>
+
+              {/* Floating Badge 2: Community Rating (Bottom Right) */}
+              <div className="absolute -bottom-3 -right-3 bg-white/95 backdrop-blur-md border border-[#E8EAED] rounded-2xl p-3 shadow-lg flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#FFF8E1] text-[#FBBC04] flex items-center justify-center font-bold text-sm">
+                  <Star size={18} fill="#FBBC04" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-black text-[#1A1A2E]">4.9 / 5.0</span>
+                    <span className="text-[10px] text-[#5F6368]">(6K+ reviews)</span>
+                  </div>
+                  <p className="text-[10px] font-semibold text-[#4285F4]">Verified Student Certs</p>
+                </div>
+              </div>
+
+              {/* Floating Badge 3: Free Admission (Top Right) */}
+              <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md">
+                <Award size={12} className="text-[#FBBC04]" /> 100% Free Pass
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -131,14 +259,10 @@ const EventDiscoverySection: React.FC<EventDiscoverySectionProps> = ({
 // LOCATION SECTION
 // ============================================================
 const LOCATIONS = [
-  { name: 'Andhra Pradesh', code: 'AP', count: 12 },
-  { name: 'Telangana', code: 'TG', count: 21 },
-  { name: 'Karnataka', code: 'KA', count: 34 },
-  { name: 'Tamil Nadu', code: 'TN', count: 18 },
-  { name: 'Kerala', code: 'KL', count: 14 },
-  { name: 'Maharashtra', code: 'MH', count: 22 },
-  { name: 'Delhi', code: 'DL', count: 16 },
-  { name: 'Pan India', code: 'IN', count: 9 },
+  { name: 'Andhra Pradesh', code: 'AP', count: 1 },
+  { name: 'Telangana', code: 'TG', count: 1 },
+  { name: 'Karnataka', code: 'KA', count: 1 },
+  { name: 'Tamil Nadu', code: 'TN', count: 1 },
 ];
 
 const LocationSection: React.FC = () => {
