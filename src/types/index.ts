@@ -101,6 +101,8 @@ export interface Event {
   whatsIncluded: string[];
   tags: string[];
   registrationUrl?: string;
+  whatsappGroupUrl?: string;
+  whatsappQrCodeUrl?: string;
   maxAttendees?: number;
   currentAttendees?: number;
 }
