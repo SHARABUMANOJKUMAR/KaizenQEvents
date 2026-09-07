@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { UserProfile } from '../types';
 import { authService, type LoginWithEmailParams, type RegisterWithEmailParams } from '../services/auth';
+import { AuthModal } from '../components/auth/AuthModal';
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -20,6 +21,8 @@ interface AuthContextType {
     phone?: string;
   }) => Promise<UserProfile>;
   logout: () => Promise<void>;
+  openAuthModal: (mode?: 'login' | 'signup', redirectAfter?: string) => void;
+  closeAuthModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,11 +31,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Global Auth Modal State
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+  const [authModalRedirect, setAuthModalRedirect] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
     setUser(currentUser);
     setLoading(false);
   }, []);
+
+  const openAuthModal = (mode: 'login' | 'signup' = 'login', redirectAfter?: string) => {
+    setAuthModalMode(mode);
+    setAuthModalRedirect(redirectAfter);
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setAuthModalOpen(false);
+    setAuthModalRedirect(undefined);
+  };
 
   const loginWithGoogle = async (customEmail?: string, customName?: string) => {
     setLoading(true);
@@ -97,9 +116,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sendOtp,
         verifyOtp,
         logout,
+        openAuthModal,
+        closeAuthModal,
       }}
     >
       {children}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={closeAuthModal}
+        initialMode={authModalMode}
+        redirectUrl={authModalRedirect}
+      />
     </AuthContext.Provider>
   );
 };
@@ -111,3 +138,4 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
+

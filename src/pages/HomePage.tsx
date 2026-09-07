@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, ArrowRight, Users, Zap, Heart, TrendingUp,
-  ChevronRight, Globe, Sparkles, Award, Star
+  ChevronRight, Globe, Sparkles, Award, Star, LayoutDashboard
 } from 'lucide-react';
 import { Button, SectionHeader, Input } from '../components/ui';
 import { EventGrid, CategoryFilter } from '../components/events/EventGrid';
 import { CommunityCard } from '../components/community/CommunityCard';
 import { eventService, communityService } from '../services';
 import type { Event, Community, EventCategory } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 // ============================================================
 // HERO SECTION
 // ============================================================
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, openAuthModal } = useAuth();
   const [recentNotification, setRecentNotification] = useState('Rahul S. from Bengaluru registered for Git & GitHub Bootcamp');
 
   useEffect(() => {
@@ -128,14 +130,26 @@ const HeroSection: React.FC = () => {
               >
                 Explore Bootcamps
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => navigate('/login')}
-                id="hero-join-kqe"
-              >
-                Join Community Free
-              </Button>
+              {isLoggedIn ? (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate('/dashboard')}
+                  id="hero-dashboard-btn"
+                  rightIcon={<LayoutDashboard size={16} />}
+                >
+                  My Dashboard
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => openAuthModal('signup')}
+                  id="hero-join-kqe"
+                >
+                  Join Community Free
+                </Button>
+              )}
             </div>
 
             {/* Quick stats (Real-Time Counts) */}

@@ -24,10 +24,12 @@ interface OrganizerCardProps {
 }
 
 export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, className }) => {
+  const [expanded, setExpanded] = React.useState(false);
+
   return (
     <article
       className={cn(
-        'bg-white border border-[#E8EAED] rounded-xl p-6 card-hover text-center flex flex-col items-center gap-4',
+        'bg-white border border-[#E8EAED] rounded-xl p-6 card-hover text-center flex flex-col items-center gap-4 transition-all',
         className
       )}
       aria-label={`Organizer: ${organizer.name}`}
@@ -40,7 +42,9 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, classNa
         <p className="text-xs text-[#9AA0A6]">{organizer.company}</p>
       </div>
 
-      <p className="text-sm text-[#5F6368] leading-relaxed line-clamp-3">{organizer.bio}</p>
+      <p className={cn('text-sm text-[#5F6368] leading-relaxed transition-all', !expanded && 'line-clamp-3')}>
+        {organizer.bio}
+      </p>
 
       <div className="flex items-center gap-2">
         {organizer.linkedin && (
@@ -49,7 +53,7 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, classNa
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${organizer.name} LinkedIn`}
-            className="w-8 h-8 rounded-full border border-[#E8EAED] flex items-center justify-center text-[#5F6368] hover:text-[#4285F4] hover:border-[#4285F4] transition-all"
+            className="w-8 h-8 rounded-full border border-[#E8EAED] flex items-center justify-center text-[#5F6368] hover:text-[#4285F4] hover:border-[#4285F4] transition-all bg-[#F8F9FA]"
           >
             <LinkedInIcon />
           </a>
@@ -60,15 +64,20 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, classNa
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${organizer.name} Twitter`}
-            className="w-8 h-8 rounded-full border border-[#E8EAED] flex items-center justify-center text-[#5F6368] hover:text-[#4285F4] hover:border-[#4285F4] transition-all"
+            className="w-8 h-8 rounded-full border border-[#E8EAED] flex items-center justify-center text-[#5F6368] hover:text-[#4285F4] hover:border-[#4285F4] transition-all bg-[#F8F9FA]"
           >
             <TwitterIcon />
           </a>
         )}
       </div>
 
-      <Button variant="outline" size="sm" id={`organizer-bio-${organizer.id}`}>
-        See Bio
+      <Button
+        variant="outline"
+        size="sm"
+        id={`organizer-bio-${organizer.id}`}
+        onClick={() => setExpanded(!expanded)}
+      >
+        {expanded ? 'Hide Bio' : 'See Bio'}
       </Button>
     </article>
   );
