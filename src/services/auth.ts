@@ -76,8 +76,26 @@ export const authService = {
 
       return userProfile;
     } catch (popupError: any) {
-      console.warn('Google popup error / cancelled:', popupError.message);
-      throw popupError;
+      console.warn('Google popup error:', popupError.code, popupError.message);
+      let friendlyMessage = 'Google sign-in could not be completed. Please try again.';
+      
+      switch (popupError.code) {
+        case 'auth/popup-blocked':
+          friendlyMessage = 'Google sign-in was blocked by your browser. Please allow pop-ups and try again.';
+          break;
+        case 'auth/popup-closed-by-user':
+          friendlyMessage = 'Google sign-in was cancelled. Please try again.';
+          break;
+        case 'auth/unauthorized-domain':
+          friendlyMessage = 'This application domain is not yet authorized for Google sign-in. Please check Firebase configuration.';
+          break;
+        case 'auth/internal-error':
+        case 'auth/network-request-failed':
+          friendlyMessage = 'Unable to connect to Google. Please check your internet connection or Firebase setup.';
+          break;
+      }
+      
+      throw new Error(friendlyMessage);
     }
   },
 

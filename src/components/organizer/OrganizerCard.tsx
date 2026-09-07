@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { OrganizerProfile, Speaker } from '../../types';
 import { Avatar, Button } from '../ui';
 import { cn } from '../../utils';
@@ -23,7 +23,7 @@ interface OrganizerCardProps {
   className?: string;
 }
 
-export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, className }) => {
+export const OrganizerCard: React.FC<OrganizerCardProps> = memo(({ organizer, className }) => {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -81,7 +81,9 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({ organizer, classNa
       </Button>
     </article>
   );
-};
+});
+
+OrganizerCard.displayName = 'OrganizerCard';
 
 // ============================================================
 // SpeakerCard
@@ -92,7 +94,7 @@ interface SpeakerCardProps {
   className?: string;
 }
 
-export const SpeakerCard: React.FC<SpeakerCardProps> = ({ speaker, compact = false, className }) => {
+export const SpeakerCard: React.FC<SpeakerCardProps> = memo(({ speaker, compact = false, className }) => {
   if (compact) {
     return (
       <div className={cn('flex items-center gap-3', className)}>
@@ -135,4 +137,6 @@ export const SpeakerCard: React.FC<SpeakerCardProps> = ({ speaker, compact = fal
       </div>
     </article>
   );
-};
+});
+
+SpeakerCard.displayName = 'SpeakerCard';

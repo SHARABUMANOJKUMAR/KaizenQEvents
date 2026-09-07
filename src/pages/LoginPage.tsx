@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft, Shield, User, Mail, KeyRound, Building,
-  GraduationCap, Phone, CheckCircle2, AlertCircle
+  GraduationCap, Phone, CheckCircle2, AlertCircle, Eye, EyeOff
 } from 'lucide-react';
 import { Button } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
@@ -33,12 +33,16 @@ const LoginPage: React.FC = () => {
 
   const handleGoogleClick = async () => {
     setGoogleLoading(true);
+    setAuthMessage(null);
     try {
       const user = await loginWithGoogle();
       handleGoogleSuccess(user.displayName);
     } catch (err: any) {
-      console.log('Firebase popup redirected / fallback:', err.message);
-      setGoogleModalOpen(true);
+      setAuthMessage({ type: 'error', text: err.message });
+      // Only open fallback modal if it's not a generic error that we handled with a friendly message
+      if (!err.message.includes('Google sign-in could not be completed') && !err.message.includes('was blocked')) {
+         setGoogleModalOpen(true);
+      }
     } finally {
       setGoogleLoading(false);
     }
@@ -49,6 +53,10 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [authMessage, setAuthMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  
+  // Password Visibility State
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Manual Register State
   const [displayName, setDisplayName] = useState('');
@@ -190,7 +198,7 @@ const LoginPage: React.FC = () => {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                <span>Continue with Google</span>
+                <span>{googleLoading ? 'Signing in...' : 'Continue with Google'}</span>
               </button>
 
               <div className="relative flex items-center justify-center my-2">
@@ -280,13 +288,20 @@ const LoginPage: React.FC = () => {
                         <KeyRound size={16} />
                       </div>
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15"
+                        className="w-full pl-9 pr-10 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9AA0A6] hover:text-[#5F6368]"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
                   </div>
 
@@ -353,13 +368,20 @@ const LoginPage: React.FC = () => {
                           <KeyRound size={16} />
                         </div>
                         <input
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           required
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] focus:outline-none focus:border-[#4285F4]"
+                          className="w-full pl-9 pr-10 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] focus:outline-none focus:border-[#4285F4]"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9AA0A6] hover:text-[#5F6368]"
+                        >
+                          {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
                       </div>
                     </div>
                     <div>
@@ -371,13 +393,20 @@ const LoginPage: React.FC = () => {
                           <KeyRound size={16} />
                         </div>
                         <input
-                          type="password"
+                          type={showConfirmPassword ? 'text' : 'password'}
                           required
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder="••••••••"
-                          className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] focus:outline-none focus:border-[#4285F4]"
+                          className="w-full pl-9 pr-10 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] focus:outline-none focus:border-[#4285F4]"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9AA0A6] hover:text-[#5F6368]"
+                        >
+                          {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
                       </div>
                     </div>
                   </div>

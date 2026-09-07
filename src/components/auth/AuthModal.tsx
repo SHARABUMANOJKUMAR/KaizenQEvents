@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   X, Mail, ArrowRight, ShieldCheck, CheckCircle2, AlertCircle,
-  KeyRound, User
+  KeyRound, User, Eye, EyeOff
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { GoogleOAuthModal } from './GoogleOAuthModal';
@@ -38,6 +38,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   // Registration Extra Fields
   const [fullName, setFullName] = useState('');
+  
+  // Password Visibility State
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     setMode(initialMode);
@@ -49,12 +53,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleGoogleClick = async () => {
     setGoogleLoading(true);
+    setAuthMessage(null);
     try {
       const user = await loginWithGoogle();
       handleAuthSuccess(user);
     } catch (err: any) {
-      console.log('Firebase popup fallback:', err.message);
-      setGoogleModalOpen(true);
+      setAuthMessage({ type: 'error', text: err.message });
+      if (!err.message.includes('Google sign-in could not be completed') && !err.message.includes('was blocked')) {
+        setGoogleModalOpen(true);
+      }
     } finally {
       setGoogleLoading(false);
     }
@@ -196,7 +203,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                 </svg>
-                Continue with Google
+                {googleLoading ? 'Signing in...' : 'Continue with Google'}
               </button>
 
               <div className="relative flex items-center justify-center my-4">
@@ -257,13 +264,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       <KeyRound size={18} />
                     </div>
                     <input
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Password"
-                      className="w-full pl-10 pr-4 py-3 bg-[#F8F9FA] border border-transparent rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:bg-white focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
+                      className="w-full pl-10 pr-10 py-3 bg-[#F8F9FA] border border-transparent rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:bg-white focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9AA0A6] hover:text-[#5F6368]"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
                 </div>
 
@@ -274,13 +288,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         <KeyRound size={18} />
                       </div>
                       <input
-                        type="password"
+                        type={showConfirmPassword ? 'text' : 'password'}
                         required
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Confirm Password"
-                        className="w-full pl-10 pr-4 py-3 bg-[#F8F9FA] border border-transparent rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:bg-white focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
+                        className="w-full pl-10 pr-10 py-3 bg-[#F8F9FA] border border-transparent rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:bg-white focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9AA0A6] hover:text-[#5F6368]"
+                      >
+                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
                     </div>
                   </div>
                 )}

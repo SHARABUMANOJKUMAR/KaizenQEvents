@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { Event, EventCategory } from '../../types';
 import { EventCard } from './EventCard';
 import { EventCardSkeleton, EmptyState } from '../ui';
@@ -10,7 +10,7 @@ interface EventGridProps {
   skeletonCount?: number;
 }
 
-export const EventGrid: React.FC<EventGridProps> = ({
+export const EventGrid: React.FC<EventGridProps> = memo(({
   events,
   loading = false,
   skeletonCount = 6,
@@ -42,7 +42,9 @@ export const EventGrid: React.FC<EventGridProps> = ({
       ))}
     </div>
   );
-};
+});
+
+EventGrid.displayName = 'EventGrid';
 
 // ============================================================
 // Category filter chips
@@ -65,7 +67,7 @@ interface CategoryFilterProps {
   onChange: (cat: EventCategory) => void;
 }
 
-export const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange }) => {
+export const CategoryFilter: React.FC<CategoryFilterProps> = memo(({ value, onChange }) => {
   return (
     <div
       className="flex gap-2 overflow-x-auto no-scrollbar pb-1"
@@ -85,4 +87,6 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ value, onChange 
       ))}
     </div>
   );
-};
+});
+
+CategoryFilter.displayName = 'CategoryFilter';

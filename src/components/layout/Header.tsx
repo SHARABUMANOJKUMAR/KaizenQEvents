@@ -31,6 +31,7 @@ export const Header: React.FC = () => {
 
   // Close drawer & dropdown on route change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setMobileOpen(false);
     setUserDropdownOpen(false);
   }, [location.pathname]);

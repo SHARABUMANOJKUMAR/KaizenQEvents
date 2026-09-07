@@ -51,9 +51,11 @@ const EventRegisterPage: React.FC = () => {
       if (user.branch && !branch) setBranch(user.branch);
       if (user.year && !year) setYear(user.year);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setLoading(true);
     if (eventId) {
       eventService.getById(eventId).then((evt) => {

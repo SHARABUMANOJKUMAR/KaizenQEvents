@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  MapPin, Calendar, Clock, Link2,
+  MapPin, Calendar, Clock,
   ChevronLeft, Users, MessageCircle, ThumbsUp, CheckCircle2,
-  BookOpen, Gift, User2, Building2
+  Share2, Heart, Award, BookOpen, Gift, User2, Building2
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -77,13 +77,13 @@ const ScheduleRow: React.FC<{ item: ScheduleItemType; isLast: boolean }> = ({ it
 const DiscussionItem: React.FC<{ discussion: Discussion }> = ({ discussion }) => {
   const [liked, setLiked] = useState(false);
 
-  const timeAgo = (ts: string) => {
-    const diff = Date.now() - new Date(ts).getTime();
+  const timeAgo = React.useCallback((ts: string) => {
+    const diff = new Date().getTime() - new Date(ts).getTime();
     const days = Math.floor(diff / 86400000);
     if (days > 30) return `${Math.floor(days / 30)}mo ago`;
     if (days > 0) return `${days}d ago`;
     return 'Today';
-  };
+  }, []);
 
   return (
     <div className="py-4">
@@ -143,18 +143,24 @@ const EventDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [shareToast, setShareToast] = useState(false);
+  const [dbRegisteredCount, setDbRegisteredCount] = useState(0);
   const stickyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setLoading(true);
     setNotFound(false);
     eventService.getById(eventId || '').then((evt) => {
       if (!evt) {
         setNotFound(true);
+        setLoading(false);
       } else {
         setEvent(evt);
+        registrationService.getRegistrationsForEvent(evt.id).then((regs) => {
+          setDbRegisteredCount(regs.length);
+          setLoading(false);
+        });
       }
-      setLoading(false);
     });
     window.scrollTo({ top: 0 });
   }, [eventId]);
@@ -164,6 +170,7 @@ const EventDetailPage: React.FC = () => {
     navigate(`/events/${event.id}/register`);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleShare = () => {
     navigator.clipboard?.writeText(window.location.href).catch(() => {});
     setShareToast(true);
@@ -171,7 +178,7 @@ const EventDetailPage: React.FC = () => {
   };
 
   const registeredCount = event
-    ? Math.max(1, (event.currentAttendees || 1) + (registrationService.getRegistrationsForEvent(event.id).length > 1 ? registrationService.getRegistrationsForEvent(event.id).length - 1 : 0))
+    ? Math.max(1, (event.currentAttendees || 1) + (dbRegisteredCount > 1 ? dbRegisteredCount - 1 : 0))
     : 1;
 
   const attendancePct = event
@@ -194,7 +201,7 @@ const EventDetailPage: React.FC = () => {
 
   if (!event) return null;
 
-  const RegisterButton: React.FC<{ fullWidth?: boolean; large?: boolean }> = ({ fullWidth, large }) => (
+  const renderRegisterButton = (fullWidth?: boolean, large?: boolean) => (
     <Button
       variant="primary"
       size={large ? 'lg' : 'md'}
@@ -543,7 +550,7 @@ const EventDetailPage: React.FC = () => {
                   </div>
                 )}
 
-                <RegisterButton fullWidth large />
+                {renderRegisterButton(true, true)}
 
                 <div className="mt-4 space-y-2 text-sm text-[#5F6368]">
                   <div className="flex items-center gap-2">
@@ -604,7 +611,7 @@ const EventDetailPage: React.FC = () => {
             <p className="text-sm font-semibold text-[#1A1A2E] truncate">{event.title}</p>
             <p className="text-xs text-[#5F6368]">{formatShortDate(event.date)}</p>
           </div>
-          <RegisterButton />
+          {renderRegisterButton()}
         </div>
       </div>
 

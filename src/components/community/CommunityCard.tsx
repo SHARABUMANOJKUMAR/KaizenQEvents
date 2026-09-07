@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Calendar } from 'lucide-react';
 import type { Community } from '../../types';
@@ -10,7 +10,7 @@ interface CommunityCardProps {
   className?: string;
 }
 
-export const CommunityCard: React.FC<CommunityCardProps> = ({ community, className }) => {
+export const CommunityCard: React.FC<CommunityCardProps> = memo(({ community, className }) => {
   const navigate = useNavigate();
 
   return (
@@ -68,4 +68,6 @@ export const CommunityCard: React.FC<CommunityCardProps> = ({ community, classNa
       </div>
     </article>
   );
-};
+});
+
+CommunityCard.displayName = 'CommunityCard';
