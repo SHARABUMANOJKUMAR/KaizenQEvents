@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, Clock } from 'lucide-react';
+import { MapPin, Calendar, Clock, ArrowRight } from 'lucide-react';
 import type { Event } from '../../types';
 import { Badge, StatusBadge, Button } from '../ui';
 import { formatDateRange, truncate } from '../../utils';
 import { cn } from '../../utils';
+import { useAuth } from '../../context/AuthContext';
 
 interface EventCardProps {
   event: Event;
@@ -13,6 +14,7 @@ interface EventCardProps {
 
 export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
   const navigate = useNavigate();
+  const { isLoggedIn, openAuthModal } = useAuth();
 
   const categoryColorMap: Record<string, 'blue' | 'red' | 'yellow' | 'green' | 'gray'> = {
     'Bootcamp': 'blue',
@@ -29,16 +31,28 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
 
   const badgeColor = categoryColorMap[event.category] || 'blue';
 
+  const handleJoinBootcamp = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      openAuthModal('login', `/events/${event.id}/register`);
+      return;
+    }
+    navigate(`/events/${event.id}/register`);
+  };
+
   return (
     <article
       className={cn(
-        'bg-white border border-[#E8EAED] rounded-xl overflow-hidden card-hover flex flex-col',
+        'bg-white border border-[#E8EAED] rounded-2xl overflow-hidden card-hover flex flex-col',
         className
       )}
       aria-label={`Event: ${event.title}`}
     >
       {/* Event image */}
-      <div className="relative overflow-hidden aspect-[16/9]">
+      <div
+        className="relative overflow-hidden aspect-[16/9] cursor-pointer"
+        onClick={() => navigate(`/events/${event.id}`)}
+      >
         <img
           src={event.imageUrl}
           alt={event.title}
@@ -71,7 +85,10 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-base font-bold text-[#1A1A2E] leading-snug line-clamp-2">
+        <h3
+          className="text-base font-bold text-[#1A1A2E] leading-snug line-clamp-2 cursor-pointer hover:text-[#4285F4] transition-colors"
+          onClick={() => navigate(`/events/${event.id}`)}
+        >
           {event.title}
         </h3>
 
@@ -104,17 +121,30 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
           </div>
         </div>
 
-        {/* CTA */}
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => navigate(`/events/${event.id}`)}
-          id={`view-event-${event.id}`}
-          className="mt-1 self-start"
-        >
-          View Event
-        </Button>
+        {/* CTAs */}
+        <div className="pt-2 border-t border-[#F1F3F4] flex items-center gap-2 mt-auto">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(`/events/${event.id}`)}
+            id={`view-event-${event.id}`}
+            className="text-xs"
+          >
+            Details
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleJoinBootcamp}
+            id={`join-event-${event.id}`}
+            className="flex-1 text-xs font-bold"
+            rightIcon={<ArrowRight size={13} />}
+          >
+            Join Bootcamp
+          </Button>
+        </div>
       </div>
     </article>
   );
 };
+

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft, Calendar, Clock, MapPin, CheckCircle2,
-  User, Mail, Phone, GraduationCap, Building, BookOpen, Settings, Sparkles, ExternalLink, ShieldCheck
+  User, Mail, Phone, GraduationCap, Building, BookOpen
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -10,6 +10,7 @@ import type { Event } from '../types';
 import { Button, Badge, Skeleton, EmptyState } from '../components/ui';
 import { formatDateRange } from '../utils';
 import { useAuth } from '../context/AuthContext';
+import { MovieTicket } from '../components/ticket/MovieTicket';
 
 const YEAR_OPTIONS = [
   '1st Year',
@@ -24,7 +25,7 @@ const YEAR_OPTIONS = [
 const EventRegisterPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, openAuthModal } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,8 +40,6 @@ const EventRegisterPage: React.FC = () => {
   const [year, setYear] = useState(user?.year || '3rd Year');
   const [college, setCollege] = useState(user?.college || '');
   const [branch, setBranch] = useState(user?.branch || '');
-
-
 
   // Auto populate user info if user state updates
   useEffect(() => {
@@ -67,9 +66,11 @@ const EventRegisterPage: React.FC = () => {
       setLoading(false);
     }
     window.scrollTo({ top: 0 });
-  }, [eventId]);
 
-
+    if (!isLoggedIn) {
+      openAuthModal('login', `/events/${eventId}/register`);
+    }
+  }, [eventId, isLoggedIn]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,43 +195,17 @@ const EventRegisterPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Ticket Card */}
-            <div className="bg-[#F8F9FA] border border-dashed border-[#4285F4]/40 rounded-xl p-5 text-left max-w-md mx-auto space-y-3">
-              <div className="flex justify-between items-center border-b border-[#E8EAED] pb-2">
-                <span className="text-xs font-semibold uppercase text-[#5F6368]">Registration ID</span>
-                <span className="text-sm font-mono font-bold text-[#4285F4]">{ticketId}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <span className="text-[#9AA0A6]">Attendee:</span>
-                  <p className="font-semibold text-[#1A1A2E]">{fullName}</p>
-                </div>
-                <div>
-                  <span className="text-[#9AA0A6]">Year / Status:</span>
-                  <p className="font-semibold text-[#1A1A2E]">{year}</p>
-                </div>
-                <div>
-                  <span className="text-[#9AA0A6]">Email:</span>
-                  <p className="font-semibold text-[#1A1A2E] truncate">{email}</p>
-                </div>
-                <div>
-                  <span className="text-[#9AA0A6]">Phone:</span>
-                  <p className="font-semibold text-[#1A1A2E]">{phone}</p>
-                </div>
-                <div>
-                  <span className="text-[#9AA0A6]">College / Inst:</span>
-                  <p className="font-semibold text-[#1A1A2E]">{college}</p>
-                </div>
-                <div>
-                  <span className="text-[#9AA0A6]">Branch:</span>
-                  <p className="font-semibold text-[#1A1A2E]">{branch || 'N/A'}</p>
-                </div>
-              </div>
-              <div className="pt-2 border-t border-[#E8EAED] flex items-center justify-between text-xs text-[#5F6368]">
-                <span>⏰ {event.time} – {event.endTime}</span>
-                <span>📍 {event.city}</span>
-              </div>
-            </div>
+            {/* Authentic Cinema / Movie Ticket Card */}
+            <MovieTicket
+              ticketId={ticketId}
+              fullName={fullName}
+              email={email}
+              phone={phone}
+              college={college}
+              branch={branch}
+              year={year}
+              event={event}
+            />
 
             {/* WhatsApp Group & QR Code Banner */}
             <div className="bg-[#111B21] text-white border border-[#25D366]/40 rounded-2xl p-6 text-center max-w-md mx-auto space-y-4 shadow-xl">
@@ -275,11 +250,9 @@ const EventRegisterPage: React.FC = () => {
         ) : (
           /* Registration Form */
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6">
-            <div className="border-b border-[#E8EAED] pb-4 flex justify-between items-center flex-wrap gap-2">
-              <div>
-                <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
-                <p className="text-xs text-[#5F6368]">Please fill in your basic details to complete registration.</p>
-              </div>
+            <div className="border-b border-[#E8EAED] pb-4">
+              <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
+              <p className="text-xs text-[#5F6368] mt-0.5">Please fill in your basic details to complete registration and generate your verified pass.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">

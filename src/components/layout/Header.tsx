@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isLoggedIn, logout } = useAuth();
+  const { user, isLoggedIn, logout, openAuthModal } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -223,21 +223,12 @@ export const Header: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate('/login')}
-                    id="header-login-btn"
-                  >
-                    Login / Sign Up
-                  </Button>
+                <div className="flex items-center">
                   <Button
                     variant="primary"
                     size="sm"
-                    onClick={() => navigate('/login')}
+                    onClick={() => openAuthModal('login')}
                     id="header-getstarted-btn"
-                    className="hidden sm:inline-flex"
                   >
                     Get Started
                   </Button>
@@ -348,11 +339,11 @@ export const Header: React.FC = () => {
               size="md"
               fullWidth
               onClick={() => {
-                navigate('/login');
                 setMobileOpen(false);
+                openAuthModal('login');
               }}
             >
-              Get Started / Login
+              Get Started
             </Button>
           )}
         </div>
