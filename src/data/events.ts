@@ -25,10 +25,10 @@ This is an interactive online live workshop — you will be writing commands, cr
     speakers: [
       {
         id: 'spk-001',
-        name: 'Maddipatla Reddi Prasanna',
-        designation: 'AI/ML Engineer & Open Source Mentor',
+        name: 'Lakshmi Prasanna Narapareddy',
+        designation: 'Git & Open Source Lead Instructor',
         company: 'Kaizen Q Events',
-        bio: 'Maddipatla Reddi Prasanna is an experienced software engineer and mentor passionate about guiding students through real-world version control, Python, and collaborative workflows.',
+        bio: 'Lakshmi Prasanna Narapareddy leads Git, GitHub, and open-source bootcamps, empowering students and developers to master version control, collaborative workflows, and software engineering.',
         imageUrl: '/speakers/laxmi-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
       },
@@ -81,7 +81,7 @@ This is an interactive online live workshop — you will be writing commands, cr
       'Access to KQE community WhatsApp group & Slack',
       'Recorded session access post-event',
     ],
-    tags: ['Git', 'GitHub', '3 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Laxmi Prasanna'],
+    tags: ['Git', 'GitHub', '3 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Lakshmi Prasanna'],
     whatsappGroupUrl: 'https://chat.whatsapp.com/Gmeo93g8weuACs0v6tiIxx?s=sh&p=a&mlu=4&ilr=4',
     maxAttendees: 150,
     currentAttendees: 1,
