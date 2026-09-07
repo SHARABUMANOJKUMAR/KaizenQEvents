@@ -2,6 +2,15 @@ import type { OrganizerProfile } from '../types';
 
 export const organizers: OrganizerProfile[] = [
   {
+    id: 'org-005',
+    name: 'Bhanu Prakash Achari',
+    company: 'Kaizen Q Events',
+    role: 'Event Organizer & Community Lead',
+    imageUrl: '/speakers/bhanu.png',
+    bio: 'Bhanu Prakash Achari is an event organizer and community lead at Kaizen Q Events, coordinating dynamic developer workshops, hands-on bootcamps, and technical programs across communities.',
+    linkedin: 'https://www.linkedin.com/in/bhanu-prakash-achari-73519a290?utm_source=share_via&utm_content=profile&utm_medium=member_android',
+  },
+  {
     id: 'org-001',
     name: 'Sharabu Manoj Kumar',
     company: 'Kaizen Q Events',
@@ -21,11 +30,20 @@ export const organizers: OrganizerProfile[] = [
   },
   {
     id: 'org-003',
-    name: 'Maddipatla Reddi Prasanna',
+    name: 'Reddy Prasanna',
     company: 'Kaizen Q Events',
-    role: 'AI/ML Lead & Open Source Mentor',
+    role: 'Python & AI Lead Instructor',
+    imageUrl: '/speakers/reddy-prasanna.jpg',
+    bio: 'Reddy Prasanna Maddipatla specializes in Python programming, machine learning workflows, and building agentic AI solutions for developers and students.',
+    linkedin: 'https://www.linkedin.com/in/reddy-prasanna-maddipatla-279392306',
+  },
+  {
+    id: 'org-006',
+    name: 'Lakshmi Prasanna Narapareddy',
+    company: 'Kaizen Q Events',
+    role: 'Git & Open Source Lead Instructor',
     imageUrl: '/speakers/laxmi-prasanna.jpg',
-    bio: 'Maddipatla Reddi Prasanna leads Python AI and open-source bootcamps, empowering students and developers to master autonomous agent workflows, version control, and data engineering.',
+    bio: 'Lakshmi Prasanna Narapareddy leads Git, GitHub, and open-source bootcamps, empowering students and developers to master version control, collaborative workflows, and software engineering.',
     linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
   },
   {
@@ -38,3 +56,4 @@ export const organizers: OrganizerProfile[] = [
     linkedin: 'https://www.linkedin.com/in/harshith-dasari-615b56356',
   },
 ];
+

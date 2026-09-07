@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  MapPin, Calendar, Clock, Link2,
+  MapPin, Calendar, Clock, Link2, Check,
   ChevronLeft, Users, MessageCircle, ThumbsUp, CheckCircle2,
   BookOpen, Gift, User2, Building2
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
+import { useAuth } from '../context/AuthContext';
 import type { Event, ScheduleItem as ScheduleItemType, Discussion } from '../types';
 import {
   Button, Badge, StatusBadge, Avatar, Divider, Skeleton, EmptyState
@@ -14,13 +15,7 @@ import {
 import { SpeakerCard } from '../components/organizer/OrganizerCard';
 import { formatShortDate, formatDateRange, cn } from '../utils';
 
-// Inline brand icons
-const TwitterShareIcon = () => (
-  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 5.987zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-  </svg>
-);
-const LinkedInShareIcon = () => (
+const LinkedInIcon = () => (
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
   </svg>
@@ -133,6 +128,7 @@ const DetailSkeleton: React.FC = () => (
 const EventDetailPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
+  const { isLoggedIn, openAuthModal } = useAuth();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -155,6 +151,10 @@ const EventDetailPage: React.FC = () => {
 
   const handleRegister = () => {
     if (!event) return;
+    if (!isLoggedIn) {
+      openAuthModal('login', `/events/${event.id}/register`);
+      return;
+    }
     navigate(`/events/${event.id}/register`);
   };
 
@@ -293,28 +293,21 @@ const EventDetailPage: React.FC = () => {
               <div className="flex flex-wrap items-center gap-3 mt-5">
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 text-sm text-[#5F6368] hover:text-[#4285F4] transition-colors border border-[#E8EAED] rounded-lg px-3 py-2"
+                  className="flex items-center gap-2 text-sm font-semibold text-[#5F6368] hover:text-[#4285F4] transition-all border border-[#E8EAED] rounded-xl px-4 py-2 hover:border-[#4285F4]/40 bg-[#F8F9FA] hover:bg-white cursor-pointer shadow-sm"
                   aria-label="Copy link"
                 >
-                  <Link2 size={14} />
-                  Copy Link
+                  {shareToast ? (
+                    <>
+                      <Check size={15} className="text-[#34A853]" />
+                      <span className="text-[#34A853]">Link Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Link2 size={15} />
+                      <span>Copy Link</span>
+                    </>
+                  )}
                 </button>
-                <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(event.title)}&url=${encodeURIComponent(window.location.href)}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-[#5F6368] hover:text-[#4285F4] transition-colors border border-[#E8EAED] rounded-lg px-3 py-2"
-                  aria-label="Share on Twitter"
-                >
-                  <TwitterShareIcon />
-                  Tweet
-                </a>
-                <a href={`https://linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm text-[#5F6368] hover:text-[#4285F4] transition-colors border border-[#E8EAED] rounded-lg px-3 py-2"
-                  aria-label="Share on LinkedIn"
-                >
-                  <LinkedInShareIcon />
-                  Share
-                </a>
               </div>
             </div>
 
@@ -390,13 +383,26 @@ const EventDetailPage: React.FC = () => {
                 <DetailSection id="organizers" title="Organizers" icon={<Users size={20} />}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {event.organizers.map((org) => (
-                      <div key={org.id} className="flex items-center gap-3 bg-[#F8F9FA] rounded-xl p-4">
-                        <Avatar src={org.imageUrl} alt={org.name} size="md" />
-                        <div className="min-w-0">
-                          <p className="font-semibold text-sm text-[#1A1A2E] truncate">{org.name}</p>
-                          <p className="text-xs text-[#5F6368]">{org.role}</p>
-                          <p className="text-xs text-[#9AA0A6]">{org.company}</p>
+                      <div key={org.id} className="flex items-center justify-between gap-3 bg-[#F8F9FA] rounded-xl p-4 border border-[#E8EAED] hover:border-[#D2E3FC] transition-all">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Avatar src={org.imageUrl} alt={org.name} size="md" />
+                          <div className="min-w-0">
+                            <p className="font-semibold text-sm text-[#1A1A2E] truncate">{org.name}</p>
+                            <p className="text-xs text-[#5F6368]">{org.role}</p>
+                            <p className="text-xs text-[#9AA0A6]">{org.company}</p>
+                          </div>
                         </div>
+                        {org.linkedin && (
+                          <a
+                            href={org.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 rounded-full border border-[#E8EAED] flex items-center justify-center text-[#5F6368] hover:text-[#4285F4] hover:border-[#4285F4] transition-all shrink-0 bg-white shadow-xs"
+                            aria-label={`${org.name} LinkedIn`}
+                          >
+                            <LinkedInIcon />
+                          </a>
+                        )}
                       </div>
                     ))}
                   </div>

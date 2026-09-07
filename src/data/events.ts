@@ -21,7 +21,7 @@ This is an interactive online live workshop — you will be writing commands, cr
     state: 'Google Meet / Zoom',
     imageUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=600&q=80',
     bannerUrl: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=1200&q=85',
-    organizers: [organizers[1], organizers[0], organizers[3]],
+    organizers: [...organizers],
     speakers: [
       {
         id: 'spk-001',
@@ -103,16 +103,25 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     state: 'Google Meet / Zoom',
     imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80',
     bannerUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=85',
-    organizers: [organizers[1], organizers[0], organizers[3]],
+    organizers: [...organizers],
     speakers: [
       {
         id: 'spk-002',
+<<<<<<< HEAD
         name: 'Maddipatla Reddi Prasanna',
         designation: 'AI/ML Lead Instructor & Data Scientist',
         company: 'Kaizen Q Events',
         bio: 'Maddipatla Reddi Prasanna specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
         imageUrl: '/speakers/laxmi-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
+=======
+        name: 'Reddy Prasanna',
+        designation: 'AI/ML & Python Bootcamp Speaker',
+        company: 'Kaizen Q Events',
+        bio: 'Reddy Prasanna Maddipatla specializes in Python programming, machine learning workflows, and autonomous AI architectures for developers and students.',
+        imageUrl: '/speakers/reddy-prasanna.png',
+        linkedin: 'https://www.linkedin.com/in/reddy-prasanna-maddipatla-279392306',
+>>>>>>> ed64990 (feat: unified GDG AuthModal, authentic cinema ticket pass, clean registration flow, and updated organizers/speakers)
       },
     ],
     schedule: [
@@ -154,9 +163,9 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
       '5-Day interactive online live bootcamp (6:00 PM – 7:30 PM)',
       'Complete Python code templates & starter repositories',
       'Verified Certificate of Completion',
-      'Live Q&A with instructor Laxmi Prasanna',
+      'Live Q&A with instructor Reddy Prasanna',
     ],
-    tags: ['Python', 'AI', '5 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Laxmi Prasanna'],
+    tags: ['Python', 'AI', '5 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Reddy Prasanna'],
     whatsappGroupUrl: 'https://chat.whatsapp.com/DdytUaOr7LPHiwau7eAkBe?s=sh&p=a&mlu=4&ilr=4',
     maxAttendees: 120,
     currentAttendees: 1,
@@ -178,7 +187,7 @@ In this hands-on masterclass, you will learn how to build AI-powered microservic
     state: 'Google Meet / Zoom',
     imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80',
     bannerUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=85',
-    organizers: [organizers[1], organizers[0], organizers[3]],
+    organizers: [...organizers],
     speakers: [
       {
         id: 'spk-003',
@@ -253,7 +262,7 @@ Discover how to fine-tune open-weights models (Llama 3, Mistral), implement adva
     state: 'Google Meet / Zoom',
     imageUrl: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80',
     bannerUrl: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=85',
-    organizers: [organizers[1], organizers[0], organizers[3]],
+    organizers: [...organizers],
     speakers: [
       {
         id: 'spk-004',
