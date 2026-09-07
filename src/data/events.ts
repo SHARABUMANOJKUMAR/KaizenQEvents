@@ -107,21 +107,12 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     speakers: [
       {
         id: 'spk-002',
-<<<<<<< HEAD
-        name: 'Maddipatla Reddi Prasanna',
-        designation: 'AI/ML Lead Instructor & Data Scientist',
-        company: 'Kaizen Q Events',
-        bio: 'Maddipatla Reddi Prasanna specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
-        imageUrl: '/speakers/laxmi-prasanna.jpg',
-        linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
-=======
         name: 'Reddy Prasanna',
         designation: 'AI/ML & Python Bootcamp Speaker',
         company: 'Kaizen Q Events',
         bio: 'Reddy Prasanna Maddipatla specializes in Python programming, machine learning workflows, and autonomous AI architectures for developers and students.',
-        imageUrl: '/speakers/reddy-prasanna.png',
+        imageUrl: '/speakers/reddy-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/reddy-prasanna-maddipatla-279392306',
->>>>>>> ed64990 (feat: unified GDG AuthModal, authentic cinema ticket pass, clean registration flow, and updated organizers/speakers)
       },
     ],
     schedule: [

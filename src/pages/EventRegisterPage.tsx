@@ -41,11 +41,6 @@ const EventRegisterPage: React.FC = () => {
   const [college, setCollege] = useState(user?.college || '');
   const [branch, setBranch] = useState(user?.branch || '');
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> ed64990 (feat: unified GDG AuthModal, authentic cinema ticket pass, clean registration flow, and updated organizers/speakers)
   // Auto populate user info if user state updates
   useEffect(() => {
     if (user) {
@@ -72,14 +67,10 @@ const EventRegisterPage: React.FC = () => {
     }
     window.scrollTo({ top: 0 });
 
-<<<<<<< HEAD
-
-=======
     if (!isLoggedIn) {
       openAuthModal('login', `/events/${eventId}/register`);
     }
   }, [eventId, isLoggedIn]);
->>>>>>> ed64990 (feat: unified GDG AuthModal, authentic cinema ticket pass, clean registration flow, and updated organizers/speakers)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -259,17 +250,9 @@ const EventRegisterPage: React.FC = () => {
         ) : (
           /* Registration Form */
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6">
-<<<<<<< HEAD
-            <div className="border-b border-[#E8EAED] pb-4 flex justify-between items-center flex-wrap gap-2">
-              <div>
-                <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
-                <p className="text-xs text-[#5F6368]">Please fill in your basic details to complete registration.</p>
-              </div>
-=======
             <div className="border-b border-[#E8EAED] pb-4">
               <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
               <p className="text-xs text-[#5F6368] mt-0.5">Please fill in your basic details to complete registration and generate your verified pass.</p>
->>>>>>> ed64990 (feat: unified GDG AuthModal, authentic cinema ticket pass, clean registration flow, and updated organizers/speakers)
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
