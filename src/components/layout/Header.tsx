@@ -225,14 +225,6 @@ export const Header: React.FC = () => {
               ) : (
                 <div className="flex items-center gap-2">
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate('/login')}
-                    id="header-login-btn"
-                  >
-                    Login / Sign Up
-                  </Button>
-                  <Button
                     variant="primary"
                     size="sm"
                     onClick={() => navigate('/login')}

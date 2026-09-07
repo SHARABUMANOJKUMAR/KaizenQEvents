@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft, Calendar, Clock, MapPin, CheckCircle2,
-  User, Mail, Phone, GraduationCap, Building, BookOpen, Settings, Sparkles, ExternalLink, ShieldCheck
+  User, Mail, Phone, GraduationCap, Building, BookOpen
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -24,7 +24,7 @@ const YEAR_OPTIONS = [
 const EventRegisterPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { user, isLoggedIn } = useAuth();
+  const { user } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);

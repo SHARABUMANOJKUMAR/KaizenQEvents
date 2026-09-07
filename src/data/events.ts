@@ -39,8 +39,11 @@ This is an interactive online live workshop — you will be writing commands, cr
       { time: '06:00 PM – 07:30 PM', title: 'Day 3 (23 Sep): Pull Requests, Merge Conflicts & Open Source', description: 'Resolving merge conflicts, PR code reviews, open-source workflows & verified certification.', type: 'session' },
     ],
     partners: [
-      { id: 'prt-001', name: 'KQE Community', type: 'Community', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465425/KAIZEN_Q_EVENTS_FAVICON_o8hwrj.png' },
-      { id: 'prt-002', name: 'OpenSource Collective', type: 'Tech', logoUrl: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=200&q=80' },
+      { id: 'prt-001', name: 'Kaizen Q', type: 'Skill Trainer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803368/Kaizen_Q_Logo_with_Background_qy0d1n.png' },
+      { id: 'prt-002', name: 'Tenspick', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802316/Picsart_25-11-12_13-19-54-694_j76nir.png' },
+      { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
+      { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
+      { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -107,10 +110,10 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     speakers: [
       {
         id: 'spk-002',
-        name: 'Maddipatla Reddi Prasanna',
+        name: 'Laxmi Prasanna Narapareddy',
         designation: 'AI/ML Lead Instructor & Data Scientist',
         company: 'Kaizen Q Events',
-        bio: 'Maddipatla Reddi Prasanna specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
+        bio: 'Laxmi Prasanna Narapareddy specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
         imageUrl: '/speakers/laxmi-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
       },
@@ -123,8 +126,11 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
       { time: '06:00 PM – 07:30 PM', title: 'Day 5 (02 Oct): Capstone AI Project & FastAPI Deployment', description: 'Deploying your AI agent as a REST API and verified certificate distribution.', type: 'session' },
     ],
     partners: [
-      { id: 'prt-001', name: 'KQE Community', type: 'Community', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465425/KAIZEN_Q_EVENTS_FAVICON_o8hwrj.png' },
-      { id: 'prt-005', name: 'AI Research Institute', type: 'Tech', logoUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=200&q=80' },
+      { id: 'prt-001', name: 'Kaizen Q', type: 'Skill Trainer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803368/Kaizen_Q_Logo_with_Background_qy0d1n.png' },
+      { id: 'prt-002', name: 'Tenspick', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802316/Picsart_25-11-12_13-19-54-694_j76nir.png' },
+      { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
+      { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
+      { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -198,8 +204,11 @@ In this hands-on masterclass, you will learn how to build AI-powered microservic
       { time: '06:00 PM – 07:30 PM', title: 'Day 5 (07 Oct): Security Guardrails, Production Deployment & Certs', description: 'Rate limiting, prompt safety, docker deployment, and certificate distribution.', type: 'session' },
     ],
     partners: [
-      { id: 'prt-001', name: 'KQE Community', type: 'Community', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465425/KAIZEN_Q_EVENTS_FAVICON_o8hwrj.png' },
-      { id: 'prt-002', name: 'Tech Innovators Pvt Ltd', type: 'Tech', logoUrl: 'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=200&q=80' },
+      { id: 'prt-001', name: 'Kaizen Q', type: 'Skill Trainer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803368/Kaizen_Q_Logo_with_Background_qy0d1n.png' },
+      { id: 'prt-002', name: 'Tenspick', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802316/Picsart_25-11-12_13-19-54-694_j76nir.png' },
+      { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
+      { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
+      { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -273,8 +282,11 @@ Discover how to fine-tune open-weights models (Llama 3, Mistral), implement adva
       { time: '06:00 PM – 07:30 PM', title: 'Day 5 (12 Oct): Multimodal AI, Model Evaluation & Certifications', description: 'Vision & Audio AI pipelines, model evaluation metrics & certificate issuance.', type: 'session' },
     ],
     partners: [
-      { id: 'prt-001', name: 'KQE Community', type: 'Community', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465425/KAIZEN_Q_EVENTS_FAVICON_o8hwrj.png' },
-      { id: 'prt-006', name: 'StartupHub Bengaluru', type: 'Sponsor', logoUrl: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=200&q=80' },
+      { id: 'prt-001', name: 'Kaizen Q', type: 'Skill Trainer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803368/Kaizen_Q_Logo_with_Background_qy0d1n.png' },
+      { id: 'prt-002', name: 'Tenspick', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802316/Picsart_25-11-12_13-19-54-694_j76nir.png' },
+      { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
+      { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
+      { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
