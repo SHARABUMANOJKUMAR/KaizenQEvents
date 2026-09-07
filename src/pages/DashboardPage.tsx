@@ -10,6 +10,7 @@ import { registrationService } from '../services/registration';
 import { events } from '../data/events';
 import type { Event } from '../types';
 import { formatDateRange } from '../utils';
+import { SEO } from '../components/SEO';
 
 interface UserRegistration {
   eventId: string;
@@ -77,6 +78,11 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-10 sm:py-14 fade-in">
+      <SEO 
+        title="My Dashboard | Kaizen Q Events" 
+        description="View your registered bootcamps and tech events." 
+        noindex={true} 
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Top Header Card */}
         <div className="bg-white border border-[#E8EAED] rounded-3xl p-6 sm:p-8 shadow-sm">

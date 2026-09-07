@@ -4,6 +4,7 @@ import { organizerService } from '../services';
 import type { OrganizerProfile } from '../types';
 import { Input, Skeleton } from '../components/ui';
 import { OrganizerCard } from '../components/organizer/OrganizerCard';
+import { SEO } from '../components/SEO';
 
 const OrganizerCardSkeleton: React.FC = () => (
   <div className="bg-white border border-[#E8EAED] rounded-xl p-6 flex flex-col items-center gap-4">
@@ -48,6 +49,11 @@ const OrganizersPage: React.FC = () => {
 
   return (
     <div className="fade-in bg-white min-h-screen">
+      <SEO 
+        title="Kaizen Q Events Organizers | Meet the Tech Community Leaders"
+        description="Meet the passionate organizers and leaders behind Kaizen Q Events who power technology bootcamps, hackathons, and developer communities across India."
+        canonical="/organizers"
+      />
       {/* Page header */}
       <div className="bg-[#F8F9FA] border-b border-[#E8EAED] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

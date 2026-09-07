@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Target, Zap, Users, Globe, Heart, BookOpen } from 'lucide-react';
 import { Button } from '../components/ui';
+import { SEO } from '../components/SEO';
 
 const AboutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,6 +43,11 @@ const AboutPage: React.FC = () => {
 
   return (
     <div className="fade-in bg-white min-h-screen">
+      <SEO 
+        title="About Kaizen Q Events | Building India's Technology Community"
+        description="Learn about Kaizen Q Events, our mission to democratize technology education, and how we are building India's most vibrant developer and student community."
+        canonical="/about"
+      />
       {/* Hero */}
       <div className="relative bg-gradient-to-br from-[#EBF3FF] to-white border-b border-[#E8EAED] py-16 sm:py-24 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#4285F4]/5 blur-3xl pointer-events-none" />

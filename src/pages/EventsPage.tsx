@@ -5,6 +5,7 @@ import type { Event, EventCategory, EventStatus, EventTab } from '../types';
 import { Input, Button } from '../components/ui';
 import { EventGrid, CategoryFilter } from '../components/events/EventGrid';
 import { cn } from '../utils';
+import { SEO } from '../components/SEO';
 
 const TABS: { id: EventTab; label: string }[] = [
   { id: 'upcoming', label: 'Upcoming' },
@@ -82,6 +83,11 @@ const EventsPage: React.FC = () => {
 
   return (
     <div className="fade-in min-h-screen bg-white">
+      <SEO 
+        title="Upcoming Technology Events, Hackathons & Workshops | Kaizen Q Events"
+        description="Discover upcoming technology events, coding competitions, hackathons, and developer workshops. Register today and join the Kaizen Q Events tech community."
+        canonical="/events"
+      />
       {/* Page header */}
       <div className="bg-[#F8F9FA] border-b border-[#E8EAED] py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

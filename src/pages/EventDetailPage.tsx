@@ -13,6 +13,7 @@ import {
 } from '../components/ui';
 import { SpeakerCard } from '../components/organizer/OrganizerCard';
 import { formatShortDate, formatDateRange, cn } from '../utils';
+import { SEO } from '../components/SEO';
 
 const InstagramIcon = () => (
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
@@ -210,8 +211,36 @@ const EventDetailPage: React.FC = () => {
     </Button>
   );
 
+  const eventSchema = event ? {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": event.title,
+    "description": event.description || `Join us for ${event.title} in ${event.location}.`,
+    "startDate": new Date(event.date).toISOString(),
+    "endDate": new Date(new Date(event.date).getTime() + 86400000).toISOString(),
+    "eventStatus": event.status === 'Closed' ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
+    "eventAttendanceMode": event.format === 'Virtual' ? "https://schema.org/OnlineEventAttendanceMode" : event.format === 'Hybrid' ? "https://schema.org/MixedEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
+    "location": {
+      "@type": event.format === 'Virtual' ? "VirtualLocation" : "Place",
+      "name": event.location,
+      "address": event.location
+    },
+    "image": event.bannerUrl,
+    "organizer": {
+      "@type": "Organization",
+      "name": "Kaizen Q Events",
+      "url": "https://kaizenqevents.com"
+    }
+  } : undefined;
+
   return (
     <div className="fade-in bg-white min-h-screen">
+      <SEO 
+        title={`${event.title} | ${event.location} | Kaizen Q Events`}
+        description={event.description || `Join us for ${event.title} in ${event.location}. Discover technology events and workshops.`}
+        canonical={`/events/${event.id}`}
+        structuredData={eventSchema}
+      />
       {/* Share toast */}
       {shareToast && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#1A1A2E] text-white text-sm px-5 py-3 rounded-full shadow-xl animate-fade-in">

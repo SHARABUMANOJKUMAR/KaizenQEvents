@@ -4,6 +4,7 @@ import { communityService } from '../services';
 import type { Community } from '../types';
 import { Input, Skeleton } from '../components/ui';
 import { CommunityCard } from '../components/community/CommunityCard';
+import { SEO } from '../components/SEO';
 
 const STATES = ['All', 'Andhra Pradesh', 'Telangana', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Maharashtra'];
 
@@ -30,6 +31,11 @@ const CommunitiesPage: React.FC = () => {
 
   return (
     <div className="fade-in bg-white min-h-screen">
+      <SEO 
+        title="Developer & Student Technology Community | Kaizen Q Events"
+        description="Join the fastest growing technology community in India. Connect with developers, students, and tech enthusiasts in your city."
+        canonical="/communities"
+      />
       {/* Header */}
       <div className="bg-[#F8F9FA] border-b border-[#E8EAED] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

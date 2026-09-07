@@ -10,6 +10,7 @@ import { CommunityCard } from '../components/community/CommunityCard';
 import { eventService, communityService } from '../services';
 import type { Event, Community, EventCategory } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { SEO } from '../components/SEO';
 
 // ============================================================
 // HERO SECTION
@@ -448,8 +449,27 @@ const HomePage: React.FC = () => {
     eventService.search({ query, category }).then(setFilteredEvents);
   }, [query, category]);
 
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Kaizen Q Events",
+    "url": "https://kaizenqevents.com",
+    "logo": "https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png",
+    "description": "Kaizen Q Events connects developers, students, builders, innovators and technology enthusiasts through hackathons, coding competitions, workshops, conferences and technology community events.",
+    "sameAs": [
+      "https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332/",
+      "https://www.instagram.com/kaizenq_lms/"
+    ]
+  };
+
   return (
     <div className="fade-in">
+      <SEO 
+        title="Kaizen Q Events | Global Technology Events, Hackathons & Developer Community"
+        description="Kaizen Q Events connects developers, students, builders, innovators and technology enthusiasts through hackathons, coding competitions, workshops, conferences and technology community events."
+        structuredData={orgSchema}
+        canonical="/"
+      />
       <HeroSection />
 
       <EventDiscoverySection

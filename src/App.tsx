@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { MainLayout } from './components/layout/MainLayout';
 import { Skeleton } from './components/ui';
 import { AuthProvider } from './context/AuthContext';
@@ -30,11 +31,12 @@ const PageLoader: React.FC = () => (
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Suspense fallback={<div className="min-h-screen"><PageLoader /></div>}>
-          <Routes>
-            {/* Login page — no layout wrapper */}
+    <HelmetProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Suspense fallback={<div className="min-h-screen"><PageLoader /></div>}>
+            <Routes>
+              {/* Login page — no layout wrapper */}
             <Route path="/login" element={<LoginPage />} />
 
             {/* All other pages use MainLayout */}
@@ -125,6 +127,7 @@ const App: React.FC = () => {
         </Suspense>
       </BrowserRouter>
     </AuthProvider>
+    </HelmetProvider>
   );
 };
 

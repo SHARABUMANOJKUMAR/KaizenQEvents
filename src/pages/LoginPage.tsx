@@ -7,6 +7,7 @@ import {
 import { Button } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { GoogleOAuthModal } from '../components/auth/GoogleOAuthModal';
+import { SEO } from '../components/SEO';
 
 const YEAR_OPTIONS = [
   '1st Year',
@@ -128,6 +129,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4 py-12">
+      <SEO 
+        title="Log In | Kaizen Q Events" 
+        description="Sign in to your Kaizen Q Events account" 
+        noindex={true} 
+      />
       <GoogleOAuthModal
         isOpen={googleModalOpen}
         onClose={() => setGoogleModalOpen(false)}
