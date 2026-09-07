@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCKPJ4klGTGxdgTxC3Q93YiaTZixlI0vE0",
@@ -20,4 +20,4 @@ googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
 
-export { signInWithPopup, signOut };
+export { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword };

@@ -50,7 +50,7 @@ export interface OrganizerProfile {
 export interface Partner {
   id: string;
   name: string;
-  type: 'Community' | 'Tech' | 'Education' | 'Media' | 'Sponsor';
+  type: 'Community' | 'Tech' | 'Education' | 'Media' | 'Sponsor' | 'Skill Trainer' | 'Event Organizer';
   logoUrl: string;
   website?: string;
 }

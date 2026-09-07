@@ -25,12 +25,12 @@ This is an interactive online live workshop — you will be writing commands, cr
     speakers: [
       {
         id: 'spk-001',
-        name: 'Lakshmi Prasanna Narapareddy',
+        name: 'Reddy Prasanna Maddipatla',
         designation: 'Git & Open Source Lead Instructor',
         company: 'Kaizen Q Events',
-        bio: 'Lakshmi Prasanna Narapareddy leads Git, GitHub, and open-source bootcamps, empowering students and developers to master version control, collaborative workflows, and software engineering.',
-        imageUrl: '/speakers/laxmi-prasanna.jpg',
-        linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
+        bio: 'Reddy Prasanna Maddipatla leads Git, GitHub, and open-source bootcamps, empowering students and developers to master version control, collaborative workflows, and software engineering.',
+        imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788806844/Reddi_Prassana_iqifrl.jpg',
+        linkedin: 'https://www.linkedin.com/in/reddy-prasanna-maddipatla-279392306',
       },
     ],
     schedule: [
@@ -84,7 +84,7 @@ This is an interactive online live workshop — you will be writing commands, cr
       'Access to KQE community WhatsApp group & Slack',
       'Recorded session access post-event',
     ],
-    tags: ['Git', 'GitHub', '3 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Lakshmi Prasanna'],
+    tags: ['Git', 'GitHub', '3 Days Bootcamp', 'Online', 'Evening 6:00-7:30 PM', 'Reddy Prasanna Maddipatla'],
     whatsappGroupUrl: 'https://chat.whatsapp.com/Gmeo93g8weuACs0v6tiIxx?s=sh&p=a&mlu=4&ilr=4',
     maxAttendees: 150,
     currentAttendees: 1,

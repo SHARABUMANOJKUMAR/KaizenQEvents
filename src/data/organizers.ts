@@ -30,10 +30,10 @@ export const organizers: OrganizerProfile[] = [
   },
   {
     id: 'org-003',
-    name: 'Reddy Prasanna',
+    name: 'Reddy Prasanna Maddipatla',
     company: 'Kaizen Q Events',
     role: 'Python & AI Lead Instructor',
-    imageUrl: '/speakers/reddy-prasanna.jpg',
+    imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788806844/Reddi_Prassana_iqifrl.jpg',
     bio: 'Reddy Prasanna Maddipatla specializes in Python programming, machine learning workflows, and building agentic AI solutions for developers and students.',
     linkedin: 'https://www.linkedin.com/in/reddy-prasanna-maddipatla-279392306',
   },

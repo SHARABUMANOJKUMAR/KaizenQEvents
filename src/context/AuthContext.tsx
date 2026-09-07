@@ -7,19 +7,9 @@ interface AuthContextType {
   user: UserProfile | null;
   loading: boolean;
   isLoggedIn: boolean;
-  loginWithGoogle: (customEmail?: string, customName?: string) => Promise<UserProfile>;
+  loginWithGoogle: () => Promise<UserProfile>;
   loginWithEmail: (params: LoginWithEmailParams) => Promise<UserProfile>;
   registerWithEmail: (params: RegisterWithEmailParams) => Promise<UserProfile>;
-  sendOtp: (email: string) => Promise<{ success: boolean; message: string; otp?: string }>;
-  verifyOtp: (payload: {
-    email: string;
-    otp: string;
-    fullName?: string;
-    college?: string;
-    branch?: string;
-    year?: string;
-    phone?: string;
-  }) => Promise<UserProfile>;
   logout: () => Promise<void>;
   openAuthModal: (mode?: 'login' | 'signup', redirectAfter?: string) => void;
   closeAuthModal: () => void;
@@ -53,9 +43,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthModalRedirect(undefined);
   };
 
-  const loginWithGoogle = async (customEmail?: string, customName?: string) => {
+  const loginWithGoogle = async () => {
     setLoading(true);
-    const loggedInUser = await authService.loginWithGoogle(customEmail, customName);
+    const loggedInUser = await authService.loginWithGoogle();
     setUser(loggedInUser);
     setLoading(false);
     return loggedInUser;
@@ -77,26 +67,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return registeredUser;
   };
 
-  const sendOtp = async (email: string) => {
-    return authService.sendOtp(email);
-  };
-
-  const verifyOtp = async (payload: {
-    email: string;
-    otp: string;
-    fullName?: string;
-    college?: string;
-    branch?: string;
-    year?: string;
-    phone?: string;
-  }) => {
-    setLoading(true);
-    const verifiedUser = await authService.verifyOtp(payload);
-    setUser(verifiedUser);
-    setLoading(false);
-    return verifiedUser;
-  };
-
   const logout = async () => {
     setLoading(true);
     await authService.logout();
@@ -113,8 +83,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginWithGoogle,
         loginWithEmail,
         registerWithEmail,
-        sendOtp,
-        verifyOtp,
         logout,
         openAuthModal,
         closeAuthModal,

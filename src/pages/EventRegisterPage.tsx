@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ChevronLeft, Calendar, Clock, MapPin, CheckCircle2,
-  User, Mail, Phone, GraduationCap, Building, BookOpen
+  User, Mail, Phone, GraduationCap, Building, BookOpen, KeyRound, AlertCircle
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -24,7 +24,7 @@ const YEAR_OPTIONS = [
 const EventRegisterPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, registerWithEmail } = useAuth();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,10 +39,9 @@ const EventRegisterPage: React.FC = () => {
   const [year, setYear] = useState(user?.year || '3rd Year');
   const [college, setCollege] = useState(user?.college || '');
   const [branch, setBranch] = useState(user?.branch || '');
-
-
-
-  // Auto populate user info if user state updates
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [authError, setAuthError] = useState('');  // Auto populate user info if user state updates
   useEffect(() => {
     if (user) {
       if (user.displayName && !fullName) setFullName(user.displayName);
@@ -75,7 +74,43 @@ const EventRegisterPage: React.FC = () => {
     e.preventDefault();
     if (!event) return;
 
+    setAuthError('');
+    
+    if (!user) {
+      if (!password || !confirmPassword) {
+        setAuthError('Password is required for registration.');
+        return;
+      }
+      if (password !== confirmPassword) {
+        setAuthError('Passwords do not match.');
+        return;
+      }
+      if (password.length < 6) {
+        setAuthError('Password must be at least 6 characters.');
+        return;
+      }
+    }
+
     setSubmitting(true);
+
+    if (!user) {
+      try {
+        await registerWithEmail({
+          email: email.trim(),
+          password,
+          confirmPassword,
+          displayName: fullName.trim(),
+          phone: phone.trim(),
+          college: college.trim(),
+          branch: branch.trim(),
+          year: year
+        });
+      } catch (err: any) {
+        setAuthError(err.message || 'Failed to create account.');
+        setSubmitting(false);
+        return;
+      }
+    }
 
     const payload = {
       eventId: event.id,
@@ -283,6 +318,12 @@ const EventRegisterPage: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              {authError && (
+                <div className="p-3.5 rounded-xl text-xs flex items-start gap-2.5 bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2] transition-all">
+                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                  <span className="font-medium leading-relaxed">{authError}</span>
+                </div>
+              )}
               {/* Full Name */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
@@ -347,6 +388,51 @@ const EventRegisterPage: React.FC = () => {
               </div>
 
               {/* Grid: Year of Study & Branch */}
+              
+              {!user && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Password */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
+                      Password <span className="text-[#EA4335]">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9AA0A6]">
+                        <KeyRound size={16} />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
+                      Confirm Password <span className="text-[#EA4335]">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9AA0A6]">
+                        <KeyRound size={16} />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E8EAED] rounded-xl text-sm font-medium text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:border-[#4285F4] focus:ring-2 focus:ring-[#4285F4]/15 transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Year of Study */}
                 <div>
