@@ -71,8 +71,10 @@ export const registrationService = {
     };
 
     try {
-      // 1. High-throughput write to Firestore
-      await addDoc(collection(db, 'registrations'), payload);
+      // 1. High-throughput write to Firestore (Non-blocking / Optimistic UI)
+      addDoc(collection(db, 'registrations'), payload).catch((err) => {
+        console.error('Background Firestore sync failed:', err);
+      });
       
       // 2. Cache locally for immediate UI updates without refetching
       try {
