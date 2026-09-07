@@ -212,13 +212,13 @@ const EventDetailPage: React.FC = () => {
     </Button>
   );
 
-  const eventSchema = event ? {
+  const eventSchema = {
     "@context": "https://schema.org",
     "@type": "Event",
     "name": event.title,
     "description": event.description || `Join us for ${event.title} in ${event.city}.`,
     "startDate": new Date(event.date).toISOString(),
-    "endDate": new Date(new Date(event.date).getTime() + 86400000).toISOString(),
+    "endDate": new Date(event.endDate || event.date).toISOString(),
     "eventStatus": event.status === 'Closed' ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
     "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
     "location": {
@@ -232,7 +232,7 @@ const EventDetailPage: React.FC = () => {
       "name": "Kaizen Q Events",
       "url": "https://kaizenqevents.com"
     }
-  } : undefined;
+  };
 
   return (
     <div className="fade-in bg-white min-h-screen">

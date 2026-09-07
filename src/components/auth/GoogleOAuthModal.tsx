@@ -29,7 +29,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
     },
   ];
 
-  const handleSelectAccount = async (/* email: string, name: string */) => {
+  const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
       const user = await loginWithGoogle();
@@ -46,7 +46,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
     e.preventDefault();
     if (!customEmail.trim() || !customEmail.includes('@')) return;
 
-    await handleSelectAccount();
+    await handleGoogleSignIn();
   };
 
   return (
@@ -107,7 +107,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
               {defaultAccounts.map((acc) => (
                 <button
                   key={acc.email}
-                  onClick={() => handleSelectAccount()}
+                  onClick={handleGoogleSignIn}
                   className="w-full px-3 py-3.5 flex items-center justify-between text-left hover:bg-[#F8F9FA] rounded-2xl transition-all group"
                 >
                   <div className="flex items-center gap-3.5">
