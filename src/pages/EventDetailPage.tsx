@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   MapPin, Calendar, Clock,
   ChevronLeft, Users, MessageCircle, ThumbsUp, CheckCircle2,
-  Share2, Heart, Award, BookOpen, Gift, User2, Building2
+  BookOpen, Gift, User2, Building2
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -142,7 +142,6 @@ const EventDetailPage: React.FC = () => {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [shareToast, setShareToast] = useState(false);
   const [dbRegisteredCount, setDbRegisteredCount] = useState(0);
   const stickyRef = useRef<HTMLDivElement>(null);
 
@@ -170,12 +169,7 @@ const EventDetailPage: React.FC = () => {
     navigate(`/events/${event.id}/register`);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleShare = () => {
-    navigator.clipboard?.writeText(window.location.href).catch(() => {});
-    setShareToast(true);
-    setTimeout(() => setShareToast(false), 2500);
-  };
+
 
   const registeredCount = event
     ? Math.max(1, (event.currentAttendees || 1) + (dbRegisteredCount > 1 ? dbRegisteredCount - 1 : 0))
@@ -222,15 +216,15 @@ const EventDetailPage: React.FC = () => {
     "@context": "https://schema.org",
     "@type": "Event",
     "name": event.title,
-    "description": event.description || `Join us for ${event.title} in ${event.location}.`,
+    "description": event.description || `Join us for ${event.title} in ${event.city}.`,
     "startDate": new Date(event.date).toISOString(),
     "endDate": new Date(new Date(event.date).getTime() + 86400000).toISOString(),
     "eventStatus": event.status === 'Closed' ? "https://schema.org/EventCancelled" : "https://schema.org/EventScheduled",
-    "eventAttendanceMode": event.format === 'Virtual' ? "https://schema.org/OnlineEventAttendanceMode" : event.format === 'Hybrid' ? "https://schema.org/MixedEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
     "location": {
-      "@type": event.format === 'Virtual' ? "VirtualLocation" : "Place",
-      "name": event.location,
-      "address": event.location
+      "@type": "Place",
+      "name": event.venue?.name || event.city,
+      "address": event.venue?.address || event.city
     },
     "image": event.bannerUrl,
     "organizer": {
@@ -243,17 +237,12 @@ const EventDetailPage: React.FC = () => {
   return (
     <div className="fade-in bg-white min-h-screen">
       <SEO 
-        title={`${event.title} | ${event.location} | Kaizen Q Events`}
-        description={event.description || `Join us for ${event.title} in ${event.location}. Discover technology events and workshops.`}
+        title={`${event.title} | ${event.city} | Kaizen Q Events`}
+        description={event.description || `Join us for ${event.title} in ${event.city}. Discover technology events and workshops.`}
         canonical={`/events/${event.id}`}
         structuredData={eventSchema}
       />
-      {/* Share toast */}
-      {shareToast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#1A1A2E] text-white text-sm px-5 py-3 rounded-full shadow-xl animate-fade-in">
-          Link copied to clipboard!
-        </div>
-      )}
+
 
       {/* ── Banner ── */}
       <div className="relative w-full overflow-hidden" style={{ maxHeight: 420 }}>

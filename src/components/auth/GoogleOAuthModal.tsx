@@ -29,10 +29,10 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
     },
   ];
 
-  const handleSelectAccount = async (email: string, name: string) => {
+  const handleSelectAccount = async (/* email: string, name: string */) => {
     setLoading(true);
     try {
-      const user = await loginWithGoogle(email, name);
+      const user = await loginWithGoogle();
       onSuccess(user.displayName);
       onClose();
     } catch (err) {
@@ -46,9 +46,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
     e.preventDefault();
     if (!customEmail.trim() || !customEmail.includes('@')) return;
 
-    const emailToUse = customEmail.trim().toLowerCase();
-    const generatedName = emailToUse.split('@')[0].replace('.', ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-    await handleSelectAccount(emailToUse, generatedName);
+    await handleSelectAccount();
   };
 
   return (
@@ -109,7 +107,7 @@ export const GoogleOAuthModal: React.FC<GoogleOAuthModalProps> = ({ isOpen, onCl
               {defaultAccounts.map((acc) => (
                 <button
                   key={acc.email}
-                  onClick={() => handleSelectAccount(acc.email, acc.name)}
+                  onClick={() => handleSelectAccount()}
                   className="w-full px-3 py-3.5 flex items-center justify-between text-left hover:bg-[#F8F9FA] rounded-2xl transition-all group"
                 >
                   <div className="flex items-center gap-3.5">
