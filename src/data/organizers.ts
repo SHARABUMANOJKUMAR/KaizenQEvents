@@ -21,11 +21,11 @@ export const organizers: OrganizerProfile[] = [
   },
   {
     id: 'org-003',
-    name: 'Laxmi Prasanna Narapareddy',
+    name: 'Maddipatla Reddi Prasanna',
     company: 'Kaizen Q Events',
     role: 'AI/ML Lead & Open Source Mentor',
     imageUrl: '/speakers/laxmi-prasanna.jpg',
-    bio: 'Laxmi Prasanna Narapareddy leads Python AI and open-source bootcamps, empowering students and developers to master autonomous agent workflows, version control, and data engineering.',
+    bio: 'Maddipatla Reddi Prasanna leads Python AI and open-source bootcamps, empowering students and developers to master autonomous agent workflows, version control, and data engineering.',
     linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
   },
   {

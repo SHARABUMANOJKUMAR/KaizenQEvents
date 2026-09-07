@@ -25,10 +25,10 @@ This is an interactive online live workshop — you will be writing commands, cr
     speakers: [
       {
         id: 'spk-001',
-        name: 'Laxmi Prasanna Narapareddy',
+        name: 'Maddipatla Reddi Prasanna',
         designation: 'AI/ML Engineer & Open Source Mentor',
         company: 'Kaizen Q Events',
-        bio: 'Laxmi Prasanna Narapareddy is an experienced software engineer and mentor passionate about guiding students through real-world version control, Python, and collaborative workflows.',
+        bio: 'Maddipatla Reddi Prasanna is an experienced software engineer and mentor passionate about guiding students through real-world version control, Python, and collaborative workflows.',
         imageUrl: '/speakers/laxmi-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
       },
@@ -107,10 +107,10 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     speakers: [
       {
         id: 'spk-002',
-        name: 'Laxmi Prasanna Narapareddy',
+        name: 'Maddipatla Reddi Prasanna',
         designation: 'AI/ML Lead Instructor & Data Scientist',
         company: 'Kaizen Q Events',
-        bio: 'Laxmi Prasanna Narapareddy specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
+        bio: 'Maddipatla Reddi Prasanna specializes in Python AI architectures, machine learning workflows, and building agentic LLM solutions for developers and students.',
         imageUrl: '/speakers/laxmi-prasanna.jpg',
         linkedin: 'https://www.linkedin.com/in/laxmi-prasanna-narapareddy-062656332',
       },

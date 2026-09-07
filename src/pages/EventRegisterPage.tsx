@@ -40,10 +40,7 @@ const EventRegisterPage: React.FC = () => {
   const [college, setCollege] = useState(user?.college || '');
   const [branch, setBranch] = useState(user?.branch || '');
 
-  // Google Sheet Webhook URL State
-  const [webhookUrl, setWebhookUrlState] = useState('');
-  const [showConfig, setShowConfig] = useState(false);
-  const [savedUrlMsg, setSavedUrlMsg] = useState(false);
+
 
   // Auto populate user info if user state updates
   useEffect(() => {
@@ -63,7 +60,6 @@ const EventRegisterPage: React.FC = () => {
       eventService.getById(eventId).then((evt) => {
         if (evt) {
           setEvent(evt);
-          setWebhookUrlState(registrationService.getEventWebhookUrl(evt.id));
         }
         setLoading(false);
       });
@@ -73,14 +69,7 @@ const EventRegisterPage: React.FC = () => {
     window.scrollTo({ top: 0 });
   }, [eventId]);
 
-  const handleSaveWebhook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (event) {
-      registrationService.setEventWebhookUrl(event.id, webhookUrl);
-      setSavedUrlMsg(true);
-      setTimeout(() => setSavedUrlMsg(false), 2500);
-    }
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -291,81 +280,7 @@ const EventRegisterPage: React.FC = () => {
                 <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
                 <p className="text-xs text-[#5F6368]">Please fill in your basic details to complete registration.</p>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowConfig(!showConfig)}
-                className="text-xs text-[#4285F4] hover:underline flex items-center gap-1 font-medium"
-              >
-                <Settings size={14} />
-                Google Sheet Config
-              </button>
             </div>
-
-            {/* Signed-in user notification bar */}
-            {isLoggedIn && user ? (
-              <div className="bg-[#E6F4EA] border border-[#34A853]/30 rounded-xl p-3.5 flex items-center justify-between text-xs text-[#137333]">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck size={16} className="text-[#34A853] shrink-0" />
-                  <span>
-                    Logged in as <strong>{user.displayName}</strong> ({user.email}) via {user.authProvider === 'google' ? 'Google Authentication' : 'Email'}. Details auto-filled!
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div className="bg-[#EBF3FF] border border-[#4285F4]/30 rounded-xl p-3.5 flex items-center justify-between text-xs text-[#1A73E8]">
-                <span>Want to auto-fill your details? Sign in with Google or Email.</span>
-                <button
-                  type="button"
-                  onClick={() => navigate('/login', { state: { from: `/events/${event.id}/register` } })}
-                  className="font-bold text-[#4285F4] hover:underline shrink-0 ml-2"
-                >
-                  Sign In →
-                </button>
-              </div>
-            )}
-
-            {/* Collapsible Google Sheet Webhook Configuration */}
-            {showConfig && (
-              <div className="bg-[#EEF4FE] border border-[#4285F4]/30 rounded-xl p-4 text-xs space-y-3 fade-in">
-                <div className="flex items-center justify-between font-semibold text-[#1A1A2E]">
-                  <span className="flex items-center gap-1.5 text-[#4285F4]">
-                    <Sparkles size={15} />
-                    Google Sheet & Service Account Settings for "{event.title}"
-                  </span>
-                  <a
-                    href="https://docs.google.com/spreadsheets/d/1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM/edit?gid=1020517039#gid=1020517039"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[#4285F4] hover:underline text-[11px]"
-                  >
-                    Open Master Google Sheet <ExternalLink size={12} />
-                  </a>
-                </div>
-                <p className="text-[#5F6368] leading-relaxed">
-                  Linked Master Google Sheet ID: <code className="bg-white px-1.5 py-0.5 rounded font-mono text-[#1A1A2E]">1UmbReGn98Wh5uVG9U_CznBEklF4Xokq-fUG87NyE8bM</code>
-                  <br />
-                  Service Account Email: <code className="bg-white px-1.5 py-0.5 rounded font-mono text-[#1A1A2E]">kqe-backend@shaivika-lms-ai.iam.gserviceaccount.com</code>
-                </p>
-                <form onSubmit={handleSaveWebhook} className="flex gap-2 pt-1">
-                  <input
-                    type="url"
-                    value={webhookUrl}
-                    onChange={(e) => setWebhookUrlState(e.target.value)}
-                    placeholder="https://script.google.com/macros/s/.../exec"
-                    className="flex-1 px-3 py-1.5 bg-white border border-[#E8EAED] rounded-lg text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[#4285F4]"
-                  />
-                  <button
-                    type="submit"
-                    className="px-3 py-1.5 bg-[#4285F4] text-white rounded-lg font-semibold hover:bg-[#3367D6] transition-colors"
-                  >
-                    Save URL
-                  </button>
-                </form>
-                {savedUrlMsg && (
-                  <p className="text-[#34A853] font-semibold">✓ Webhook URL saved successfully!</p>
-                )}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Full Name */}
