@@ -9,7 +9,7 @@ import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import { events } from '../data/events';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
 export const EventPassPage: React.FC = () => {
@@ -152,18 +152,15 @@ export const EventPassPage: React.FC = () => {
                 return;
               }
               
-              // Use html-to-image to generate a high quality PNG
-              const dataUrl = await toPng(element, {
-                quality: 1.0,
-                pixelRatio: 2, // High resolution
-                style: {
-                  transform: 'scale(1)',
-                  transformOrigin: 'top left',
-                },
-                fetchRequestInit: {
-                  cache: 'no-cache',
-                }
+              // Use html2canvas for max compatibility
+              const canvas = await html2canvas(element, {
+                scale: 2, // High resolution
+                useCORS: true,
+                allowTaint: false,
+                backgroundColor: '#ffffff'
               });
+              
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.98);
               
               // Calculate PDF dimensions
               // A4 size: 210 x 297 mm
@@ -178,8 +175,7 @@ export const EventPassPage: React.FC = () => {
               
               // We'll calculate the image dimensions to fit within A4
               // while preserving the ticket's aspect ratio.
-              const imgProps = pdf.getImageProperties(dataUrl);
-              const imgRatio = imgProps.width / imgProps.height;
+              const imgRatio = canvas.width / canvas.height;
               
               let drawWidth = pdfWidth;
               let drawHeight = pdfWidth / imgRatio;
@@ -194,7 +190,7 @@ export const EventPassPage: React.FC = () => {
               const x = (pdfWidth - drawWidth) / 2;
               const y = 0; // Top align for ticket
               
-              pdf.addImage(dataUrl, 'PNG', x, y, drawWidth, drawHeight);
+              pdf.addImage(dataUrl, 'JPEG', x, y, drawWidth, drawHeight);
               pdf.save(`Kaizen_Event_Pass_${ticketId}.pdf`);
               
               setIsGenerating(false);
