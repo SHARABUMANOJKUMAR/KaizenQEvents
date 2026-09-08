@@ -6,6 +6,7 @@
   from = "/__/auth/*"
   to = "https://shaivika-lms-ai.firebaseapp.com/__/auth/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
