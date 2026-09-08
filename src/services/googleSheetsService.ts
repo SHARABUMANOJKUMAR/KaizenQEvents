@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-// Public Google Sheets CSV Export URLs
+// Public Google Sheets CSV Export URLs (raw)
 const SHEET_URLS = {
   users: 'https://docs.google.com/spreadsheets/d/1olJiRcGQHhs1bU0LbFeR-i5iKlX53A9sXUiHwSXF6MU/export?format=csv&gid=0',
   logins: 'https://docs.google.com/spreadsheets/d/1olJiRcGQHhs1bU0LbFeR-i5iKlX53A9sXUiHwSXF6MU/export?format=csv&gid=1037440371',
@@ -10,10 +10,29 @@ const SHEET_URLS = {
   javaAI: 'https://docs.google.com/spreadsheets/d/1Xk80UdTZmrXHOc3agRVZjTRmQMWcaW2EuMjhL72OGi4/export?format=csv&gid=0'
 };
 
+// In production (Netlify), route via serverless function to avoid CORS issues.
+// In local dev, hit Google Sheets directly.
+const isProduction = import.meta.env.PROD;
+const sheetKeys: Record<string, string> = {
+  [SHEET_URLS.generativeAI]: 'generativeAI',
+  [SHEET_URLS.pythonAI]: 'pythonAI',
+  [SHEET_URLS.gitGitHub]: 'gitGitHub',
+  [SHEET_URLS.javaAI]: 'javaAI',
+  [SHEET_URLS.users]: 'users',
+  [SHEET_URLS.logins]: 'logins',
+};
+
+function resolveUrl(rawUrl: string): string {
+  if (!isProduction) return rawUrl;
+  const key = sheetKeys[rawUrl];
+  return key ? `/.netlify/functions/fetch-sheet?sheet=${key}` : rawUrl;
+}
+
 // Generic fetch and parse function
 async function fetchSheetData<T>(url: string, mockFallbackData: T[]): Promise<T[]> {
   try {
-    const response = await fetch(url);
+    const resolvedUrl = resolveUrl(url);
+    const response = await fetch(resolvedUrl);
     if (!response.ok) {
       console.warn(`Failed to fetch data: ${response.status}. Using mock data instead.`);
       return mockFallbackData;
