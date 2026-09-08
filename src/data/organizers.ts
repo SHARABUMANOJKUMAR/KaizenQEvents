@@ -55,5 +55,13 @@ export const organizers: OrganizerProfile[] = [
     bio: 'Harshith Dasari coordinates community operations and event management at Kaizen Q Events, bringing students and builders together for immersive tech learning experiences.',
     linkedin: 'https://www.linkedin.com/in/harshith-dasari-615b56356',
   },
+  {
+    id: 'org-007',
+    name: 'Waseem Hussain',
+    company: 'Kaizen Q Events',
+    role: 'Google Student Ambassador',
+    imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788859136/Wassem_Profile_ele3lt.jpg',
+    bio: 'Waseem Hussain is a Google Student Ambassador passionate about AI, Machine Learning, Data Science, and Web Development. He is focused on leadership, innovation, and entrepreneurship, building impactful technology solutions and continuously exploring emerging technologies.',
+    linkedin: 'https://www.linkedin.com/in/waseem-hussain-a74311326',
+  }
 ];
-
