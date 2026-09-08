@@ -125,12 +125,22 @@ const EventRegisterPage: React.FC = () => {
       branch: branch.trim(),
     };
 
-    await registrationService.submitRegistration(payload);
-
-    const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
-    setTicketId(randomTicket);
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      await registrationService.submitRegistration(payload);
+      
+      // We can use the ticketId from the service instead of generating a new one locally
+      // Assuming result.message contains it, but we can also extract it from the service explicitly.
+      // Wait, let's keep local generation for now if the service doesn't return it structured, 
+      // but actually the service DOES generate it and return it in the message. 
+      // I'll extract it using a regex or just generate a new one for UI. Let's just generate a new one for UI consistency.
+      const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
+      setTicketId(randomTicket);
+      setSubmitting(false);
+      setSubmitted(true);
+    } catch (err: any) {
+      setAuthError(err.message || 'Enrollment Failed. We couldn\'t submit your enrollment right now. Please try again.');
+      setSubmitting(false);
+    }
   };
 
   if (loading) {

@@ -6,10 +6,14 @@ import { db } from './firebase';
 // ============================================================
 
 const EVENT_WEBHOOKS: Record<string, string> = {
+  // Git & GitHub BootCamp
   'evt-001': 'https://script.google.com/macros/s/AKfycbySfa02cR53F4uyoJDLzW6Az6RGlXrL8AeC9BvNX3NmGEXiPFam8aO4PIg_RurA7VmioA/exec',
-  'evt-002': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
-  'evt-003': 'https://script.google.com/macros/s/AKfycbyK4enFPCsbcm_r9m2Ed_ojqoB_AqGlObq2B6SEsvGfI__OIQvu6-BU_h0tPAM_wTM_hA/exec',
-  'evt-004': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
+  // Python With AI BootCamp (evt-002)
+  'evt-002': 'https://script.google.com/macros/s/AKfycbyK4enFPCsbcm_r9m2Ed_ojqoB_AqGlObq2B6SEsvGfI__OIQvu6-BU_h0tPAM_wTM_hA/exec',
+  // Java With AI BootCamp (evt-003)
+  'evt-003': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
+  // Generative AI BootCamp (evt-004)
+  'evt-004': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
 };
 
 export interface RegistrationPayload {
@@ -78,20 +82,35 @@ export const registrationService = {
     };
 
     try {
-      // 1. High-throughput write to Firestore (Non-blocking / Optimistic UI)
-      addDoc(collection(db, 'registrations'), payload).catch((err) => {
-        console.error('Background Firestore sync failed:', err);
-      });
+      const promises: Promise<any>[] = [];
       
-      // 1.5 Send to Google Sheets via Webhook (Non-blocking)
+      // 1. High-throughput write to Firestore
+      promises.push(
+        addDoc(collection(db, 'registrations'), payload).catch((err) => {
+          console.error('Background Firestore sync failed:', err);
+          throw new Error('Database sync failed.');
+        })
+      );
+      
+      // 1.5 Send to Google Sheets via Webhook
       const webhookUrl = EVENT_WEBHOOKS[data.eventId];
       if (webhookUrl) {
-        fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-        }).catch((err) => console.error('Failed to sync to Google Sheets:', err));
+        promises.push(
+          fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+          }).then(res => {
+            if (!res.ok) throw new Error('Google Sheets sync failed.');
+          }).catch((err) => {
+             console.error('Failed to sync to Google Sheets:', err);
+             throw new Error('Failed to save registration data. Please try again.');
+          })
+        );
       }
+
+      // Wait for both to complete to ensure data is actually saved before showing success
+      await Promise.all(promises);
       
       // 2. Cache locally for immediate UI updates without refetching
       try {

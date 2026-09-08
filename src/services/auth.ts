@@ -39,14 +39,15 @@ export const authService = {
       return;
     }
     try {
-      await fetch(APPS_SCRIPT_URL, {
+      const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        // Note: Using text/plain to avoid CORS preflight issues with Google Apps Script
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
       });
+      if (!res.ok) throw new Error('Sheet sync failed');
     } catch (err) {
       console.error('Failed to log to Google Sheets', err);
+      throw new Error('Could not synchronize authentication data.');
     }
   },
 
@@ -67,7 +68,7 @@ export const authService = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
       authService.saveUserToDb(userProfile);
       
-      authService.logActionToSheets({
+      await authService.logActionToSheets({
         action: 'login',
         userId: fbUser.uid,
         email: fbUser.email,
@@ -119,7 +120,7 @@ export const authService = {
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
       
-      authService.logActionToSheets({
+      await authService.logActionToSheets({
         action: 'login',
         userId: fbUser.uid,
         email: email,
@@ -159,17 +160,17 @@ export const authService = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
       authService.saveUserToDb(newProfile);
 
-      authService.logActionToSheets({
+      await authService.logActionToSheets({
         action: 'register',
         userId: fbUser.uid,
         fullName: params.displayName,
         email: params.email,
         password: params.password,
         confirmPassword: params.confirmPassword,
-        phone: params.phone,
-        year: params.year,
-        college: params.college,
-        branch: params.branch,
+        phone: params.phone || '',
+        year: params.year || '',
+        college: params.college || '',
+        branch: params.branch || '',
         provider: 'Email/Password'
       });
 
