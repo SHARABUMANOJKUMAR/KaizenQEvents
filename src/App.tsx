@@ -18,6 +18,19 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 
+// Admin pages
+const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
+const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage'));
+const AdminLoginsPage = lazy(() => import('./pages/admin/AdminLoginsPage'));
+const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
+const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage'));
+import { AdminBootcampPage } from './pages/admin/AdminBootcampPage';
+import { GoogleSheetsService } from './services/googleSheetsService';
+
+import { AdminRoute } from './components/admin/AdminRoute';
+import { AdminAuthProvider } from './context/AdminAuthContext';
+
 // Page loading fallback
 const PageLoader: React.FC = () => (
   <div className="min-h-[60vh] flex flex-col gap-4 p-8 max-w-7xl mx-auto w-full">
@@ -35,9 +48,63 @@ const App: React.FC = () => {
   return (
     <HelmetProvider>
       <AuthProvider>
+        <AdminAuthProvider>
         <BrowserRouter>
           <Suspense fallback={<div className="min-h-screen"><PageLoader /></div>}>
             <Routes>
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<AdminLoginPage />} />
+              <Route path="/admin" element={<AdminRoute />}>
+                <Route path="dashboard" element={<AdminDashboardPage />} />
+                <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                
+                <Route path="users" element={<AdminUsersPage />} />
+                <Route path="logins" element={<AdminLoginsPage />} />
+                <Route 
+                  path="generative-ai" 
+                  element={
+                    <AdminBootcampPage 
+                      title="Generative AI BootCamp" 
+                      fetchData={GoogleSheetsService.getGenerativeAIRegistrations}
+                      fileName="generative_ai_registrations.csv"
+                    />
+                  } 
+                />
+                <Route 
+                  path="python-ai" 
+                  element={
+                    <AdminBootcampPage 
+                      title="Python with AI BootCamp" 
+                      fetchData={GoogleSheetsService.getPythonAIRegistrations}
+                      fileName="python_ai_registrations.csv"
+                    />
+                  } 
+                />
+                <Route 
+                  path="git-github" 
+                  element={
+                    <AdminBootcampPage 
+                      title="Git & GitHub BootCamp" 
+                      fetchData={GoogleSheetsService.getGitGithubRegistrations}
+                      fileName="git_github_registrations.csv"
+                    />
+                  } 
+                />
+                <Route 
+                  path="java-ai" 
+                  element={
+                    <AdminBootcampPage 
+                      title="Java with AI BootCamp" 
+                      fetchData={GoogleSheetsService.getJavaAIRegistrations}
+                      fileName="java_ai_registrations.csv"
+                    />
+                  } 
+                />
+                <Route path="analytics" element={<AdminAnalyticsPage />} />
+                <Route path="settings" element={<AdminSettingsPage />} />
+                
+              </Route>
+
               {/* Login page — no layout wrapper */}
             <Route path="/login" element={<LoginPage />} />
 
@@ -148,6 +215,8 @@ const App: React.FC = () => {
           </Routes>
         </Suspense>
       </BrowserRouter>
+      </AdminAuthProvider>
+
     </AuthProvider>
     </HelmetProvider>
   );

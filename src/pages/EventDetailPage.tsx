@@ -142,7 +142,6 @@ const EventDetailPage: React.FC = () => {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [dbRegisteredCount, setDbRegisteredCount] = useState(0);
   const stickyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,7 +155,6 @@ const EventDetailPage: React.FC = () => {
       } else {
         setEvent(evt);
         registrationService.getRegistrationsForEvent(evt.id).then((regs) => {
-          setDbRegisteredCount(regs.length);
           setLoading(false);
         });
       }
@@ -170,14 +168,6 @@ const EventDetailPage: React.FC = () => {
   };
 
 
-
-  const registeredCount = event
-    ? Math.max(1, (event.currentAttendees || 1) + (dbRegisteredCount > 1 ? dbRegisteredCount - 1 : 0))
-    : 1;
-
-  const attendancePct = event
-    ? Math.max(1, Math.round((registeredCount / (event.maxAttendees || 1)) * 100))
-    : 0;
 
   if (loading) return <DetailSkeleton />;
 
@@ -548,21 +538,7 @@ const EventDetailPage: React.FC = () => {
               <div className="border border-[#E8EAED] rounded-2xl p-6 bg-white shadow-sm">
                 <h3 className="font-bold text-[#1A1A2E] mb-4">Registration</h3>
 
-                {/* Attendance progress (Real-Time Count) */}
-                {event.maxAttendees && (
-                  <div className="mb-5">
-                    <div className="flex justify-between text-xs text-[#5F6368] mb-1.5">
-                      <span className="font-semibold text-[#1A1A2E]">{registeredCount} {registeredCount === 1 ? 'member registered' : 'registered'}</span>
-                    </div>
-                    <div className="w-full bg-[#E8EAED] rounded-full h-2">
-                      <div
-                        className="bg-[#4285F4] h-2 rounded-full transition-all"
-                        style={{ width: `${Math.max(1, Math.min(attendancePct, 100))}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-[#9AA0A6] mt-1">{attendancePct}% filled • Real-time count</p>
-                  </div>
-                )}
+
 
                 {renderRegisterButton(true, true)}
 
