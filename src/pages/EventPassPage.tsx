@@ -9,6 +9,8 @@ import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { registrationService } from '../services/registration';
 import { events } from '../data/events';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 
 export const EventPassPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -89,49 +91,68 @@ export const EventPassPage: React.FC = () => {
         </button>
         <button 
           disabled={isGenerating}
-          onClick={() => {
+          onClick={async () => {
+            if (isGenerating) return;
             setIsGenerating(true);
             
-            const generatePDF = () => {
-              try {
-                const element = document.getElementById('ticket-content');
-                if (!element) {
-                  setIsGenerating(false);
-                  return;
-                }
-                
-                const opt = {
-                  margin:       0,
-                  filename:     `Kaizen_Event_Pass_${ticketId}.pdf`,
-                  image:        { type: 'jpeg' as const, quality: 0.98 },
-                  html2canvas:  { scale: 2, useCORS: true, allowTaint: false },
-                  jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
-                };
-                
-                // @ts-ignore
-                window.html2pdf().set(opt).from(element).save().then(() => {
-                  setIsGenerating(false);
-                });
-              } catch (err) {
-                console.error('Failed to generate PDF', err);
+            try {
+              const element = document.getElementById('ticket-content');
+              if (!element) {
                 setIsGenerating(false);
-                window.print();
+                return;
               }
-            };
-
-            // @ts-ignore
-            if (typeof window.html2pdf !== 'undefined') {
-              generatePDF();
-            } else {
-              const script = document.createElement('script');
-              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-              script.onload = generatePDF;
-              script.onerror = () => {
-                console.error('Failed to load html2pdf from CDN');
-                setIsGenerating(false);
-                window.print();
-              };
-              document.head.appendChild(script);
+              
+              // Use html-to-image to generate a high quality PNG
+              const dataUrl = await toPng(element, {
+                quality: 1.0,
+                pixelRatio: 2, // High resolution
+                style: {
+                  transform: 'scale(1)',
+                  transformOrigin: 'top left',
+                },
+                fetchRequestInit: {
+                  cache: 'no-cache',
+                }
+              });
+              
+              // Calculate PDF dimensions
+              // A4 size: 210 x 297 mm
+              const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+              });
+              
+              const pdfWidth = pdf.internal.pageSize.getWidth();
+              const pdfHeight = pdf.internal.pageSize.getHeight();
+              
+              // We'll calculate the image dimensions to fit within A4
+              // while preserving the ticket's aspect ratio.
+              const imgProps = pdf.getImageProperties(dataUrl);
+              const imgRatio = imgProps.width / imgProps.height;
+              
+              let drawWidth = pdfWidth;
+              let drawHeight = pdfWidth / imgRatio;
+              
+              // If it's too tall for the page, scale by height instead
+              if (drawHeight > pdfHeight) {
+                drawHeight = pdfHeight;
+                drawWidth = pdfHeight * imgRatio;
+              }
+              
+              // Center it horizontally and vertically
+              const x = (pdfWidth - drawWidth) / 2;
+              const y = 0; // Top align for ticket
+              
+              pdf.addImage(dataUrl, 'PNG', x, y, drawWidth, drawHeight);
+              pdf.save(`Kaizen_Event_Pass_${ticketId}.pdf`);
+              
+              setIsGenerating(false);
+            } catch (err) {
+              console.error('Failed to generate PDF', err);
+              setIsGenerating(false);
+              // Fallback to print if absolute failure
+              window.print();
             }
           }}
           className={`flex items-center gap-2 px-6 py-2 text-white rounded-lg shadow font-medium ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
