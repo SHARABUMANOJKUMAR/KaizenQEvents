@@ -25,7 +25,7 @@ async function fetchSheetData<T>(url: string, mockFallbackData: T[]): Promise<T[
       return mockFallbackData;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       Papa.parse<T>(csvData, {
         header: true,
         skipEmptyLines: true,

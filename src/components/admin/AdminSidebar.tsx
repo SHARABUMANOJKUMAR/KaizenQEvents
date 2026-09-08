@@ -9,7 +9,6 @@ import {
   GitBranch, 
   Coffee, 
   BarChart3, 
-  CalendarCheck, 
   Settings, 
   LogOut,
   X

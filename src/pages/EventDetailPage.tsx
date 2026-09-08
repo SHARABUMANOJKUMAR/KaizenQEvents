@@ -154,7 +154,7 @@ const EventDetailPage: React.FC = () => {
         setLoading(false);
       } else {
         setEvent(evt);
-        registrationService.getRegistrationsForEvent(evt.id).then((regs) => {
+        registrationService.getRegistrationsForEvent(evt.id).then(() => {
           setLoading(false);
         });
       }
