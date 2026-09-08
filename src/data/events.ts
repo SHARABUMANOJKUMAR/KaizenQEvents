@@ -3,7 +3,7 @@ import { organizers } from './organizers';
 
 export const events: Event[] = [
   {
-    id: 'evt-001',
+    id: 'git-and-github-bootcamp',
     title: 'Git & GitHub Bootcamp',
     shortDescription: 'Master version control from scratch. 3 Days intensive hands-on bootcamp with Git, GitHub, branching, PRs and open-source workflows.',
     description: `This intensive 3-Day hands-on online bootcamp is designed for students and early-career developers who want to master Git and GitHub from the ground up. You will move from the basics of version control to real-world collaboration workflows used by top engineering teams.
@@ -90,7 +90,7 @@ This is an interactive online live workshop — you will be writing commands, cr
     currentAttendees: 1,
   },
   {
-    id: 'evt-002',
+    id: 'python-with-ai-bootcamp',
     title: 'Python with AI Bootcamp',
     shortDescription: '5 Days intensive hands-on bootcamp on Python for Artificial Intelligence, LLM APIs, LangChain, and autonomous agents.',
     description: `Python is the premier programming language for Artificial Intelligence. This 5-day hands-on online bootcamp takes you from Python programming foundations to building state-of-the-art AI systems and autonomous agent workflows.
@@ -168,7 +168,7 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     currentAttendees: 1,
   },
   {
-    id: 'evt-003',
+    id: 'java-with-ai-masterclass',
     title: 'Java with AI Masterclass',
     shortDescription: '5 Days hands-on bootcamp on modern Java, Spring Boot 3, Spring AI, Vector DBs, and Enterprise RAG microservices.',
     description: `Join us for a 5-day comprehensive online workshop on integrating Artificial Intelligence into Java enterprise ecosystems. Java developers can now seamlessly connect with LLMs, vector databases, and AI models using Spring AI and LangChain4j.
@@ -246,7 +246,7 @@ In this hands-on masterclass, you will learn how to build AI-powered microservic
     currentAttendees: 1,
   },
   {
-    id: 'evt-004',
+    id: 'generative-ai-masterclass',
     title: 'Generative AI Masterclass',
     shortDescription: '5 Days intensive masterclass on Generative AI, Fine-Tuning Open-Weights Models, Multimodal AI, and RAG architectures.',
     description: `Generative AI is transforming software engineering, creative industries, and enterprise productivity. This 5-day online masterclass brings together practical architectures, live coding demos, and hands-on LLM engineering.

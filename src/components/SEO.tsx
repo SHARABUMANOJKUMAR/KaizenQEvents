@@ -7,7 +7,7 @@ interface SEOProps {
   canonical?: string;
   type?: string;
   image?: string;
-  structuredData?: object;
+  structuredData?: object | object[];
   noindex?: boolean;
 }
 
@@ -20,8 +20,20 @@ export const SEO: React.FC<SEOProps> = ({
   structuredData,
   noindex = false,
 }) => {
-  const siteUrl = 'https://kaizenqevents.com'; // Change to the actual domain when deploying
+  const siteUrl = 'https://kaizenqevents.tech'; // Updated to new domain
   const currentUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
+
+  const renderStructuredData = () => {
+    if (!structuredData || noindex) return null;
+    
+    const schemas = Array.isArray(structuredData) ? structuredData : [structuredData];
+    
+    return schemas.map((schema, index) => (
+      <script type="application/ld+json" key={index}>
+        {JSON.stringify(schema)}
+      </script>
+    ));
+  };
 
   return (
     <Helmet>
@@ -55,11 +67,7 @@ export const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:image" content={image} />
 
       {/* Structured Data (Schema.org) */}
-      {structuredData && !noindex && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
+      {renderStructuredData()}
     </Helmet>
   );
 };

@@ -230,17 +230,42 @@ const EventDetailPage: React.FC = () => {
     "organizer": {
       "@type": "Organization",
       "name": "Kaizen Q Events",
-      "url": "https://kaizenqevents.com"
+      "url": "https://kaizenqevents.tech"
     }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://kaizenqevents.tech/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Events",
+        "item": "https://kaizenqevents.tech/events"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": event.title,
+        "item": `https://kaizenqevents.tech/events/${event.id}`
+      }
+    ]
   };
 
   return (
     <div className="fade-in bg-white min-h-screen">
       <SEO 
-        title={`${event.title} | ${event.city} | Kaizen Q Events`}
+        title={`${event.title} | Tech Events & Bootcamps in India | Kaizen Q Events`}
         description={event.description || `Join us for ${event.title} in ${event.city}. Discover technology events and workshops.`}
         canonical={`/events/${event.id}`}
-        structuredData={eventSchema}
+        structuredData={[eventSchema, breadcrumbSchema]}
       />
 
 

@@ -252,7 +252,7 @@ const EventDiscoverySection: React.FC<EventDiscoverySectionProps> = ({
   return (
     <section className="bg-[#F8F9FA] py-10 sm:py-14 border-y border-[#E8EAED]" aria-label="Event discovery">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1A2E]">Find an event near you</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1A2E]">Explore Tech Events & Coding Bootcamps in India</h2>
 
         <Input
           id="home-event-search"
@@ -287,8 +287,8 @@ const LocationSection: React.FC = () => {
     <section className="py-14 sm:py-20 bg-white" aria-label="Explore locations">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Explore KQE events by location"
-          subtitle="Find technology events happening in your city and state."
+          title="Explore KQE technology events by location"
+          subtitle="Find bootcamps, workshops and hackathons happening in your city and state."
           action={
             <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={16} />} onClick={() => navigate('/events')}>
               View all
@@ -453,7 +453,7 @@ const HomePage: React.FC = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Kaizen Q Events",
-    "url": "https://kaizenqevents.com",
+    "url": "https://kaizenqevents.tech",
     "logo": "https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png",
     "description": "Kaizen Q Events connects developers, students, builders, innovators and technology enthusiasts through hackathons, coding competitions, workshops, conferences and technology community events.",
     "sameAs": [
@@ -462,12 +462,23 @@ const HomePage: React.FC = () => {
     ]
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://kaizenqevents.tech/"
+    }]
+  };
+
   return (
     <div className="fade-in">
       <SEO 
-        title="Kaizen Q Events | Global Technology Events, Hackathons & Developer Community"
-        description="Kaizen Q Events connects developers, students, builders, innovators and technology enthusiasts through hackathons, coding competitions, workshops, conferences and technology community events."
-        structuredData={orgSchema}
+        title="Kaizen Q Events | Tech Events, Bootcamps, Workshops & Competitions"
+        description="Discover Kaizen Q Events — technology events, AI bootcamps, coding workshops, hackathons, competitions, and student-focused learning experiences across India and online."
+        structuredData={[orgSchema, breadcrumbSchema]}
         canonical="/"
       />
       <HeroSection />
@@ -483,8 +494,8 @@ const HomePage: React.FC = () => {
       <section className="py-14 sm:py-20 bg-white" aria-label="Upcoming events">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <SectionHeader
-            title="Upcoming events"
-            subtitle="Don't miss what's happening in the KQE community."
+            title="Upcoming technology events"
+            subtitle="Don't miss the latest AI bootcamps and coding workshops in the KQE community."
             action={
               <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={16} />} onClick={() => navigate('/events')}>
                 View all events

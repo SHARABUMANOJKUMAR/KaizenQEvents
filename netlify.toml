@@ -9,6 +9,30 @@
   force = true
 
 [[redirects]]
+  from = "/events/evt-001"
+  to = "/events/git-and-github-bootcamp"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/events/evt-002"
+  to = "/events/python-with-ai-bootcamp"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/events/evt-003"
+  to = "/events/java-with-ai-masterclass"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/events/evt-004"
+  to = "/events/generative-ai-masterclass"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

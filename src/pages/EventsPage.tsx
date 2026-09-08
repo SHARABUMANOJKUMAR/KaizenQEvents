@@ -91,8 +91,8 @@ const EventsPage: React.FC = () => {
       {/* Page header */}
       <div className="bg-[#F8F9FA] border-b border-[#E8EAED] py-10 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A2E] mb-2">Explore Events</h1>
-          <p className="text-[#5F6368] text-base">Discover technology events, bootcamps and workshops near you.</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A2E] mb-2">Explore Technology Events & Bootcamps</h1>
+          <p className="text-[#5F6368] text-base">Discover coding competitions, tech events, bootcamps and workshops near you.</p>
         </div>
       </div>
 

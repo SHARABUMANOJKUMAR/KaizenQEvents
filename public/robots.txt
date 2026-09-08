@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /login
-Disallow: /dashboard
+Disallow: /__/auth/
 
-Sitemap: https://kaizenqevents.com/sitemap.xml
+Sitemap: https://kaizenqevents.tech/sitemap.xml
