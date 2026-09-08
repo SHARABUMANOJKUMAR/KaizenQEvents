@@ -49,33 +49,61 @@ export const EventPassPage: React.FC = () => {
             const { GoogleSheetsService } = await import('../services/googleSheetsService');
             const data = await GoogleSheetsService.getAllDashboardData();
             
-            const searchInSheet = (sheetData: any[], eventId: string, eventTitle: string) => {
-              if (!sheetData) return null;
-              const row = sheetData.find(r => r.ticketId === targetId || r['Ticket ID'] === targetId);
+            // Normalize key lookup – column headers can vary in case/spacing
+            const getField = (row: Record<string, string | undefined>, ...keys: string[]): string => {
+              // First try exact match
+              for (const key of keys) {
+                if (row[key] !== undefined && row[key] !== '') return row[key]!;
+              }
+              // Then try case-insensitive match
+              const rowKeys = Object.keys(row);
+              for (const key of keys) {
+                const found = rowKeys.find(k => k.toLowerCase().replace(/[\s_-]/g, '') === key.toLowerCase().replace(/[\s_-]/g, ''));
+                if (found && row[found] !== undefined && row[found] !== '') return row[found]!;
+              }
+              return '';
+            };
+
+            const searchInSheet = (sheetData: Record<string, string | undefined>[], eventId: string, eventTitle: string) => {
+              if (!sheetData || sheetData.length === 0) return null;
+              
+              const row = sheetData.find(r => {
+                const rowTicketId = getField(r, 'Ticket ID', 'ticketId', 'ticket_id', 'TicketID');
+                return rowTicketId.trim().toUpperCase() === targetId;
+              });
+              
               if (row) {
+                const fullName = getField(row, 'Full Name', 'fullName', 'Name', 'name');
+                const email = getField(row, 'Email', 'email', 'Email Address');
+                const phone = getField(row, 'Phone Number', 'phone', 'Phone', 'Mobile');
+                const year = getField(row, 'Year of Study / Status', 'yearOfStudy', 'Year', 'year');
+                const college = getField(row, 'College / Organization', 'college', 'College', 'Organization');
+                const dept = getField(row, 'Department / Branch', 'department', 'branch', 'Department', 'Branch');
+                const timestamp = getField(row, 'Timestamp', 'timestamp');
+
                 return {
                   eventId,
                   eventTitle,
-                  fullName: row.fullName || row['Full Name'] || 'Student',
-                  email: row.email || row['Email'] || '',
-                  phone: row.phone || row['Phone Number'] || '',
-                  yearOfStudy: row.yearOfStudy || row['Year of Study / Status'] || '',
-                  year: row.yearOfStudy || row['Year of Study / Status'] || '',
-                  college: row.college || row['College / Organization'] || '',
-                  department: row.department || row['Department / Branch'] || '',
-                  branch: row.department || row['Department / Branch'] || '',
+                  fullName: fullName || 'Student',
+                  email,
+                  phone,
+                  yearOfStudy: year,
+                  year,
+                  college,
+                  department: dept,
+                  branch: dept,
                   ticketId: targetId,
-                  timestamp: row.timestamp || row['Timestamp'] || new Date().toISOString()
+                  timestamp: timestamp || new Date().toISOString()
                 } as unknown as RegistrationPayload;
               }
               return null;
             };
 
             foundTicket = 
-              searchInSheet(data.genAI, 'ai-bootcamp-01', 'Generative AI Masterclass') ||
-              searchInSheet(data.pythonAI, 'python-bootcamp-02', 'Python with AI BootCamp') ||
-              searchInSheet(data.gitGitHub, 'git-github-03', 'Git & GitHub BootCamp') ||
-              searchInSheet(data.javaAI, 'java-bootcamp-04', 'Java with AI BootCamp');
+              searchInSheet(data.genAI as Record<string, string | undefined>[], 'ai-bootcamp-01', 'Generative AI Masterclass') ||
+              searchInSheet(data.pythonAI as Record<string, string | undefined>[], 'python-bootcamp-02', 'Python with AI Bootcamp') ||
+              searchInSheet(data.gitGitHub as Record<string, string | undefined>[], 'git-github-03', 'Git & GitHub Bootcamp') ||
+              searchInSheet(data.javaAI as Record<string, string | undefined>[], 'java-bootcamp-04', 'Java with AI Bootcamp');
           }
 
           if (foundTicket) {
