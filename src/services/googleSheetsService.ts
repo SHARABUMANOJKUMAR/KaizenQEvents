@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 // Public Google Sheets CSV Export URLs
 const SHEET_URLS = {
   users: 'https://docs.google.com/spreadsheets/d/1olJiRcGQHhs1bU0LbFeR-i5iKlX53A9sXUiHwSXF6MU/export?format=csv&gid=0',
+  logins: 'https://docs.google.com/spreadsheets/d/1olJiRcGQHhs1bU0LbFeR-i5iKlX53A9sXUiHwSXF6MU/export?format=csv&gid=1037440371',
   generativeAI: 'https://docs.google.com/spreadsheets/d/16eCfu21GCne7Mjtjk0qxfpbHkYqfINCG-BRUHvCyTZg/export?format=csv&gid=0',
   pythonAI: 'https://docs.google.com/spreadsheets/d/1M9PNRYV7vNb-H-q9PQND5jKydh9THJFlqXxx7gUZuq8/export?format=csv&gid=0',
   gitGitHub: 'https://docs.google.com/spreadsheets/d/1wj8RxQ17DNEnYGYJQpKl76A7-gBF9dY5nfGEnxXuwes/export?format=csv&gid=0',
@@ -91,7 +92,7 @@ export const GoogleSheetsService = {
   getPythonAIRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.pythonAI, MOCK_BOOTCAMP_REGISTRATIONS),
   getGitGithubRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.gitGitHub, MOCK_BOOTCAMP_REGISTRATIONS),
   getJavaAIRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.javaAI, MOCK_BOOTCAMP_REGISTRATIONS),
-  getLogins: () => fetchSheetData<LoginActivity>(SHEET_URLS.users, MOCK_LOGINS), // using MOCK_LOGINS for the logins page
+  getLogins: () => fetchSheetData<LoginActivity>(SHEET_URLS.logins, MOCK_LOGINS),
 
   
   // Data normalization utils

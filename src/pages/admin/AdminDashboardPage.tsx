@@ -170,33 +170,35 @@ const AdminDashboardPage: React.FC = () => {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider">User Growth Trend</h3>
-          <div className="h-72">
+        <div className="lg:col-span-2 bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+          <h3 className="text-sm font-extrabold text-gray-800 mb-6 uppercase tracking-widest relative z-10">User Growth Trend</h3>
+          <div className="h-72 relative z-10">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mockTrendData}>
                 <defs>
                   <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4285F4" stopOpacity={0.3}/>
+                    <stop offset="5%" stopColor="#4285F4" stopOpacity={0.4}/>
                     <stop offset="95%" stopColor="#4285F4" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9CA3AF', fontSize: 12}} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" strokeOpacity={0.5} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12, fontWeight: 500}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12, fontWeight: 500}} />
                 <Tooltip 
-                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  cursor={{ stroke: '#E5E7EB', strokeWidth: 2, strokeDasharray: '3 3' }}
+                  contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
+                  cursor={{ stroke: '#94a3b8', strokeWidth: 2, strokeDasharray: '4 4' }}
                 />
-                <Area type="monotone" dataKey="users" stroke="#4285F4" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
+                <Area type="monotone" dataKey="users" stroke="#4285F4" strokeWidth={4} fillOpacity={1} fill="url(#colorUsers)" isAnimationActive={true} animationDuration={1500} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h3 className="text-sm font-bold text-gray-900 mb-6 uppercase tracking-wider">Data Source Health</h3>
-          <div className="space-y-4">
+        <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 p-6 relative overflow-hidden">
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-400/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+          <h3 className="text-sm font-extrabold text-gray-800 mb-6 uppercase tracking-widest relative z-10">Data Source Health</h3>
+          <div className="space-y-4 relative z-10">
             <HealthItem name="Users & Logins" status={data?.users ? 'Connected' : 'Error'} />
             <HealthItem name="Generative AI" status={data?.genAI ? 'Connected' : 'Error'} />
             <HealthItem name="Python with AI" status={data?.pythonAI ? 'Connected' : 'Error'} />
@@ -211,30 +213,32 @@ const AdminDashboardPage: React.FC = () => {
 
 // Sub-components
 const KPICard = ({ title, value, icon, color, note }: { title: string, value: string | number, icon: React.ReactNode, color: string, note?: string }) => (
-  <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-    <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${color}`}>
+  <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 flex items-center gap-5 transform hover:-translate-y-1.5 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+    <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/40 rounded-full blur-2xl group-hover:bg-white/60 transition-colors"></div>
+    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${color} shadow-inner bg-opacity-70 backdrop-blur-sm relative z-10`}>
       {icon}
     </div>
-    <div>
-      <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
+    <div className="relative z-10">
+      <p className="text-sm font-bold text-gray-500 mb-1 tracking-wide">{title}</p>
       <div className="flex items-baseline gap-2">
-        <h3 className="text-3xl font-bold text-gray-900 tracking-tight">{value}</h3>
-        {note && <span className="text-xs text-gray-400 font-medium">{note}</span>}
+        <h3 className="text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm">{value}</h3>
+        {note && <span className="text-xs text-blue-500 font-bold">{note}</span>}
       </div>
     </div>
   </div>
 );
 
 const BootcampStatCard = ({ title, count, icon, bgColor, accent }: { title: string, count: number, icon: React.ReactNode, bgColor: string, accent: string }) => (
-  <div className={`bg-white rounded-xl p-5 shadow-sm border-l-4 ${accent} border-t border-r border-b border-gray-100 hover:shadow-md transition-shadow`}>
-    <div className="flex justify-between items-start mb-4">
-      <div className={`p-2 rounded-lg ${bgColor}`}>
+  <div className={`bg-white/60 backdrop-blur-xl rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-l-4 ${accent} border-t border-r border-b border-white/80 transform hover:-translate-y-1.5 hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group`}>
+    <div className={`absolute -right-6 -bottom-6 w-32 h-32 ${bgColor} rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity`}></div>
+    <div className="flex justify-between items-start mb-4 relative z-10">
+      <div className={`p-3 rounded-2xl ${bgColor} shadow-inner bg-opacity-70 backdrop-blur-sm`}>
         {icon}
       </div>
     </div>
-    <div>
-      <h3 className="text-2xl font-bold text-gray-900">{count.toLocaleString()}</h3>
-      <p className="text-sm font-medium text-gray-500">{title}</p>
+    <div className="relative z-10">
+      <h3 className="text-3xl font-extrabold text-gray-900 drop-shadow-sm">{count.toLocaleString()}</h3>
+      <p className="text-sm font-bold text-gray-500 tracking-wide mt-1">{title}</p>
     </div>
   </div>
 );

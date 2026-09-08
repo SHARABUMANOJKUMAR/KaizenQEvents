@@ -18,10 +18,13 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 
+// Event Pass & Verification
+const EventPassPage = lazy(() => import('./pages/EventPassPage').then(m => ({ default: m.EventPassPage })));
+const VerifyPassPage = lazy(() => import('./pages/VerifyPassPage').then(m => ({ default: m.VerifyPassPage })));
+
 // Admin pages
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
-const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage'));
 const AdminLoginsPage = lazy(() => import('./pages/admin/AdminLoginsPage'));
 const AdminAnalyticsPage = lazy(() => import('./pages/admin/AdminAnalyticsPage'));
 const AdminSettingsPage = lazy(() => import('./pages/admin/AdminSettingsPage'));
@@ -57,8 +60,6 @@ const App: React.FC = () => {
               <Route path="/admin" element={<AdminRoute />}>
                 <Route path="dashboard" element={<AdminDashboardPage />} />
                 <Route index element={<Navigate to="/admin/dashboard" replace />} />
-                
-                <Route path="users" element={<AdminUsersPage />} />
                 <Route path="logins" element={<AdminLoginsPage />} />
                 <Route 
                   path="generative-ai" 
@@ -106,9 +107,27 @@ const App: React.FC = () => {
               </Route>
 
               {/* Login page — no layout wrapper */}
-            <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* All other pages use MainLayout */}
+              {/* Event Pass & Verify — no layout wrapper */}
+              <Route 
+                path="/pass/:ticketId" 
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <EventPassPage />
+                  </Suspense>
+                } 
+              />
+              <Route 
+                path="/verify/:ticketId" 
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <VerifyPassPage />
+                  </Suspense>
+                } 
+              />
+
+              {/* All other pages use MainLayout */}
             <Route
               path="/"
               element={

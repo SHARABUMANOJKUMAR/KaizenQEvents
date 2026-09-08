@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Calendar, MapPin, Ticket, Award, CheckCircle2,
-  ExternalLink, Building, ArrowRight, Download
+  ExternalLink, Building, ArrowRight, Printer
 } from 'lucide-react';
 import { Button, Skeleton } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
@@ -243,9 +243,9 @@ const DashboardPage: React.FC = () => {
                       <Button
                         variant="primary"
                         size="sm"
-                        onClick={() => window.print()}
+                        onClick={() => navigate(`/pass/${reg.ticketId}`, { state: { reg, event } })}
                       >
-                        <Download size={13} className="mr-1" /> Print Pass
+                        <Printer size={13} className="mr-1" /> Print Pass
                       </Button>
                     </div>
                   </div>

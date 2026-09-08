@@ -7,7 +7,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-const COLORS = ['#F59E0B', '#10B981', '#F43F5E', '#06B6D4'];
+const COLORS = ['#FBBC05', '#34A853', '#EA4335', '#4285F4']; // Google Colors (Yellow, Green, Red, Blue)
 
 const AdminAnalyticsPage: React.FC = () => {
   const [data, setData] = useState<any>(null);
@@ -75,49 +75,54 @@ const AdminAnalyticsPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <TrendingUp size={20} className="text-blue-600" />
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 p-6 relative overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+            <h3 className="text-lg font-extrabold text-gray-800 mb-6 flex items-center gap-2 relative z-10 drop-shadow-sm">
+              <TrendingUp size={20} className="text-blue-500" />
               Bootcamp Distribution
             </h3>
-            <div className="h-80">
+            <div className="h-80 relative z-10">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={data.bootcampDist}
                     cx="50%"
                     cy="50%"
-                    innerRadius={80}
-                    outerRadius={110}
-                    paddingAngle={5}
+                    innerRadius={85}
+                    outerRadius={120}
+                    paddingAngle={6}
                     dataKey="value"
+                    isAnimationActive={true}
+                    animationDuration={1500}
+                    stroke="none"
                   >
                     {data.bootcampDist.map((_entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
                   />
-                  <Legend verticalAlign="bottom" height={36}/>
+                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Registrations by BootCamp</h3>
-            <div className="h-80">
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/80 p-6 relative overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300">
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-400/5 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+            <h3 className="text-lg font-extrabold text-gray-800 mb-6 relative z-10 drop-shadow-sm">Registrations by BootCamp</h3>
+            <div className="h-80 relative z-10">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.bootcampDist}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#6B7280', fontSize: 12}} />
+                <BarChart data={data.bootcampDist} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" strokeOpacity={0.5} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12, fontWeight: 500}} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12, fontWeight: 500}} />
                   <Tooltip 
-                    cursor={{fill: '#F3F4F6'}}
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    cursor={{fill: 'rgba(241, 245, 249, 0.4)'}}
+                    contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(12px)', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)' }}
                   />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="value" radius={[8, 8, 8, 8]} isAnimationActive={true} animationDuration={1500}>
                     {data.bootcampDist.map((_entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}

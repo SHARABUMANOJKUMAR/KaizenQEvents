@@ -31,34 +31,77 @@ export interface RegistrationPayload {
 
 export const registrationService = {
   /**
-   * Fetch registered bootcamps for a specific user email from Firestore
+   * Fetch registered bootcamps for a specific user email directly from Google Sheets
+   * to ensure data is permanently synced across all devices without needing a backend.
    */
   getUserRegistrations: async (email: string): Promise<RegistrationPayload[]> => {
     if (!email) return [];
     
     try {
-      const regsRef = collection(db, 'registrations');
-      const q = query(
-        regsRef, 
-        where('email', '==', email.toLowerCase())
-      );
+      // 1. Fetch from Google Sheets (Single Source of Truth)
+      // We import it dynamically to avoid circular dependencies if any
+      const { GoogleSheetsService } = await import('./googleSheetsService');
+      const data = await GoogleSheetsService.getAllDashboardData();
       
-      const snapshot = await getDocs(q);
-      const registrations: RegistrationPayload[] = [];
+      const emailLower = email.toLowerCase();
       
-      snapshot.forEach((doc) => {
-        registrations.push(doc.data() as RegistrationPayload);
-      });
-      
-      // Sort by timestamp descending (client side since Firestore needs index for multiple fields)
-      return registrations.sort((a, b) => {
+      const findRegs = (sheetData: any[], eventId: string, eventTitle: string) => {
+        return sheetData
+          .filter(row => {
+            // Find any key that might contain the email
+            const emailKey = Object.keys(row).find(k => k.toLowerCase().includes('email'));
+            if (emailKey && row[emailKey]) {
+              return row[emailKey].toLowerCase().trim() === emailLower;
+            }
+            return false;
+          })
+          .map(row => {
+            const ticketKey = Object.keys(row).find(k => k.toLowerCase().includes('ticket'));
+            return {
+              eventId,
+              eventTitle,
+              fullName: row['Full Name'] || row['Name'] || 'Student',
+              email: emailLower,
+              phone: row['Phone'] || row['WhatsApp Number'] || '',
+              year: row['Year'] || '',
+              college: row['College'] || row['University'] || '',
+              branch: row['Branch'] || '',
+              ticketId: ticketKey ? row[ticketKey] : undefined,
+              timestamp: row['Timestamp'] || new Date().toISOString()
+            } as RegistrationPayload;
+          });
+      };
+
+      const userRegs: RegistrationPayload[] = [
+        ...findRegs(data.genAI, 'generative-ai-masterclass', 'Generative AI Masterclass'),
+        ...findRegs(data.pythonAI, 'python-with-ai-bootcamp', 'Python with AI Bootcamp'),
+        ...findRegs(data.gitGitHub, 'git-and-github-bootcamp', 'Git & GitHub Bootcamp'),
+        ...findRegs(data.javaAI, 'java-with-ai-masterclass', 'Java with AI Bootcamp'),
+      ];
+
+      // Sort by timestamp descending
+      userRegs.sort((a, b) => {
         const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
         const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
         return timeB - timeA;
       });
 
+      if (userRegs.length > 0) {
+        // Cache locally so it loads instantly next time
+        try {
+          localStorage.setItem(`kqe_user_regs_${emailLower}`, JSON.stringify(userRegs));
+        } catch {}
+        return userRegs;
+      }
+      
+      // If we got nothing from sheets (e.g. sheets are private), fallback to local storage
+      const cached = localStorage.getItem(`kqe_user_regs_${emailLower}`);
+      if (cached) return JSON.parse(cached);
+      
+      return [];
+
     } catch (err) {
-      console.error('Error fetching user registrations from Firestore:', err);
+      console.error('Error fetching user registrations from Sheets:', err);
       // Fallback to local storage if offline/error
       try {
         const cached = localStorage.getItem(`kqe_user_regs_${email.toLowerCase()}`);
