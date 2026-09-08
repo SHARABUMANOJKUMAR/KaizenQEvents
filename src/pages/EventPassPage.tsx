@@ -9,7 +9,7 @@ import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import { events } from '../data/events';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 
 export const EventPassPage: React.FC = () => {
@@ -133,12 +133,12 @@ export const EventPassPage: React.FC = () => {
       
       {/* Controls - Hidden when printing */}
       <div className="max-w-lg sm:max-w-2xl mx-auto w-full mb-6 flex justify-between items-center print:hidden px-2 sm:px-0">
-        <button 
-          onClick={() => navigate(user ? '/dashboard' : '/')}
+        <a 
+          href={user ? '/dashboard' : '/'}
           className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 text-gray-700 font-medium"
         >
           <ArrowLeft size={16} /> {user ? 'Back to Dashboard' : 'Go to Home'}
-        </button>
+        </a>
         <button 
           disabled={isGenerating}
           onClick={async () => {
@@ -152,15 +152,19 @@ export const EventPassPage: React.FC = () => {
                 return;
               }
               
-              // Use html2canvas for max compatibility
-              const canvas = await html2canvas(element, {
-                scale: 2, // High resolution
-                useCORS: true,
-                allowTaint: false,
-                backgroundColor: '#ffffff'
+              // Use html-to-image to generate a high quality PNG
+              const dataUrl = await toPng(element, {
+                quality: 1.0,
+                pixelRatio: 2, // High resolution
+                backgroundColor: '#ffffff',
+                style: {
+                  transform: 'scale(1)',
+                  transformOrigin: 'top left',
+                },
+                fetchRequestInit: {
+                  cache: 'no-cache',
+                }
               });
-              
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.98);
               
               // Calculate PDF dimensions
               // A4 size: 210 x 297 mm
@@ -175,7 +179,8 @@ export const EventPassPage: React.FC = () => {
               
               // We'll calculate the image dimensions to fit within A4
               // while preserving the ticket's aspect ratio.
-              const imgRatio = canvas.width / canvas.height;
+              const imgProps = pdf.getImageProperties(dataUrl);
+              const imgRatio = imgProps.width / imgProps.height;
               
               let drawWidth = pdfWidth;
               let drawHeight = pdfWidth / imgRatio;
@@ -190,13 +195,14 @@ export const EventPassPage: React.FC = () => {
               const x = (pdfWidth - drawWidth) / 2;
               const y = 0; // Top align for ticket
               
-              pdf.addImage(dataUrl, 'JPEG', x, y, drawWidth, drawHeight);
+              pdf.addImage(dataUrl, 'PNG', x, y, drawWidth, drawHeight);
               pdf.save(`Kaizen_Event_Pass_${ticketId}.pdf`);
               
               setIsGenerating(false);
             } catch (err) {
               console.error('Failed to generate PDF', err);
               setIsGenerating(false);
+              alert("Could not generate PDF automatically. The print dialog will open so you can 'Save as PDF'.");
               // Fallback to print if absolute failure
               window.print();
             }
