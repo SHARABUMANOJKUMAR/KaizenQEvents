@@ -98,13 +98,12 @@ export const registrationService = {
         promises.push(
           fetch(webhookUrl, {
             method: 'POST',
+            mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload),
-          }).then(res => {
-            if (!res.ok) throw new Error('Google Sheets sync failed.');
           }).catch((err) => {
              console.error('Failed to sync to Google Sheets:', err);
-             throw new Error('Failed to save registration data. Please try again.');
+             throw new Error('Failed to save registration data. Please check your connection.');
           })
         );
       }

@@ -3,7 +3,7 @@ import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, 
 
 const STORAGE_KEY = 'kqe_current_user';
 const USERS_DB_KEY = 'kqe_registered_users';
-const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxsNaSEYmr4ZIKh3R9GZi70uDHhJ0dB99w8yNafKUzdy27vytz8GkuqH6QS-1wq1lu_Q/exec';
 
 export interface LoginWithEmailParams {
   email: string;
@@ -34,20 +34,16 @@ export const authService = {
   },
 
   logActionToSheets: async (payload: any) => {
-    if (APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
-      console.warn('Google Apps Script URL not configured. Skipping sheets logging.');
-      return;
-    }
     try {
-      const res = await fetch(APPS_SCRIPT_URL, {
+      await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
+        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('Sheet sync failed');
+      // With no-cors, we can't read res.ok, but if it doesn't throw a network error, it's sent.
     } catch (err) {
-      console.error('Failed to log to Google Sheets', err);
-      throw new Error('Could not synchronize authentication data.');
+      console.warn('Failed to log to Google Sheets, but continuing...', err);
     }
   },
 
