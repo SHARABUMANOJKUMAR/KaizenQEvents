@@ -5,12 +5,10 @@ import type { RegistrationPayload } from '../services/registration';
 import type { Event } from '../types';
 import { formatDateRange } from '../utils';
 import { SEO } from '../components/SEO';
-import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, Award, Printer, ArrowLeft, Share2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import { events } from '../data/events';
-import { toPng } from 'html-to-image';
-import { jsPDF } from 'jspdf';
 
 export const EventPassPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -137,80 +135,37 @@ export const EventPassPage: React.FC = () => {
           href={user ? '/dashboard' : '/'}
           className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 text-gray-700 font-medium"
         >
-          <ArrowLeft size={16} /> {user ? 'Back to Dashboard' : 'Go to Home'}
+          <ArrowLeft size={16} /> <span className="hidden sm:inline">{user ? 'Back to Dashboard' : 'Go to Home'}</span><span className="sm:hidden">Back</span>
         </a>
-        <button 
-          disabled={isGenerating}
-          onClick={async () => {
-            if (isGenerating) return;
-            setIsGenerating(true);
-            
-            try {
-              const element = document.getElementById('ticket-content');
-              if (!element) {
-                setIsGenerating(false);
-                return;
-              }
-              
-              // Use html-to-image to generate a high quality PNG
-              const dataUrl = await toPng(element, {
-                quality: 1.0,
-                pixelRatio: 2, // High resolution
-                backgroundColor: '#ffffff',
-                style: {
-                  transform: 'scale(1)',
-                  transformOrigin: 'top left',
-                },
-                fetchRequestInit: {
-                  cache: 'no-cache',
+        <div className="flex items-center gap-2 sm:gap-4">
+          <button 
+            onClick={async () => {
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    title: 'Kaizen Q Events Pass',
+                    text: `Check out my event pass for ${reg.eventTitle}!`,
+                    url: window.location.href,
+                  });
+                } catch (err) {
+                  console.error('Error sharing:', err);
                 }
-              });
-              
-              // Calculate PDF dimensions
-              // A4 size: 210 x 297 mm
-              const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-              });
-              
-              const pdfWidth = pdf.internal.pageSize.getWidth();
-              const pdfHeight = pdf.internal.pageSize.getHeight();
-              
-              // We'll calculate the image dimensions to fit within A4
-              // while preserving the ticket's aspect ratio.
-              const imgProps = pdf.getImageProperties(dataUrl);
-              const imgRatio = imgProps.width / imgProps.height;
-              
-              let drawWidth = pdfWidth;
-              let drawHeight = pdfWidth / imgRatio;
-              
-              // If it's too tall for the page, scale by height instead
-              if (drawHeight > pdfHeight) {
-                drawHeight = pdfHeight;
-                drawWidth = pdfHeight * imgRatio;
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
               }
-              
-              // Center it horizontally and vertically
-              const x = (pdfWidth - drawWidth) / 2;
-              const y = 0; // Top align for ticket
-              
-              pdf.addImage(dataUrl, 'PNG', x, y, drawWidth, drawHeight);
-              pdf.save(`Kaizen_Event_Pass_${ticketId}.pdf`);
-              
-              setIsGenerating(false);
-            } catch (err) {
-              console.error('Failed to generate PDF', err);
-              setIsGenerating(false);
-              alert("Could not generate PDF automatically. The print dialog will open so you can 'Save as PDF'.");
-              // Fallback to print if absolute failure
-              window.print();
-            }
-          }}
-          className={`flex items-center gap-2 px-6 py-2 text-white rounded-lg shadow font-medium ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
-        >
-          <Printer size={16} /> {isGenerating ? 'Generating...' : 'Download PDF'}
-        </button>
+            }}
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg shadow-sm hover:bg-blue-100 font-medium transition-colors"
+          >
+            <Share2 size={16} /> <span className="hidden sm:inline">Share Pass</span><span className="sm:hidden">Share</span>
+          </button>
+          <button 
+            onClick={() => window.print()}
+            className="flex items-center gap-2 px-4 sm:px-6 py-2 text-white rounded-lg shadow font-medium bg-blue-600 hover:bg-blue-700 transition-colors"
+          >
+            <Printer size={16} /> Print Pass
+          </button>
+        </div>
       </div>
 
       {/* The Ticket / Pass - optimized for A4 */}
