@@ -7,7 +7,7 @@ import { formatDateRange } from '../utils';
 import { SEO } from '../components/SEO';
 import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { registrationService } from '../services/registration';
+
 import { events } from '../data/events';
 import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
@@ -28,23 +28,73 @@ export const EventPassPage: React.FC = () => {
 
   useEffect(() => {
     // If navigated directly without state, try to fetch the registration
-    if (!reg && user?.email) {
-      registrationService.getUserRegistrations(user.email).then(regs => {
-        const foundReg = regs.find(r => r.ticketId === ticketId);
-        if (foundReg) {
-          setReg(foundReg);
-          // Also set the event if we found the registration
-          if (foundReg.eventId && !event) {
-            // We can't set event directly since it's not a state variable anymore, wait, it IS a state variable but I just removed the setter.
-            // Let's re-add the setter for event.
+    if (!reg && ticketId) {
+      const fetchTicket = async () => {
+        try {
+          const targetId = ticketId.trim().toUpperCase();
+          let foundTicket: RegistrationPayload | null = null;
+          
+          try {
+            const { collection, query, where, getDocs } = await import('firebase/firestore');
+            const { db } = await import('../services/firebase');
+            const q = query(collection(db, 'registrations'), where('ticketId', '==', targetId));
+            const snapshot = await getDocs(q);
+            
+            if (!snapshot.empty) {
+              foundTicket = snapshot.docs[0].data() as RegistrationPayload;
+            }
+          } catch (fbErr) {
+            console.warn("Firestore search failed or was blocked by rules.", fbErr);
           }
+
+          // Fallback to Google Sheets if not found in Firestore
+          if (!foundTicket) {
+            const { GoogleSheetsService } = await import('../services/googleSheetsService');
+            const data = await GoogleSheetsService.getAllDashboardData();
+            
+            const searchInSheet = (sheetData: any[], eventId: string, eventTitle: string) => {
+              if (!sheetData) return null;
+              const row = sheetData.find(r => r.ticketId === targetId || r['Ticket ID'] === targetId);
+              if (row) {
+                return {
+                  eventId,
+                  eventTitle,
+                  fullName: row.fullName || row['Full Name'] || 'Student',
+                  email: row.email || row['Email'] || '',
+                  phone: row.phone || row['Phone Number'] || '',
+                  yearOfStudy: row.yearOfStudy || row['Year of Study / Status'] || '',
+                  year: row.yearOfStudy || row['Year of Study / Status'] || '',
+                  college: row.college || row['College / Organization'] || '',
+                  department: row.department || row['Department / Branch'] || '',
+                  branch: row.department || row['Department / Branch'] || '',
+                  ticketId: targetId,
+                  timestamp: row.timestamp || row['Timestamp'] || new Date().toISOString()
+                } as unknown as RegistrationPayload;
+              }
+              return null;
+            };
+
+            foundTicket = 
+              searchInSheet(data.genAI, 'ai-bootcamp-01', 'Generative AI Masterclass') ||
+              searchInSheet(data.pythonAI, 'python-bootcamp-02', 'Python with AI BootCamp') ||
+              searchInSheet(data.gitGitHub, 'git-github-03', 'Git & GitHub BootCamp') ||
+              searchInSheet(data.javaAI, 'java-bootcamp-04', 'Java with AI BootCamp');
+          }
+
+          if (foundTicket) {
+            setReg(foundTicket);
+          }
+        } catch (error) {
+          console.error("Error fetching pass:", error);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
-      });
+      };
+      fetchTicket();
     } else {
       setLoading(false);
     }
-  }, [reg, ticketId, user]);
+  }, [reg, ticketId]);
 
   useEffect(() => {
     // Optional: auto-print when ready
