@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GoogleSheetsService } from '../services/googleSheetsService';
 import { SEO } from '../components/SEO';
 import { CheckCircle2, XCircle, AlertTriangle, ArrowLeft, BadgeCheck } from 'lucide-react';
 
@@ -27,35 +26,28 @@ export const VerifyPassPage: React.FC = () => {
       }
 
       try {
-        const data = await GoogleSheetsService.getAllDashboardData();
+        const targetId = ticketId.trim().toUpperCase();
+        
+        const { collection, query, where, getDocs } = await import('firebase/firestore');
+        const { db } = await import('../services/firebase');
+        
+        const q = query(collection(db, 'registrations'), where('ticketId', '==', targetId));
+        const snapshot = await getDocs(q);
         
         let foundTicket: VerifiedTicket | null = null;
-        const targetId = ticketId.trim().toUpperCase();
-
-        const searchInSheet = (sheetData: any[], eventId: string, eventTitle: string) => {
-          for (const row of sheetData) {
-            const ticketKey = Object.keys(row).find(k => k.toLowerCase().includes('ticket'));
-            if (ticketKey && row[ticketKey]?.trim().toUpperCase() === targetId) {
-              const emailKey = Object.keys(row).find(k => k.toLowerCase().includes('email'));
-              return {
-                eventId,
-                eventTitle,
-                fullName: row['Full Name'] || row['Name'] || 'Student',
-                email: emailKey ? row[emailKey] : '',
-                ticketId: targetId,
-                status: row['Status'] || 'CONFIRMED',
-                timestamp: row['Timestamp']
-              } as VerifiedTicket;
-            }
-          }
-          return null;
-        };
-
-        foundTicket = 
-          searchInSheet(data.genAI, 'generative-ai-masterclass', 'Generative AI Masterclass') ||
-          searchInSheet(data.pythonAI, 'python-with-ai-bootcamp', 'Python with AI Bootcamp') ||
-          searchInSheet(data.gitGitHub, 'git-and-github-bootcamp', 'Git & GitHub Bootcamp') ||
-          searchInSheet(data.javaAI, 'java-with-ai-masterclass', 'Java with AI Bootcamp');
+        
+        if (!snapshot.empty) {
+          const docData = snapshot.docs[0].data();
+          foundTicket = {
+            eventId: docData.eventId || '',
+            eventTitle: docData.eventTitle || 'Tech Event',
+            fullName: docData.fullName || 'Student',
+            email: docData.email || '',
+            ticketId: docData.ticketId,
+            status: docData.status || 'CONFIRMED',
+            timestamp: docData.timestamp
+          };
+        }
 
         setTicket(foundTicket);
       } catch (err) {
