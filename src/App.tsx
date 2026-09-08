@@ -15,6 +15,8 @@ const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 
 // Page loading fallback
 const PageLoader: React.FC = () => (
@@ -116,6 +118,26 @@ const App: React.FC = () => {
                 <MainLayout>
                   <Suspense fallback={<PageLoader />}>
                     <AboutPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/privacy-policy"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <PrivacyPolicyPage />
+                  </Suspense>
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/terms"
+              element={
+                <MainLayout>
+                  <Suspense fallback={<PageLoader />}>
+                    <TermsOfServicePage />
                   </Suspense>
                 </MainLayout>
               }

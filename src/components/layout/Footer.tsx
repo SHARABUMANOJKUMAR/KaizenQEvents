@@ -9,10 +9,9 @@ const footerLinks = {
     { label: 'About KQE', href: '/about' },
   ],
   Legal: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Code of Conduct', href: '#' },
-
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Code of Conduct', href: '/terms' },
   ],
 };
 
