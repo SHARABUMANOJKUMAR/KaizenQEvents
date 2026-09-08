@@ -28,25 +28,59 @@ export const VerifyPassPage: React.FC = () => {
       try {
         const targetId = ticketId.trim().toUpperCase();
         
-        const { collection, query, where, getDocs } = await import('firebase/firestore');
-        const { db } = await import('../services/firebase');
-        
-        const q = query(collection(db, 'registrations'), where('ticketId', '==', targetId));
-        const snapshot = await getDocs(q);
-        
         let foundTicket: VerifiedTicket | null = null;
         
-        if (!snapshot.empty) {
-          const docData = snapshot.docs[0].data();
-          foundTicket = {
-            eventId: docData.eventId || '',
-            eventTitle: docData.eventTitle || 'Tech Event',
-            fullName: docData.fullName || 'Student',
-            email: docData.email || '',
-            ticketId: docData.ticketId,
-            status: docData.status || 'CONFIRMED',
-            timestamp: docData.timestamp
+        try {
+          const { collection, query, where, getDocs } = await import('firebase/firestore');
+          const { db } = await import('../services/firebase');
+          const q = query(collection(db, 'registrations'), where('ticketId', '==', targetId));
+          const snapshot = await getDocs(q);
+          
+          if (!snapshot.empty) {
+            const docData = snapshot.docs[0].data();
+            foundTicket = {
+              eventId: docData.eventId || '',
+              eventTitle: docData.eventTitle || 'Tech Event',
+              fullName: docData.fullName || 'Student',
+              email: docData.email || '',
+              ticketId: docData.ticketId,
+              status: docData.status || 'CONFIRMED',
+              timestamp: docData.timestamp
+            };
+          }
+        } catch (fbErr) {
+          console.warn("Firestore search failed or was blocked by rules.", fbErr);
+        }
+
+        // Fallback to Google Sheets if not found in Firestore
+        if (!foundTicket) {
+          const { GoogleSheetsService } = await import('../services/googleSheetsService');
+          const data = await GoogleSheetsService.getAllDashboardData();
+          
+          const searchInSheet = (sheetData: any[], eventId: string, eventTitle: string) => {
+            for (const row of sheetData) {
+              const ticketKey = Object.keys(row).find(k => k.toLowerCase().includes('ticket'));
+              if (ticketKey && row[ticketKey]?.trim().toUpperCase() === targetId) {
+                const emailKey = Object.keys(row).find(k => k.toLowerCase().includes('email'));
+                return {
+                  eventId,
+                  eventTitle,
+                  fullName: row['Full Name'] || row['Name'] || 'Student',
+                  email: emailKey ? row[emailKey] : '',
+                  ticketId: targetId,
+                  status: row['Status'] || 'CONFIRMED',
+                  timestamp: row['Timestamp']
+                } as VerifiedTicket;
+              }
+            }
+            return null;
           };
+
+          foundTicket = 
+            searchInSheet(data.genAI, 'generative-ai-masterclass', 'Generative AI Masterclass') ||
+            searchInSheet(data.pythonAI, 'python-with-ai-bootcamp', 'Python with AI Bootcamp') ||
+            searchInSheet(data.gitGitHub, 'git-and-github-bootcamp', 'Git & GitHub Bootcamp') ||
+            searchInSheet(data.javaAI, 'java-with-ai-masterclass', 'Java with AI Bootcamp');
         }
 
         setTicket(foundTicket);
@@ -82,7 +116,7 @@ export const VerifyPassPage: React.FC = () => {
               <img 
                 src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png" 
                 alt="Kaizen Q Events Logo" 
-                className="h-10 sm:h-12 object-contain"
+                className="h-16 sm:h-20 object-contain"
               />
             </div>
           </Link>

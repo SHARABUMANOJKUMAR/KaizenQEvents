@@ -85,15 +85,35 @@ export const EventPassPage: React.FC = () => {
         </button>
         <div className="flex-1"></div>
         <button 
-          onClick={() => window.print()}
+          onClick={async () => {
+            try {
+              const html2pdf = (await import('html2pdf.js')).default;
+              const element = document.getElementById('ticket-content');
+              if (!element) return;
+              
+              const opt = {
+                margin:       0,
+                filename:     `Kaizen_Event_Pass_${ticketId}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+              };
+              
+              html2pdf().set(opt).from(element).save();
+            } catch (err) {
+              console.error('Failed to generate PDF', err);
+              // Fallback to browser print
+              window.print();
+            }
+          }}
           className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 font-medium"
         >
-          <Printer size={16} /> Print Pass / Save PDF
+          <Printer size={16} /> Download PDF
         </button>
       </div>
 
       {/* The Ticket / Pass - optimized for A4 */}
-      <div className="ticket-container bg-white w-full max-w-lg sm:max-w-[210mm] sm:min-h-[297mm] shadow-2xl print:shadow-none print:w-full print:min-h-0 print:m-0 mx-auto relative overflow-hidden border border-gray-200">
+      <div id="ticket-content" className="ticket-container bg-white w-full max-w-lg sm:max-w-[210mm] sm:min-h-[297mm] shadow-2xl print:shadow-none print:w-full print:min-h-0 print:m-0 mx-auto relative overflow-hidden border border-gray-200">
         
         {/* Top Header */}
         <div className="bg-[linear-gradient(135deg,#FFD700,#FFA500,#2563EB,#16A34A)] text-white p-10 flex flex-col items-center justify-center relative">
@@ -102,7 +122,7 @@ export const EventPassPage: React.FC = () => {
             <img 
               src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png" 
               alt="Kaizen Q Events Logo" 
-              className="h-10 sm:h-12 object-contain"
+              className="h-16 sm:h-20 object-contain"
             />
           </div>
           <h1 className="text-sm font-semibold tracking-widest text-white/90 uppercase mb-2 relative z-10">Official Event Pass</h1>
