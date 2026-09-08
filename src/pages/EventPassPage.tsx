@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import QRCode from 'react-qr-code';
+import { QRCodeCanvas } from 'qrcode.react';
 import type { RegistrationPayload } from '../services/registration';
 import type { Event } from '../types';
 import { formatDateRange } from '../utils';
@@ -9,6 +9,7 @@ import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { registrationService } from '../services/registration';
 import { events } from '../data/events';
+import html2pdf from 'html2pdf.js';
 
 export const EventPassPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -22,6 +23,7 @@ export const EventPassPage: React.FC = () => {
     (location.state?.reg?.eventId ? events.find(e => e.id === location.state.reg.eventId) : null)
   );
   const [loading, setLoading] = useState(!location.state?.reg);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     // If navigated directly without state, try to fetch the registration
@@ -72,43 +74,51 @@ export const EventPassPage: React.FC = () => {
   const verifyUrl = `${window.location.origin}/verify/${ticketId}`;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 print:py-0 print:bg-white">
-      <SEO title={`Event Pass - ${reg.eventTitle}`} noindex={true} description="Event Pass Ticket" />
-
-      {/* Screen-only controls */}
-      <div className="mb-8 flex gap-4 print:hidden w-full max-w-3xl px-4">
+    <div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-2 sm:px-4 flex flex-col font-sans">
+      <SEO 
+        title="Event Pass - Kaizen Q Events"
+        description="Your official Kaizen Q Events registration pass"
+      />
+      
+      {/* Controls - Hidden when printing */}
+      <div className="max-w-lg sm:max-w-2xl mx-auto w-full mb-6 flex justify-between items-center print:hidden px-2 sm:px-0">
         <button 
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 text-gray-700 font-medium"
         >
-          <ArrowLeft size={16} /> Back to Dashboard
+          <ArrowLeft size={16} /> Back
         </button>
-        <div className="flex-1"></div>
         <button 
-          onClick={async () => {
+          disabled={isGenerating}
+          onClick={() => {
+            setIsGenerating(true);
             try {
-              const html2pdf = (await import('html2pdf.js')).default;
               const element = document.getElementById('ticket-content');
-              if (!element) return;
+              if (!element) {
+                setIsGenerating(false);
+                return;
+              }
               
               const opt = {
                 margin:       0,
                 filename:     `Kaizen_Event_Pass_${ticketId}.pdf`,
                 image:        { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 2, useCORS: true, allowTaint: false },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
               };
               
-              html2pdf().set(opt).from(element).save();
+              html2pdf().set(opt).from(element).save().then(() => {
+                setIsGenerating(false);
+              });
             } catch (err) {
               console.error('Failed to generate PDF', err);
-              // Fallback to browser print
+              setIsGenerating(false);
               window.print();
             }
           }}
-          className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 font-medium"
+          className={`flex items-center gap-2 px-6 py-2 text-white rounded-lg shadow font-medium ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
         >
-          <Printer size={16} /> Download PDF
+          <Printer size={16} /> {isGenerating ? 'Generating...' : 'Download PDF'}
         </button>
       </div>
 
@@ -118,10 +128,11 @@ export const EventPassPage: React.FC = () => {
         {/* Top Header */}
         <div className="bg-[linear-gradient(135deg,#FFD700,#FFA500,#2563EB,#16A34A)] text-white p-10 flex flex-col items-center justify-center relative">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
-          <div className="flex items-center justify-center mb-6 relative z-10">
+          <div className="flex items-center justify-center mb-6 relative z-10 bg-white rounded-xl p-4 shadow-sm">
             <img 
               src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png" 
               alt="Kaizen Q Events Logo" 
+              crossOrigin="anonymous"
               className="h-16 sm:h-20 object-contain"
             />
           </div>
@@ -193,7 +204,7 @@ export const EventPassPage: React.FC = () => {
           {/* QR Code and Validation */}
           <div className="flex flex-col items-center justify-center pt-2 sm:pt-4">
             <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-3">
-              <QRCode 
+              <QRCodeCanvas 
                 value={verifyUrl}
                 size={140}
                 level="H"
