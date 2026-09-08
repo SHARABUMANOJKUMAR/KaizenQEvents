@@ -5,6 +5,13 @@ import { db } from './firebase';
 // Registration Service (High-Scale Firestore Implementation)
 // ============================================================
 
+const EVENT_WEBHOOKS: Record<string, string> = {
+  'evt-001': 'https://script.google.com/macros/s/AKfycbySfa02cR53F4uyoJDLzW6Az6RGlXrL8AeC9BvNX3NmGEXiPFam8aO4PIg_RurA7VmioA/exec',
+  'evt-002': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
+  'evt-003': 'https://script.google.com/macros/s/AKfycbyK4enFPCsbcm_r9m2Ed_ojqoB_AqGlObq2B6SEsvGfI__OIQvu6-BU_h0tPAM_wTM_hA/exec',
+  'evt-004': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
+};
+
 export interface RegistrationPayload {
   eventId: string;
   eventTitle: string;
@@ -75,6 +82,16 @@ export const registrationService = {
       addDoc(collection(db, 'registrations'), payload).catch((err) => {
         console.error('Background Firestore sync failed:', err);
       });
+      
+      // 1.5 Send to Google Sheets via Webhook (Non-blocking)
+      const webhookUrl = EVENT_WEBHOOKS[data.eventId];
+      if (webhookUrl) {
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+        }).catch((err) => console.error('Failed to sync to Google Sheets:', err));
+      }
       
       // 2. Cache locally for immediate UI updates without refetching
       try {
