@@ -9,7 +9,6 @@ import { CheckCircle2, Award, Printer, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { registrationService } from '../services/registration';
 import { events } from '../data/events';
-import html2pdf from 'html2pdf.js';
 
 export const EventPassPage: React.FC = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -83,37 +82,56 @@ export const EventPassPage: React.FC = () => {
       {/* Controls - Hidden when printing */}
       <div className="max-w-lg sm:max-w-2xl mx-auto w-full mb-6 flex justify-between items-center print:hidden px-2 sm:px-0">
         <button 
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate(user ? '/dashboard' : '/')}
           className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg shadow-sm hover:bg-gray-50 text-gray-700 font-medium"
         >
-          <ArrowLeft size={16} /> Back
+          <ArrowLeft size={16} /> {user ? 'Back to Dashboard' : 'Go to Home'}
         </button>
         <button 
           disabled={isGenerating}
           onClick={() => {
             setIsGenerating(true);
-            try {
-              const element = document.getElementById('ticket-content');
-              if (!element) {
+            
+            const generatePDF = () => {
+              try {
+                const element = document.getElementById('ticket-content');
+                if (!element) {
+                  setIsGenerating(false);
+                  return;
+                }
+                
+                const opt = {
+                  margin:       0,
+                  filename:     `Kaizen_Event_Pass_${ticketId}.pdf`,
+                  image:        { type: 'jpeg' as const, quality: 0.98 },
+                  html2canvas:  { scale: 2, useCORS: true, allowTaint: false },
+                  jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
+                };
+                
+                // @ts-ignore
+                window.html2pdf().set(opt).from(element).save().then(() => {
+                  setIsGenerating(false);
+                });
+              } catch (err) {
+                console.error('Failed to generate PDF', err);
                 setIsGenerating(false);
-                return;
+                window.print();
               }
-              
-              const opt = {
-                margin:       0,
-                filename:     `Kaizen_Event_Pass_${ticketId}.pdf`,
-                image:        { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, allowTaint: false },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
-              };
-              
-              html2pdf().set(opt).from(element).save().then(() => {
+            };
+
+            // @ts-ignore
+            if (typeof window.html2pdf !== 'undefined') {
+              generatePDF();
+            } else {
+              const script = document.createElement('script');
+              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+              script.onload = generatePDF;
+              script.onerror = () => {
+                console.error('Failed to load html2pdf from CDN');
                 setIsGenerating(false);
-              });
-            } catch (err) {
-              console.error('Failed to generate PDF', err);
-              setIsGenerating(false);
-              window.print();
+                window.print();
+              };
+              document.head.appendChild(script);
             }
           }}
           className={`flex items-center gap-2 px-6 py-2 text-white rounded-lg shadow font-medium ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}`}
