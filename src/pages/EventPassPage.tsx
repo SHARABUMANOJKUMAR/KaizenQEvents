@@ -96,7 +96,7 @@ export const EventPassPage: React.FC = () => {
       <div className="ticket-container bg-white w-full max-w-lg sm:max-w-[210mm] sm:min-h-[297mm] shadow-2xl print:shadow-none print:w-full print:min-h-0 print:m-0 mx-auto relative overflow-hidden border border-gray-200">
         
         {/* Top Header */}
-        <div className="bg-[#1A1A2E] text-white p-10 flex flex-col items-center justify-center relative">
+        <div className="bg-[linear-gradient(135deg,#FFD700,#FFA500,#2563EB,#16A34A)] text-white p-10 flex flex-col items-center justify-center relative">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
           <div className="flex items-center justify-center mb-6 relative z-10">
             <img 
@@ -105,8 +105,8 @@ export const EventPassPage: React.FC = () => {
               className="h-10 sm:h-12 object-contain"
             />
           </div>
-          <h1 className="text-sm font-semibold tracking-widest text-blue-400 uppercase mb-2 relative z-10">Official Event Pass</h1>
-          <div className="h-1 w-12 bg-blue-500 rounded-full relative z-10"></div>
+          <h1 className="text-sm font-semibold tracking-widest text-white/90 uppercase mb-2 relative z-10">Official Event Pass</h1>
+          <div className="h-1 w-12 bg-white/50 rounded-full relative z-10"></div>
         </div>
 
         {/* Main Content */}
