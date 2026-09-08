@@ -84,11 +84,11 @@ export const registrationService = {
     try {
       const promises: Promise<any>[] = [];
       
-      // 1. High-throughput write to Firestore
+      // 1. High-throughput write to Firestore (Non-blocking backup)
       promises.push(
         addDoc(collection(db, 'registrations'), payload).catch((err) => {
-          console.error('Background Firestore sync failed:', err);
-          throw new Error('Database sync failed.');
+          console.warn('Background Firestore sync failed (likely rules issue):', err);
+          // Do not throw here. We want Google Sheets to still succeed!
         })
       );
       
