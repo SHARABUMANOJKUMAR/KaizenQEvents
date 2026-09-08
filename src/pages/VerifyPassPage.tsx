@@ -78,9 +78,12 @@ export const VerifyPassPage: React.FC = () => {
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-8">
           <Link to="/" className="inline-block">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-blue-600 text-3xl font-black tracking-tighter">{"<K>"}</span>
-              <span className="text-xl font-bold tracking-tight text-gray-900">KAIZEN Q EVENTS</span>
+            <div className="flex items-center justify-center mb-2">
+              <img 
+                src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png" 
+                alt="Kaizen Q Events Logo" 
+                className="h-10 sm:h-12 object-contain"
+              />
             </div>
           </Link>
           <h1 className="text-lg font-medium text-gray-500 uppercase tracking-widest">Pass Verification System</h1>

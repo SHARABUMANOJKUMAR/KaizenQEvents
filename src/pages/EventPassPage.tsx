@@ -98,9 +98,12 @@ export const EventPassPage: React.FC = () => {
         {/* Top Header */}
         <div className="bg-[#1A1A2E] text-white p-10 flex flex-col items-center justify-center relative">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
-          <div className="flex items-center gap-3 mb-6 relative z-10">
-            <span className="text-blue-500 text-3xl font-black tracking-tighter">{"<K>"}</span>
-            <span className="text-2xl font-bold tracking-tight">KAIZEN Q EVENTS</span>
+          <div className="flex items-center justify-center mb-6 relative z-10">
+            <img 
+              src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png" 
+              alt="Kaizen Q Events Logo" 
+              className="h-10 sm:h-12 object-contain"
+            />
           </div>
           <h1 className="text-sm font-semibold tracking-widest text-blue-400 uppercase mb-2 relative z-10">Official Event Pass</h1>
           <div className="h-1 w-12 bg-blue-500 rounded-full relative z-10"></div>
