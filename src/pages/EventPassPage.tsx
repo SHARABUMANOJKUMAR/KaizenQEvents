@@ -22,7 +22,6 @@ export const EventPassPage: React.FC = () => {
     (location.state?.reg?.eventId ? events.find(e => e.id === location.state.reg.eventId) : null)
   );
   const [loading, setLoading] = useState(!location.state?.reg);
-  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     // If navigated directly without state, try to fetch the registration
