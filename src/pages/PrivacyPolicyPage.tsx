@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Shield } from 'lucide-react';
-import { SEO } from '../components/ui';
+import { Helmet } from 'react-helmet-async';
 
 const PrivacyPolicyPage: React.FC = () => {
   useEffect(() => {
@@ -9,11 +9,11 @@ const PrivacyPolicyPage: React.FC = () => {
 
   return (
     <div className="bg-[#F8F9FA] min-h-screen py-12">
-      <SEO 
-        title="Privacy Policy | Kaizen Q Events"
-        description="Learn how Kaizen Q Events collects, uses, and protects your personal data and Google account information."
-        canonical="/privacy-policy"
-      />
+      <Helmet>
+        <title>Privacy Policy | Kaizen Q Events</title>
+        <meta name="description" content="Learn how Kaizen Q Events collects, uses, and protects your personal data and Google account information." />
+        <link rel="canonical" href="/privacy-policy" />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-sm border border-[#E8EAED] p-8 sm:p-12">
           <div className="flex items-center gap-4 mb-8 border-b border-[#E8EAED] pb-6">

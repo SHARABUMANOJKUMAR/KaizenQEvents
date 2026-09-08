@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FileText } from 'lucide-react';
-import { SEO } from '../components/ui';
+import { Helmet } from 'react-helmet-async';
 
 const TermsOfServicePage: React.FC = () => {
   useEffect(() => {
@@ -9,11 +9,11 @@ const TermsOfServicePage: React.FC = () => {
 
   return (
     <div className="bg-[#F8F9FA] min-h-screen py-12">
-      <SEO 
-        title="Terms of Service | Kaizen Q Events"
-        description="Read the terms and conditions for using Kaizen Q Events platform."
-        canonical="/terms"
-      />
+      <Helmet>
+        <title>Terms of Service | Kaizen Q Events</title>
+        <meta name="description" content="Read the terms and conditions for using Kaizen Q Events platform." />
+        <link rel="canonical" href="/terms" />
+      </Helmet>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-sm border border-[#E8EAED] p-8 sm:p-12">
           <div className="flex items-center gap-4 mb-8 border-b border-[#E8EAED] pb-6">
