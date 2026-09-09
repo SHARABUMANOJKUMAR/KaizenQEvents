@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCKPJ4klGTGxdgTxC3Q93YiaTZixlI0vE0",
-  authDomain: "kaizenqevents.tech",
+  authDomain: "kaizenqevents.click",
   projectId: "shaivika-lms-ai",
   storageBucket: "shaivika-lms-ai.firebasestorage.app",
   messagingSenderId: "977716272905",

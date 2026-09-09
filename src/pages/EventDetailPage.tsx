@@ -220,7 +220,7 @@ const EventDetailPage: React.FC = () => {
     "organizer": {
       "@type": "Organization",
       "name": "Kaizen Q Events",
-      "url": "https://kaizenqevents.tech"
+      "url": "https://kaizenqevents.click"
     }
   };
 
@@ -232,19 +232,19 @@ const EventDetailPage: React.FC = () => {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://kaizenqevents.tech/"
+        "item": "https://kaizenqevents.click/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Events",
-        "item": "https://kaizenqevents.tech/events"
+        "item": "https://kaizenqevents.click/events"
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": event.title,
-        "item": `https://kaizenqevents.tech/events/${event.id}`
+        "item": `https://kaizenqevents.click/events/${event.id}`
       }
     ]
   };

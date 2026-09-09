@@ -194,12 +194,12 @@ export const EventPassPage: React.FC = () => {
 
           {/* Print Pass */}
           <button 
-            title="Get Pass"
+            title="Get a Pass"
             onClick={() => window.print()}
             className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-50 text-gray-700 border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 font-medium transition-colors"
           >
             <Printer size={16} />
-            <span className="hidden sm:inline">Get Pass</span>
+            <span className="hidden sm:inline">Get a Pass</span>
           </button>
 
           {/* Download PDF */}

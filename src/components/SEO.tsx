@@ -20,7 +20,7 @@ export const SEO: React.FC<SEOProps> = ({
   structuredData,
   noindex = false,
 }) => {
-  const siteUrl = 'https://kaizenqevents.tech'; // Updated to new domain
+  const siteUrl = 'https://kaizenqevents.click'; // Updated to new domain
   const currentUrl = canonical ? `${siteUrl}${canonical}` : siteUrl;
 
   const renderStructuredData = () => {

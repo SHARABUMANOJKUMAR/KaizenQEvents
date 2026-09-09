@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /__/auth/
 
-Sitemap: https://kaizenqevents.tech/sitemap.xml
+Sitemap: https://kaizenqevents.click/sitemap.xml

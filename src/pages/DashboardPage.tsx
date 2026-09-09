@@ -245,7 +245,7 @@ const DashboardPage: React.FC = () => {
                         size="sm"
                         onClick={() => navigate(`/pass/${reg.ticketId}`, { state: { reg, event } })}
                       >
-                        <Printer size={13} className="mr-1" /> Print Pass
+                        <Printer size={13} className="mr-1" /> Get a Pass
                       </Button>
                     </div>
                   </div>

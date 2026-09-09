@@ -453,7 +453,7 @@ const HomePage: React.FC = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Kaizen Q Events",
-    "url": "https://kaizenqevents.tech",
+    "url": "https://kaizenqevents.click",
     "logo": "https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788465282/KAIZEN_Q_EVENTS_kxjtz4.png",
     "description": "Kaizen Q Events connects developers, students, builders, innovators and technology enthusiasts through hackathons, coding competitions, workshops, conferences and technology community events.",
     "sameAs": [
@@ -469,7 +469,7 @@ const HomePage: React.FC = () => {
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "https://kaizenqevents.tech/"
+      "item": "https://kaizenqevents.click/"
     }]
   };
 

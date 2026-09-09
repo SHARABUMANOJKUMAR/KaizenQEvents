@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kaizenqevents.tech/</loc>
+    <loc>https://kaizenqevents.click/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/events</loc>
+    <loc>https://kaizenqevents.click/events</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/communities</loc>
+    <loc>https://kaizenqevents.click/communities</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/organizers</loc>
+    <loc>https://kaizenqevents.click/organizers</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/about</loc>
+    <loc>https://kaizenqevents.click/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/events/git-and-github-bootcamp</loc>
+    <loc>https://kaizenqevents.click/events/git-and-github-bootcamp</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/events/python-with-ai-bootcamp</loc>
+    <loc>https://kaizenqevents.click/events/python-with-ai-bootcamp</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/events/java-with-ai-masterclass</loc>
+    <loc>https://kaizenqevents.click/events/java-with-ai-masterclass</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://kaizenqevents.tech/events/generative-ai-masterclass</loc>
+    <loc>https://kaizenqevents.click/events/generative-ai-masterclass</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
