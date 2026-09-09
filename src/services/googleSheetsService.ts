@@ -10,22 +10,9 @@ const SHEET_URLS = {
   javaAI: 'https://docs.google.com/spreadsheets/d/1Xk80UdTZmrXHOc3agRVZjTRmQMWcaW2EuMjhL72OGi4/export?format=csv&gid=0'
 };
 
-// In production (Netlify), route via serverless function to avoid CORS issues.
-// In local dev, hit Google Sheets directly.
-const isProduction = import.meta.env.PROD;
-const sheetKeys: Record<string, string> = {
-  [SHEET_URLS.generativeAI]: 'generativeAI',
-  [SHEET_URLS.pythonAI]: 'pythonAI',
-  [SHEET_URLS.gitGitHub]: 'gitGitHub',
-  [SHEET_URLS.javaAI]: 'javaAI',
-  [SHEET_URLS.users]: 'users',
-  [SHEET_URLS.logins]: 'logins',
-};
-
 function resolveUrl(rawUrl: string): string {
-  if (!isProduction) return rawUrl;
-  const key = sheetKeys[rawUrl];
-  return key ? `/.netlify/functions/fetch-sheet?sheet=${key}` : rawUrl;
+  // Always fetch directly from Google Sheets (Frontend-Only approach)
+  return rawUrl;
 }
 
 // Generic fetch and parse function
