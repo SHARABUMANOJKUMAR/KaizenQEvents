@@ -10,25 +10,25 @@
 
 [[redirects]]
   from = "/events/evt-001"
-  to = "/events/git-and-github-bootcamp"
+  to = "/events/GITHUB"
   status = 301
   force = true
 
 [[redirects]]
   from = "/events/evt-002"
-  to = "/events/python-with-ai-bootcamp"
+  to = "/events/PYTHON"
   status = 301
   force = true
 
 [[redirects]]
   from = "/events/evt-003"
-  to = "/events/java-with-ai-masterclass"
+  to = "/events/JAVA"
   status = 301
   force = true
 
 [[redirects]]
   from = "/events/evt-004"
-  to = "/events/generative-ai-masterclass"
+  to = "/events/GENERATIVE%20AI"
   status = 301
   force = true
 

@@ -7,13 +7,13 @@ import { db } from './firebase';
 
 const EVENT_WEBHOOKS: Record<string, string> = {
   // Git & GitHub BootCamp
-  'git-and-github-bootcamp': 'https://script.google.com/macros/s/AKfycbySfa02cR53F4uyoJDLzW6Az6RGlXrL8AeC9BvNX3NmGEXiPFam8aO4PIg_RurA7VmioA/exec',
+  'GITHUB': 'https://script.google.com/macros/s/AKfycbySfa02cR53F4uyoJDLzW6Az6RGlXrL8AeC9BvNX3NmGEXiPFam8aO4PIg_RurA7VmioA/exec',
   // Python With AI BootCamp
-  'python-with-ai-bootcamp': 'https://script.google.com/macros/s/AKfycbyK4enFPCsbcm_r9m2Ed_ojqoB_AqGlObq2B6SEsvGfI__OIQvu6-BU_h0tPAM_wTM_hA/exec',
+  'PYTHON': 'https://script.google.com/macros/s/AKfycbyK4enFPCsbcm_r9m2Ed_ojqoB_AqGlObq2B6SEsvGfI__OIQvu6-BU_h0tPAM_wTM_hA/exec',
   // Java With AI BootCamp
-  'java-with-ai-masterclass': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
+  'JAVA': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
   // Generative AI BootCamp
-  'generative-ai-masterclass': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
+  'GENERATIVE AI': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
 };
 
 export interface RegistrationPayload {
@@ -73,10 +73,10 @@ export const registrationService = {
       };
 
       const userRegs: RegistrationPayload[] = [
-        ...findRegs(data.genAI, 'generative-ai-masterclass', 'Generative AI Masterclass'),
-        ...findRegs(data.pythonAI, 'python-with-ai-bootcamp', 'Python with AI Bootcamp'),
-        ...findRegs(data.gitGitHub, 'git-and-github-bootcamp', 'Git & GitHub Bootcamp'),
-        ...findRegs(data.javaAI, 'java-with-ai-masterclass', 'Java with AI Bootcamp'),
+        ...findRegs(data.genAI, 'GENERATIVE AI', 'Generative AI Masterclass'),
+        ...findRegs(data.pythonAI, 'PYTHON', 'Python with AI Bootcamp'),
+        ...findRegs(data.gitGitHub, 'GITHUB', 'Git & GitHub Bootcamp'),
+        ...findRegs(data.javaAI, 'JAVA', 'Java with AI Bootcamp'),
       ];
 
       // Sort by timestamp descending

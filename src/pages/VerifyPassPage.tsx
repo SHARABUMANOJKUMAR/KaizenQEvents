@@ -77,10 +77,10 @@ export const VerifyPassPage: React.FC = () => {
           };
 
           foundTicket = 
-            searchInSheet(data.genAI, 'generative-ai-masterclass', 'Generative AI Masterclass') ||
-            searchInSheet(data.pythonAI, 'python-with-ai-bootcamp', 'Python with AI Bootcamp') ||
-            searchInSheet(data.gitGitHub, 'git-and-github-bootcamp', 'Git & GitHub Bootcamp') ||
-            searchInSheet(data.javaAI, 'java-with-ai-masterclass', 'Java with AI Bootcamp');
+            searchInSheet(data.genAI, 'GENERATIVE AI', 'Generative AI Masterclass') ||
+            searchInSheet(data.pythonAI, 'PYTHON', 'Python with AI Bootcamp') ||
+            searchInSheet(data.gitGitHub, 'GITHUB', 'Git & GitHub Bootcamp') ||
+            searchInSheet(data.javaAI, 'JAVA', 'Java with AI Bootcamp');
         }
 
         setTicket(foundTicket);
