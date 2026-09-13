@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { type BootcampRegistration } from '../../services';
 import { DataTable } from '../../components/admin/DataTable';
-import { RefreshCw, Users, Clock, CheckCircle, Eye, Edit, Mail, X } from 'lucide-react';
+import { RefreshCw, Users, Clock, CheckCircle, Eye, Edit, Mail, X, Trash2 } from 'lucide-react';
 
 interface AdminBootcampPageProps {
   title: string;
@@ -40,6 +40,12 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
   useEffect(() => {
     loadData();
   }, [fetchData]);
+
+  const handleDelete = (row: BootcampRegistration) => {
+    if (window.confirm('Are you sure you want to remove this registration? (This only removes it from the current view)')) {
+      setRegistrations(prev => prev.filter(reg => !(reg.Email === row.Email && reg.Timestamp === row.Timestamp)));
+    }
+  };
 
   const columns = React.useMemo(() => {
     let cols: any[] = [];
@@ -84,6 +90,13 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
             title="Send Email"
           >
             <Mail size={18} />
+          </button>
+          <button 
+            onClick={() => handleDelete(row)}
+            className="text-gray-500 hover:text-red-600 transition-colors"
+            title="Delete Registration"
+          >
+            <Trash2 size={18} />
           </button>
         </div>
       )
