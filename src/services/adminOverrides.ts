@@ -43,10 +43,27 @@ export const adminOverrideService = {
         payload,
       };
 
-      await setDoc(doc(db, 'admin_overrides', docId), overrideData);
+      try {
+        await setDoc(doc(db, 'admin_overrides', docId), overrideData);
+      } catch (err) {
+        console.warn('Firestore save failed (likely rules issue). Falling back to local storage.', err);
+      }
+      
+      // Always save to local storage as fallback/cache
+      try {
+        const localKey = `kqe_admin_overrides_${bootcampTitle.replace(/[^a-zA-Z0-9_]/g, '_')}`;
+        const existing = JSON.parse(localStorage.getItem(localKey) || '[]');
+        // Remove existing override for this docId to avoid duplicates
+        const updated = existing.filter((o: any) => o._docId !== docId);
+        updated.push({ ...overrideData, _docId: docId });
+        localStorage.setItem(localKey, JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save to local storage', e);
+        throw new Error('Failed to permanently save the change. Please check your browser settings.');
+      }
     } catch (err) {
-      console.error('Failed to save admin override:', err);
-      throw new Error('Failed to permanently save the change. Please check your connection.');
+      console.error('Failed to process admin override:', err);
+      throw new Error('Failed to permanently save the change. Please try again.');
     }
   },
 
@@ -54,6 +71,9 @@ export const adminOverrideService = {
    * Fetch all overrides for a specific bootcamp.
    */
   getOverrides: async (bootcampTitle: string): Promise<AdminOverride[]> => {
+    let overrides: AdminOverride[] = [];
+    
+    // Try fetch from Firestore
     try {
       const q = query(
         collection(db, 'admin_overrides'),
@@ -61,16 +81,34 @@ export const adminOverrideService = {
       );
       
       const snapshot = await getDocs(q);
-      const overrides: AdminOverride[] = [];
       
       snapshot.forEach((doc) => {
         overrides.push(doc.data() as AdminOverride);
       });
-      
-      return overrides;
     } catch (err) {
-      console.error('Failed to fetch admin overrides:', err);
-      return [];
+      console.warn('Failed to fetch admin overrides from Firestore (rules issue?):', err);
+    }
+    
+    // Merge from local storage
+    try {
+      const localKey = `kqe_admin_overrides_${bootcampTitle.replace(/[^a-zA-Z0-9_]/g, '_')}`;
+      const localOverrides = JSON.parse(localStorage.getItem(localKey) || '[]');
+      
+      // Merge them, preferring local storage if there's a conflict since it might be newer if Firestore failed
+      const mergedMap = new Map();
+      overrides.forEach(o => {
+          const id = `${o.email}_${o.timestamp}`;
+          mergedMap.set(id, o);
+      });
+      localOverrides.forEach((o: any) => {
+          const id = `${o.email}_${o.timestamp}`;
+          mergedMap.set(id, o);
+      });
+      
+      return Array.from(mergedMap.values());
+    } catch (e) {
+       console.error('Failed to read from local storage', e);
+       return overrides;
     }
   },
 
