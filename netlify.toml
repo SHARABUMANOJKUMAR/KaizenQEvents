@@ -4,7 +4,7 @@
 
 [[redirects]]
   from = "/__/auth/*"
-  to = "https://shaivika-lms-ai.firebaseapp.com/__/auth/:splat"
+  to = "https://kaizenqevents.click/__/auth/:splat"
   status = 200
   force = true
 

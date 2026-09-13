@@ -62,6 +62,7 @@ export const organizers: OrganizerProfile[] = [
     role: 'Google Student Ambassador',
     imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788859136/Wassem_Profile_ele3lt.jpg',
     bio: 'Waseem Hussain is a Google Student Ambassador passionate about AI, Machine Learning, Data Science, and Web Development. He is focused on leadership, innovation, and entrepreneurship, building impactful technology solutions and continuously exploring emerging technologies.',
+    linkedin: 'https://www.linkedin.com/in/waseem-hussain-a74311326/',
   },
   {
     id: 'org-008',
