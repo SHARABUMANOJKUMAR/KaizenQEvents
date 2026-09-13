@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, query, where, setDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, setDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
 
 export type OverrideAction = 'DELETE' | 'UPDATE';

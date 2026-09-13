@@ -5,7 +5,7 @@ import {
   User, Mail, Phone, GraduationCap, Building, BookOpen, KeyRound, AlertCircle
 } from 'lucide-react';
 import { eventService } from '../services';
-import { registrationService } from '../services/registration';
+import { registrationService, type RegistrationPayload } from '../services/registration';
 import type { Event } from '../types';
 import { Button, Badge, Skeleton, EmptyState } from '../components/ui';
 import { formatDateRange } from '../utils';
