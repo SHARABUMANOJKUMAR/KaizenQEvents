@@ -41,7 +41,9 @@ const EventRegisterPage: React.FC = () => {
   const [branch, setBranch] = useState(user?.branch || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [authError, setAuthError] = useState('');  // Auto populate user info if user state updates
+  const [authError, setAuthError] = useState('');
+  const [existingRegistration, setExistingRegistration] = useState<RegistrationPayload | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);  // Auto populate user info if user state updates
   useEffect(() => {
     if (user) {
       if (user.displayName && !fullName) setFullName(user.displayName);
@@ -94,6 +96,22 @@ const EventRegisterPage: React.FC = () => {
     }
 
     setSubmitting(true);
+
+    if (!isUpdating) {
+      try {
+        const emailToCheck = email.trim().toLowerCase();
+        const existingRegs = await registrationService.getUserRegistrations(emailToCheck);
+        const duplicate = existingRegs.find(reg => reg.eventId === event.id);
+        
+        if (duplicate) {
+          setExistingRegistration(duplicate);
+          setSubmitting(false);
+          return;
+        }
+      } catch (err) {
+        console.error("Duplicate check failed:", err);
+      }
+    }
 
     if (!user) {
       try {
@@ -324,13 +342,36 @@ const EventRegisterPage: React.FC = () => {
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6">
             <div className="border-b border-[#E8EAED] pb-4 flex justify-between items-center flex-wrap gap-2">
               <div>
-                <h2 className="text-xl font-bold text-[#1A1A2E]">Attendee Registration Form</h2>
+                <h2 className="text-xl font-bold text-[#1A1A2E]">
+                  {isUpdating ? 'Update Attendee Registration' : 'Attendee Registration Form'}
+                </h2>
                 <p className="text-xs text-[#5F6368]">Please fill in your basic details to complete registration.</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {authError && (
+            {existingRegistration && !isUpdating ? (
+              <div className="bg-[#FFF8E1] border border-[#FFE082] rounded-xl p-6 shadow-sm space-y-4">
+                <div className="flex items-start gap-3 text-[#B78103]">
+                  <AlertCircle size={24} className="shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-bold text-base">⚠️ Already Enrolled</h3>
+                    <p className="text-sm mt-1">
+                      You have already registered for <span className="font-semibold">{event.title}</span> using this email address ({existingRegistration.email}).
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-3 pt-2 pl-9">
+                  <Button variant="primary" onClick={() => navigate('/dashboard')}>
+                    View Enrollment
+                  </Button>
+                  <Button variant="secondary" onClick={() => setIsUpdating(true)}>
+                    Update Enrollment
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {authError && (
                 <div className="p-3.5 rounded-xl text-xs flex items-start gap-2.5 bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2] transition-all">
                   <AlertCircle size={16} className="shrink-0 mt-0.5" />
                   <span className="font-medium leading-relaxed">{authError}</span>
@@ -528,6 +569,7 @@ const EventRegisterPage: React.FC = () => {
                 </p>
               </div>
             </form>
+            )}
           </div>
         )}
       </div>

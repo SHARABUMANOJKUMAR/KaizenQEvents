@@ -86,12 +86,22 @@ export const registrationService = {
         return timeB - timeA;
       });
 
-      if (userRegs.length > 0) {
+      // Deduplicate by eventId (keep the latest one)
+      const uniqueRegsMap = new Map<string, RegistrationPayload>();
+      userRegs.forEach(reg => {
+        if (!uniqueRegsMap.has(reg.eventId)) {
+          uniqueRegsMap.set(reg.eventId, reg);
+        }
+      });
+      
+      const deduplicatedRegs = Array.from(uniqueRegsMap.values());
+
+      if (deduplicatedRegs.length > 0) {
         // Cache locally so it loads instantly next time
         try {
-          localStorage.setItem(`kqe_user_regs_${emailLower}`, JSON.stringify(userRegs));
+          localStorage.setItem(`kqe_user_regs_${emailLower}`, JSON.stringify(deduplicatedRegs));
         } catch {}
-        return userRegs;
+        return deduplicatedRegs;
       }
       
       // If we got nothing from sheets (e.g. sheets are private), fallback to local storage
