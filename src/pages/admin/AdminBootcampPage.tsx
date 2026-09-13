@@ -29,7 +29,10 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
     setError(null);
     try {
       const data = await fetchData();
-      setRegistrations(data);
+      const { adminOverrideService } = await import('../../services');
+      const overrides = await adminOverrideService.getOverrides(title);
+      const processedData = adminOverrideService.applyOverrides(data, overrides);
+      setRegistrations(processedData);
     } catch (err) {
       setError(`Failed to fetch ${title} data. Please check connection and sheet permissions.`);
     } finally {
@@ -41,9 +44,15 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
     loadData();
   }, [fetchData]);
 
-  const handleDelete = (row: BootcampRegistration) => {
-    if (window.confirm('Are you sure you want to remove this registration? (This only removes it from the current view)')) {
-      setRegistrations(prev => prev.filter(reg => !(reg.Email === row.Email && reg.Timestamp === row.Timestamp)));
+  const handleDelete = async (row: BootcampRegistration) => {
+    if (window.confirm('Are you sure you want to PERMANENTLY remove this registration?')) {
+      try {
+        const { adminOverrideService } = await import('../../services');
+        await adminOverrideService.saveOverride(title, row.Email || row['Email Address'] || '', row.Timestamp || '', 'DELETE');
+        setRegistrations(prev => prev.filter(reg => !(reg.Email === row.Email && reg.Timestamp === row.Timestamp)));
+      } catch (err) {
+        alert('Failed to delete permanently. Please try again.');
+      }
     }
   };
 
@@ -111,15 +120,27 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
     ? (registrations[registrations.length - 1].Timestamp || 'N/A') 
     : 'N/A';
 
-  const handleEditSave = (e: React.FormEvent) => {
+  const handleEditSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editModal) {
-      // Local update only since there's no backend
-      const updatedRegs = registrations.map(reg => 
-        (reg.Email === editModal.Email && reg.Timestamp === editModal.Timestamp) ? editModal : reg
-      );
-      setRegistrations(updatedRegs);
-      setEditModal(null);
+      try {
+        const { adminOverrideService } = await import('../../services');
+        await adminOverrideService.saveOverride(
+          title, 
+          editModal.Email || editModal['Email Address'] || '', 
+          editModal.Timestamp || '', 
+          'UPDATE', 
+          editModal
+        );
+        
+        const updatedRegs = registrations.map(reg => 
+          (reg.Email === editModal.Email && reg.Timestamp === editModal.Timestamp) ? editModal : reg
+        );
+        setRegistrations(updatedRegs);
+        setEditModal(null);
+      } catch (err) {
+        alert('Failed to save edit permanently. Please try again.');
+      }
     }
   };
 
@@ -242,7 +263,7 @@ export const AdminBootcampPage: React.FC<AdminBootcampPageProps> = ({ title, fet
             <div className="p-5 flex justify-between items-center border-b border-gray-100">
               <div>
                 <h3 className="text-lg font-bold text-gray-900">Edit Registration</h3>
-                <p className="text-xs text-yellow-600 mt-1">Changes are saved locally until refresh.</p>
+                <p className="text-xs text-blue-600 mt-1">Changes will be saved permanently for all admins.</p>
               </div>
               <button onClick={() => setEditModal(null)} className="text-gray-400 hover:text-gray-600">
                 <X size={20} />
