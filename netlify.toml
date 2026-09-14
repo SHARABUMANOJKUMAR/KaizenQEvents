@@ -3,8 +3,8 @@
   command = "npm run build"
 
 [[redirects]]
-  from = "/__/auth/*"
-  to = "https://kaizenqevents.click/__/auth/:splat"
+  from = "/__/*"
+  to = "https://shaivika-lms-ai.firebaseapp.com/__/:splat"
   status = 200
   force = true
 
