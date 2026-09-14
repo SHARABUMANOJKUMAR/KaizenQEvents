@@ -1,5 +1,6 @@
 import { collection, getDocs, query, where, setDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
+import { getWebhookForTitle } from './registration';
 
 export type OverrideAction = 'DELETE' | 'UPDATE';
 
@@ -47,6 +48,26 @@ export const adminOverrideService = {
         await setDoc(doc(db, 'admin_overrides', docId), overrideData);
       } catch (err) {
         console.warn('Firestore save failed (likely rules issue). Falling back to local storage.', err);
+      }
+      
+      // Attempt to immediately sync with Google Sheets via Webhook
+      try {
+        const webhookUrl = getWebhookForTitle(bootcampTitle);
+        if (webhookUrl) {
+          fetch(webhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: action,
+              email: emailLower,
+              timestamp: safeTimestamp,
+              updateData: payload || {}
+            }),
+          }).catch(e => console.warn('Webhook sync error:', e));
+        }
+      } catch (err) {
+        console.warn('Failed to trigger webhook:', err);
       }
       
       // Always save to local storage as fallback/cache

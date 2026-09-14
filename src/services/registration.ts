@@ -5,7 +5,7 @@ import { db } from './firebase';
 // Registration Service (High-Scale Firestore Implementation)
 // ============================================================
 
-const EVENT_WEBHOOKS: Record<string, string> = {
+export const EVENT_WEBHOOKS: Record<string, string> = {
   // Git & GitHub BootCamp
   'GITHUB': 'https://script.google.com/macros/s/AKfycbySfa02cR53F4uyoJDLzW6Az6RGlXrL8AeC9BvNX3NmGEXiPFam8aO4PIg_RurA7VmioA/exec',
   // Python With AI BootCamp
@@ -14,6 +14,15 @@ const EVENT_WEBHOOKS: Record<string, string> = {
   'JAVA': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
   // Generative AI BootCamp
   'GENERATIVE AI': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
+};
+
+export const getWebhookForTitle = (title: string): string | undefined => {
+  const t = title.toLowerCase();
+  if (t.includes('github')) return EVENT_WEBHOOKS['GITHUB'];
+  if (t.includes('python')) return EVENT_WEBHOOKS['PYTHON'];
+  if (t.includes('java')) return EVENT_WEBHOOKS['JAVA'];
+  if (t.includes('generative ai')) return EVENT_WEBHOOKS['GENERATIVE AI'];
+  return undefined;
 };
 
 export interface RegistrationPayload {
