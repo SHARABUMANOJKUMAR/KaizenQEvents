@@ -64,7 +64,7 @@ export const authService = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
       authService.saveUserToDb(userProfile);
       
-      await authService.logActionToSheets({
+      authService.logActionToSheets({
         action: 'login',
         userId: fbUser.uid,
         email: fbUser.email,
@@ -116,7 +116,7 @@ export const authService = {
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
       
-      await authService.logActionToSheets({
+      authService.logActionToSheets({
         action: 'login',
         userId: fbUser.uid,
         email: email,
@@ -156,7 +156,7 @@ export const authService = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newProfile));
       authService.saveUserToDb(newProfile);
 
-      await authService.logActionToSheets({
+      authService.logActionToSheets({
         action: 'register',
         userId: fbUser.uid,
         fullName: params.displayName,
