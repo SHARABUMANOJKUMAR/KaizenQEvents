@@ -506,6 +506,30 @@ const EventDetailPage: React.FC = () => {
 
             <Divider />
 
+            {/* Tasks */}
+            {event.tasks && event.tasks.length > 0 && (
+              <>
+                <DetailSection id="tasks" title="Tasks" icon={<CheckCircle2 size={20} />}>
+                  <div className="grid grid-cols-1 gap-4">
+                    {event.tasks.map((task) => (
+                      <div key={task.id} className="border border-[#E8EAED] rounded-xl p-5 bg-[#F8F9FA] shadow-sm">
+                        <h3 className="text-lg font-bold text-[#1A1A2E] mb-2">{task.title}</h3>
+                        <p className="text-sm text-[#5F6368] mb-5 leading-relaxed">{task.description}</p>
+                        <Button
+                          variant="primary"
+                          size="md"
+                          onClick={() => window.open(task.link, '_blank', 'noopener,noreferrer')}
+                        >
+                          Submit task
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </DetailSection>
+                <Divider />
+              </>
+            )}
+
             {/* Discussions */}
             <DetailSection id="discussions" title="Discussions" icon={<MessageCircle size={20} />}>
               {event.discussions.length > 0 ? (

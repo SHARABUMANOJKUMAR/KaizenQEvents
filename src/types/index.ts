@@ -76,6 +76,13 @@ export interface Discussion {
   replies: number;
 }
 
+export interface EventTask {
+  id: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
 export interface Event {
   id: string;
   title: string;
@@ -97,6 +104,7 @@ export interface Event {
   partners: Partner[];
   venue: Venue;
   discussions: Discussion[];
+  tasks?: EventTask[];
   whatYoullLearn: string[];
   whatsIncluded: string[];
   tags: string[];

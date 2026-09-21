@@ -92,6 +92,37 @@ const OrganizersPage: React.FC = () => {
             No organizers match your search.
           </div>
         )}
+
+        {/* Mentor Talks Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-extrabold text-[#1A1A2E] mb-8 border-b border-[#E8EAED] pb-4">
+            Mentor Talks
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <OrganizerCard
+              organizer={{
+                id: 'mentor-001',
+                name: 'Harshith Sai Tunuguntla',
+                company: 'LinkedIn Top Voice',
+                role: 'Backend Software Engineer',
+                imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789981646/harshith_sai_kmbmmq.jpg',
+                bio: 'Harshith Sai Tunuguntla is an Indian backend software engineer, tech content creator, and public speaker. He is widely recognized as a LinkedIn Top Voice focused on personal branding, career growth, and networking strategies for students and tech professionals.',
+                linkedin: 'https://in.linkedin.com/in/harshithtunuguntla',
+              }}
+            />
+            <OrganizerCard
+              organizer={{
+                id: 'mentor-002',
+                name: 'Bhadri',
+                company: 'Apexx Global Fintech',
+                role: 'Portal Architect',
+                imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789987449/badri_mt_zg3xil.jpg',
+                bio: 'Bhadri is a Portal Architect at Apexx Global Fintech, with experience in designing and developing scalable digital platforms and enterprise-level solutions. He brings practical industry knowledge and a strong understanding of modern software development, architecture, and technology. He is passionate about sharing real-world insights, helping developers understand industry practices, and guiding learners toward building strong technical skills and professional careers.',
+                linkedin: 'https://www.linkedin.com/in/badri-nath-1b5a9b217/',
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

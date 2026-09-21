@@ -44,6 +44,7 @@ This is an interactive online live workshop — you will be writing commands, cr
       { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
       { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
       { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
+      { id: 'prt-008', name: 'Naukri', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789981144/nuokari_img_oo0ugh.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -52,6 +53,14 @@ This is an interactive online live workshop — you will be writing commands, cr
       state: 'Live Virtual Workshop',
       pincode: 'Online',
     },
+    tasks: [
+      {
+        id: 'tsk-001',
+        title: '🚀 Day 1 Task Submission — Git Foundations',
+        description: "Complete today's hands-on Git tasks, practice the commands, create meaningful commits, and submit your work through this form.",
+        link: 'https://docs.google.com/forms/d/e/1FAIpQLSdahc6mk_ZovA1umaRZLhOIAFdVYsFEFRz_5Ajk5hobZw-R4g/viewform?usp=dialog',
+      }
+    ],
     discussions: [
       {
         id: 'dis-001',
@@ -131,6 +140,7 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
       { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
       { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
       { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
+      { id: 'prt-008', name: 'Naukri', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789981144/nuokari_img_oo0ugh.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -209,6 +219,7 @@ In this hands-on masterclass, you will learn how to build AI-powered microservic
       { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
       { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
       { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
+      { id: 'prt-008', name: 'Naukri', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789981144/nuokari_img_oo0ugh.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
@@ -287,6 +298,7 @@ Discover how to fine-tune open-weights models (Llama 3, Mistral), implement adva
       { id: 'prt-003', name: 'Google Developer Groups', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802581/GDG_Chapter_lockup_-_GDG_New_Delhi_2_oqrbyn.png' },
       { id: 'prt-004', name: 'ELITE WEB KINGDOM', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788802827/EWK_kaqgis.png' },
       { id: 'prt-007', name: 'Shaivika Groups', type: 'Event Organizer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803584/Shaivika_Groups_Logo_BGT_xo5vqx.png' },
+      { id: 'prt-008', name: 'Naukri', type: 'Tech', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789981144/nuokari_img_oo0ugh.png' },
     ],
     venue: {
       name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
