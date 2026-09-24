@@ -14,12 +14,37 @@ import {
 import { Button, Card, Skeleton } from '../components/ui';
 import { certificateService, type CertificateData } from '../services/certificateService';
 
+const normalizeGoogleDrivePdfUrl = (url?: string) => {
+  if (!url) return null;
+  let fileId = '';
+  
+  const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileIdMatch && fileIdMatch[1]) {
+    fileId = fileIdMatch[1];
+  } else {
+    const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (idMatch && idMatch[1]) {
+      fileId = idMatch[1];
+    }
+  }
+
+  if (!fileId) return null;
+
+  return {
+    fileId,
+    previewUrl: `https://drive.google.com/file/d/${fileId}/preview`,
+    viewUrl: `https://drive.google.com/file/d/${fileId}/view`,
+    downloadUrl: `https://drive.google.com/uc?export=download&id=${fileId}`
+  };
+};
+
 export const CertificateVerificationPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const certId = searchParams.get('cert');
   
   const [loading, setLoading] = useState(true);
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
+  const [pdfLinks, setPdfLinks] = useState<{fileId: string; previewUrl: string; viewUrl: string; downloadUrl: string} | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
 
@@ -33,6 +58,17 @@ export const CertificateVerificationPage: React.FC = () => {
       try {
         const data = await certificateService.getCertificateById(certId.trim());
         setCertificate(data);
+        if (data && data.pdfUrl) {
+          const links = normalizeGoogleDrivePdfUrl(data.pdfUrl);
+          setPdfLinks(links);
+          console.log("PDF URL:", data.pdfUrl);
+          if (links) {
+            console.log("PDF file ID:", links.fileId);
+            console.log("Preview URL:", links.previewUrl);
+            console.log("View URL:", links.viewUrl);
+            console.log("Download URL:", links.downloadUrl);
+          }
+        }
       } catch (err) {
         console.error('Verification error:', err);
       } finally {
@@ -271,7 +307,7 @@ export const CertificateVerificationPage: React.FC = () => {
           <Card className="shadow-md overflow-hidden bg-gray-200 relative min-h-[300px] flex items-center justify-center" padding={false}>
             {certificate.pdfUrl ? (
               <iframe 
-                src={`${certificate.pdfUrl}#toolbar=0`} 
+                src={pdfLinks?.previewUrl || certificate.pdfUrl} 
                 title="Certificate Preview"
                 className="w-full aspect-[1.414/1] md:aspect-[1.414/1] bg-white"
                 style={{ border: 'none' }}
@@ -279,8 +315,8 @@ export const CertificateVerificationPage: React.FC = () => {
             ) : (
               <div className="p-12 text-center text-gray-500 flex flex-col items-center">
                 <ExternalLink size={48} className="mb-4 opacity-50" />
-                <p className="font-medium mb-4">Certificate Preview Unavailable</p>
-                <p className="text-sm max-w-sm">The PDF preview could not be loaded, but you can still download the certificate.</p>
+                <p className="font-medium mb-4">Certificate PDF is currently unavailable.</p>
+                <p className="text-sm max-w-sm">The PDF preview could not be loaded, but the certificate is valid.</p>
               </div>
             )}
           </Card>
@@ -294,8 +330,9 @@ export const CertificateVerificationPage: React.FC = () => {
             leftIcon={<Download size={20} />} 
             fullWidth
             onClick={() => {
-              if (certificate.pdfUrl) {
-                window.open(certificate.pdfUrl, '_blank', 'noopener,noreferrer');
+              const url = pdfLinks?.downloadUrl || certificate.pdfUrl;
+              if (url) {
+                window.open(url, '_blank', 'noopener,noreferrer');
               } else {
                 alert("Download link is currently unavailable.");
               }
@@ -309,8 +346,9 @@ export const CertificateVerificationPage: React.FC = () => {
             leftIcon={<ExternalLink size={20} />} 
             fullWidth
             onClick={() => {
-              if (certificate.pdfUrl) {
-                window.open(certificate.pdfUrl, '_blank', 'noopener,noreferrer');
+              const url = pdfLinks?.viewUrl || certificate.pdfUrl;
+              if (url) {
+                window.open(url, '_blank', 'noopener,noreferrer');
               } else {
                 alert("View link is currently unavailable.");
               }

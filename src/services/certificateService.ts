@@ -3,28 +3,53 @@ export interface CertificateData {
   certificateId: string;
   completionDate: string;
   course: string;
+  organization: string;
   verificationUrl: string;
   pdfUrl: string;
 }
 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlZtIKCjqnijS0-Iw7GJnm70f0l4ak2OCrQrPX5AXyKYjTbJbefkUm0pGS8zXYvFhY/exec";
+
+const fetchJSONP = (url: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+    const script = document.createElement('script');
+    
+    // Setup callback
+    (window as any)[callbackName] = (data: any) => {
+      delete (window as any)[callbackName];
+      document.body.removeChild(script);
+      resolve(data);
+    };
+
+    // Handle errors
+    script.onerror = () => {
+      delete (window as any)[callbackName];
+      document.body.removeChild(script);
+      reject(new Error('JSONP request failed'));
+    };
+
+    script.src = `${url}&callback=${callbackName}`;
+    document.body.appendChild(script);
+  });
+};
+
 export const certificateService = {
   getCertificateById: async (certificateId: string): Promise<CertificateData | null> => {
-    // TODO: Connect this to the actual backend API using VITE_CERTIFICATE_API_URL
-    // Example: const response = await fetch(`${import.meta.env.VITE_CERTIFICATE_API_URL}/certificates/${certificateId}`);
+    try {
+      const url = `${APPS_SCRIPT_URL}?action=verify&cert=${encodeURIComponent(certificateId)}`;
+      const response = await fetchJSONP(url);
+      
+      console.log("Certificate ID:", certificateId);
+      console.log("Certificate data:", response);
 
-    // Temporary development data as requested
-    if (certificateId === 'KQE-GH-2026-0001') {
-      return {
-        fullName: "S MANOJ KUMAR",
-        certificateId: "KQE-GH-2026-0001",
-        completionDate: "23-09-2026",
-        course: "Git & GitHub Bootcamp",
-        verificationUrl: "https://kaizenqevents.click/verify?cert=KQE-GH-2026-0001",
-        pdfUrl: "" // Will test UI empty state for this or replace with a real test URL if needed
-      };
+      if (response && response.success && response.certificate) {
+        return response.certificate as CertificateData;
+      }
+      return null;
+    } catch (err) {
+      console.error("Error fetching certificate:", err);
+      return null;
     }
-
-    // Return null if certificate not found
-    return null;
   }
 };
