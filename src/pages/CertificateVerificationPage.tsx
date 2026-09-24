@@ -8,13 +8,11 @@ import {
   BadgeCheck, 
   Download, 
   Share2, 
-  Linkedin, 
-  Instagram, 
   Copy,
   ExternalLink
 } from 'lucide-react';
-import { Button, Card, Badge, Skeleton } from '../components/ui';
-import { certificateService, CertificateData } from '../services/certificateService';
+import { Button, Card, Skeleton } from '../components/ui';
+import { certificateService, type CertificateData } from '../services/certificateService';
 
 export const CertificateVerificationPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -339,14 +337,14 @@ export const CertificateVerificationPage: React.FC = () => {
               onClick={handleLinkedInShare}
               className="flex items-center gap-2 px-5 py-2.5 bg-[#0077b5] hover:bg-[#006396] text-white rounded-lg font-semibold transition-colors"
             >
-              <Linkedin size={18} />
+              <ExternalLink size={18} />
               LinkedIn
             </button>
             <button 
               onClick={handleInstagramShare}
               className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-90 text-white rounded-lg font-semibold transition-opacity"
             >
-              <Instagram size={18} />
+              <ExternalLink size={18} />
               Instagram
             </button>
             <button 
