@@ -21,6 +21,7 @@ const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 // Event Pass & Verification
 const EventPassPage = lazy(() => import('./pages/EventPassPage').then(m => ({ default: m.EventPassPage })));
 const VerifyPassPage = lazy(() => import('./pages/VerifyPassPage').then(m => ({ default: m.VerifyPassPage })));
+const CertificateVerificationPage = lazy(() => import('./pages/CertificateVerificationPage'));
 
 // Admin pages
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
@@ -123,6 +124,14 @@ const App: React.FC = () => {
                 element={
                   <Suspense fallback={<PageLoader />}>
                     <VerifyPassPage />
+                  </Suspense>
+                } 
+              />
+              <Route 
+                path="/verify" 
+                element={
+                  <Suspense fallback={<PageLoader />}>
+                    <CertificateVerificationPage />
                   </Suspense>
                 } 
               />

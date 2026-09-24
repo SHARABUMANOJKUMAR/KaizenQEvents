@@ -371,6 +371,7 @@ const EventRegisterPage: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                <fieldset disabled={event.id === 'GITHUB'} className="space-y-5">
                 {authError && (
                 <div className="p-3.5 rounded-xl text-xs flex items-start gap-2.5 bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2] transition-all">
                   <AlertCircle size={16} className="shrink-0 mt-0.5" />
@@ -555,21 +556,26 @@ const EventRegisterPage: React.FC = () => {
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
-                  type="submit"
-                  variant="primary"
+                  type={event.id === 'GITHUB' ? "button" : "submit"}
+                  variant={event.id === 'GITHUB' ? "secondary" : "primary"}
                   size="lg"
                   fullWidth
                   loading={submitting}
+                  disabled={event.id === 'GITHUB' || submitting}
                   id="submit-registration-btn"
                 >
-                  Submit Registration
+                  {event.id === 'GITHUB' ? 'Bootcamp Completed' : 'Submit Registration'}
                 </Button>
                 <p className="text-center text-xs text-[#9AA0A6] mt-3">
-                  By registering, you agree to receive event updates & confirmation details.
+                  {event.id === 'GITHUB' 
+                    ? 'Registration for this bootcamp is now closed.' 
+                    : 'By registering, you agree to receive event updates & confirmation details.'}
                 </p>
               </div>
+              </fieldset>
             </form>
             )}
+
           </div>
         )}
       </div>

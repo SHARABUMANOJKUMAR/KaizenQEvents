@@ -59,6 +59,18 @@ This is an interactive online live workshop — you will be writing commands, cr
         title: '🚀 Day 1 Task Submission — Git Foundations',
         description: "Complete today's hands-on Git tasks, practice the commands, create meaningful commits, and submit your work through this form.",
         link: 'https://docs.google.com/forms/d/e/1FAIpQLSdahc6mk_ZovA1umaRZLhOIAFdVYsFEFRz_5Ajk5hobZw-R4g/viewform?usp=dialog',
+      },
+      {
+        id: 'tsk-002',
+        title: '🚀 Day 2 Task Submission — Branching & GitHub',
+        description: "Practice branching strategies, push your code to remote repositories, and submit your work through this form.",
+        link: 'https://docs.google.com/forms/d/e/1FAIpQLScpcYs0YXGCtPforleBieVMxHUwV5GKoLnm8Z7g1KPFbfb25Q/viewform?usp=publish-editor',
+      },
+      {
+        id: 'tsk-003',
+        title: '🚀 Day 3 Task Submission — Pull Requests & Open Source',
+        description: "Create pull requests, resolve merge conflicts, and submit your work through this form.",
+        link: 'https://docs.google.com/forms/d/e/1FAIpQLSf-oLAzl2H3yYjPjTlCJt0goa_lsWFX_RAQ7ZTP29cJnbYi_Q/viewform',
       }
     ],
     discussions: [

@@ -439,14 +439,16 @@ const HomePage: React.FC = () => {
       eventService.getAll(),
       communityService.getAll(),
     ]).then(([evts, coms]) => {
-      setFilteredEvents(evts);
+      setFilteredEvents(evts.filter(e => e.id !== 'GITHUB'));
       setCommunities(coms.slice(0, 4));
       setLoading(false);
     });
   }, []);
 
   useEffect(() => {
-    eventService.search({ query, category }).then(setFilteredEvents);
+    eventService.search({ query, category }).then((evts) => {
+      setFilteredEvents(evts.filter(e => e.id !== 'GITHUB'));
+    });
   }, [query, category]);
 
   const orgSchema = {
