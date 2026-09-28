@@ -49,7 +49,7 @@ const OrganizersPage: React.FC = () => {
 
   return (
     <div className="fade-in bg-white min-h-screen">
-      <SEO 
+      <SEO
         title="Kaizen Q Events Organizers | Meet the Tech Community Leaders"
         description="Meet the passionate organizers and leaders behind Kaizen Q Events who power technology bootcamps, hackathons, and developer communities across India."
         canonical="/organizers"
@@ -119,6 +119,28 @@ const OrganizersPage: React.FC = () => {
                 imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1789987449/badri_mt_zg3xil.jpg',
                 bio: 'Bhadri is a Portal Architect at Apexx Global Fintech, with experience in designing and developing scalable digital platforms and enterprise-level solutions. He brings practical industry knowledge and a strong understanding of modern software development, architecture, and technology. He is passionate about sharing real-world insights, helping developers understand industry practices, and guiding learners toward building strong technical skills and professional careers.',
                 linkedin: 'https://www.linkedin.com/in/badri-nath-1b5a9b217/',
+              }}
+            />
+            <OrganizerCard
+              organizer={{
+                id: 'mentor-003',
+                name: 'Kuncham Likitha Reddy',
+                company: 'Infosys Company',
+                role: 'Java Senior Developer',
+                imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1790620210/ChatGPT_Image_Sep_28_2026_11_49_42_PM_fju7yg.png',
+                bio: 'Likhitha Kuncham is a Senior Java Backend Developer with 3.8 years of professional experience in developing scalable, high-performance backend applications. She specializes in Java, Spring Boot, Microservices, REST APIs, and Apache Kafka. She has hands-on experience with Docker, Kubernetes, AWS, MySQL, and CI/CD, with a strong focus on building reliable, scalable, and efficient backend systems.',
+                linkedin: 'https://www.linkedin.com/in/likhitha-kuncham-31b98036b/',
+              }}
+            />
+            <OrganizerCard
+              organizer={{
+                id: 'mentor-004',
+                name: 'Mahesh Merpula',
+                company: "Let's Talk Academy",
+                role: 'Founder',
+                imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1790620622/WhatsApp_Image_2026-09-28_at_11.56.03_atragu.jpg',
+                bio: "Merpula Mahesh is described in publicly available information as a personality development trainer associated with Let's Talk Training Institute in Puttur, Andhra Pradesh. He studied at Sri Venkateswara University (SVU). He was also listed as a resource person at an Entrepreneurship Awareness Camp held at Madanapalle Institute of Technology and Science (MITS) from January 4–6, 2018.",
+                linkedin: 'https://in.linkedin.com/in/mahesh-merupula-499a591b4?utm_source=chatgpt.com',
               }}
             />
           </div>

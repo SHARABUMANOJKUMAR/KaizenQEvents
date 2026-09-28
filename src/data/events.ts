@@ -161,6 +161,14 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
       state: 'Live Virtual Workshop',
       pincode: 'Online',
     },
+    tasks: [
+      {
+        id: 'tsk-py-001',
+        title: '🚀 Day 1 Task Submission — Python with AI Foundations',
+        description: "Complete today's hands-on Python tasks, practice the foundations, and submit your work through this link.",
+        link: 'https://kaizen-q-events-pythonday1task.vercel.app/',
+      }
+    ],
     discussions: [
       {
         id: 'dis-022',
