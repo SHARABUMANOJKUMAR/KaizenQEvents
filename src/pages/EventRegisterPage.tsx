@@ -182,12 +182,11 @@ const EventRegisterPage: React.FC = () => {
               
               await paymentService.verifyPayment(verifyPayload);
               
-              // We also want to save to Firebase, but it's optional as we have it in Google Sheets.
-              // Let's just call submitRegistration here just to sync it to Firebase if we want.
+              // Save to Firebase and Local Storage so it appears in the Dashboard immediately
               try {
-                await registrationService.submitRegistration(payload);
+                await registrationService.saveLocalRegistration(payload);
               } catch (e) {
-                // Ignore firebase errors since payment verified
+                // Ignore errors since payment verified
               }
               
               const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);

@@ -192,6 +192,26 @@ export const registrationService = {
   },
 
   /**
+   * Save registration to Firestore and LocalStorage (used after successful payment)
+   */
+  saveLocalRegistration: async (data: RegistrationPayload): Promise<void> => {
+    const ticketId = `KQE-${Math.floor(100000 + Math.random() * 900000)}`;
+    const payload: RegistrationPayload = {
+      ...data,
+      email: data.email.toLowerCase(),
+      timestamp: new Date().toISOString(),
+      ticketId,
+    };
+    try {
+      await addDoc(collection(db, 'registrations'), payload).catch(e => console.warn(e));
+      const userKey = `kqe_user_regs_${data.email.toLowerCase()}`;
+      const userRegs: RegistrationPayload[] = JSON.parse(localStorage.getItem(userKey) || '[]');
+      userRegs.unshift(payload);
+      localStorage.setItem(userKey, JSON.stringify(userRegs));
+    } catch {}
+  },
+
+  /**
    * Get all registrations for a specific event (For Admin / Organizer view)
    */
   getRegistrationsForEvent: async (eventId: string): Promise<RegistrationPayload[]> => {
