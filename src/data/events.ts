@@ -419,7 +419,7 @@ Join us to learn how to create autonomous agents that can plan, execute tools, a
     maxAttendees: 150,
     currentAttendees: 0,
     originalPrice: 1499,
-    price: 1,
+    price: 149,
     isPaid: true,
     faqs: [
       { question: 'Do I need prior Python knowledge?', answer: 'Basic programming knowledge is helpful, but Day 1 covers Python Foundations.' },

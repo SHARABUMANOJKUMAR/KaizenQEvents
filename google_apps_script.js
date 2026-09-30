@@ -41,9 +41,9 @@ function handleCreateOrder(data) {
   var courseId = data.eventId;
   
   // Hardcoded price based on course, can be updated later
-  var amount = 1;
+  var amount = 149;
   if (courseId !== 'AGENTIC_AI') {
-    amount = 1; 
+    amount = 149; 
   }
 
   var keyId = PropertiesService.getScriptProperties().getProperty('RAZORPAY_KEY_ID');
@@ -127,7 +127,7 @@ function handleVerifyPayment(data) {
     "PAID",
     paymentId,
     orderId,
-    data.amount || 1,
+    data.amount || 149,
     signature,
     data.couponCode || ""
   ]);
@@ -278,7 +278,7 @@ function handleVerifyPayment(data) {
             </tr>
             <tr>
               <th>Amount Paid</th>
-              <td>₹` + (data.amount || 1) + `</td>
+              <td>₹` + (data.amount || 149) + `</td>
             </tr>
             <tr>
               <th>Email Address</th>
