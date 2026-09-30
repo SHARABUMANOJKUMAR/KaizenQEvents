@@ -164,8 +164,8 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
     tasks: [
       {
         id: 'tsk-py-001',
-        title: '🚀 Day 1 Task Submission — Python with AI Foundations',
-        description: "Complete today's hands-on Python tasks, practice the foundations, and submit your work through this link.",
+        title: '🚀 All Python with AI Bootcamp Tasks',
+        description: "Complete 5 Day's hands-on Python tasks, practice the foundations, and submit your work through this link.",
         link: 'https://kaizen-q-events-pythonday1task.vercel.app/',
       }
     ],
@@ -354,5 +354,77 @@ Discover how to fine-tune open-weights models (Llama 3, Mistral), implement adva
     whatsappGroupUrl: 'https://chat.whatsapp.com/HOO0SWFMmgA43p8goTWJsh?s=sh&p=a&mlu=4&ilr=4',
     maxAttendees: 200,
     currentAttendees: 1,
+  },
+  {
+    id: 'AGENTIC_AI',
+    title: 'Generative AI + Agentic AI Engineering',
+    shortDescription: '7 Days intensive bootcamp on Python Foundations, Generative AI, LLMs, AI Agents, and Real-World Projects.',
+    description: `Generative AI and Agentic AI are revolutionizing the tech industry. This 7-day comprehensive online workshop will guide you through Python Foundations to building real-world AI Agents.
+
+Join us to learn how to create autonomous agents that can plan, execute tools, and coordinate with other agents using the latest Agentic AI frameworks.`,
+    category: 'Workshop',
+    status: 'Open',
+    date: '2026-10-05',
+    endDate: '2026-10-11',
+    time: '06:00 PM',
+    endTime: '07:30 PM',
+    city: 'Online Mode',
+    state: 'Google Meet / Zoom',
+    imageUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1790789042/Gen_AI_C_KQE_Img_g49qca.webp',
+    bannerUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1790789042/Gen_AI_C_KQE_Img_g49qca.webp',
+    organizers: [organizers[1], organizers[0], organizers[3]],
+    speakers: [
+      {
+        id: 'spk-004',
+        name: 'Sharabu Manoj Kumar',
+        designation: 'Generative AI & LLM Systems Specialist',
+        company: 'Kaizen Q Events',
+        bio: 'Sharabu Manoj Kumar leads generative AI initiatives and specializes in large language model fine-tuning, advanced multimodal architectures, and production AI deployments.',
+        imageUrl: '/speakers/manoj.jpg',
+        linkedin: 'https://www.linkedin.com/in/sharabu-manoj-kumar',
+      },
+    ],
+    schedule: [
+      { time: '06:00 PM – 07:30 PM', title: 'Day 1 (05 Oct): Python Foundations', description: 'Core Python skills required for AI development.', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 2 (06 Oct): Generative AI & LLMs Basics', description: 'Understanding LLMs and prompt engineering.', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 3 (07 Oct): Introduction to Agentic AI', description: 'Concept of AI Agents and autonomous systems.', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 4 (08 Oct): Tool Calling and Execution', description: 'Equipping agents with tools (web search, calculators).', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 5 (09 Oct): Memory and Planning', description: 'Adding memory and reasoning to AI Agents.', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 6 (10 Oct): Multi-Agent Systems', description: 'Coordinating multiple agents for complex tasks.', type: 'session' },
+      { time: '06:00 PM – 07:30 PM', title: 'Day 7 (11 Oct): Real-World Projects', description: 'Capstone project and deployment.', type: 'session' },
+    ],
+    partners: [
+      { id: 'prt-001', name: 'Kaizen Q', type: 'Skill Trainer', logoUrl: 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1788803368/Kaizen_Q_Logo_with_Background_qy0d1n.png' },
+    ],
+    venue: {
+      name: 'Online Live Interactive Classroom (Google Meet / Zoom)',
+      address: 'Live Stream link shared upon registration & in WhatsApp group',
+      city: 'Online Mode',
+      state: 'Live Virtual Workshop',
+      pincode: 'Online',
+    },
+    discussions: [],
+    whatYoullLearn: [
+      'Python Foundations',
+      'Generative AI and LLMs',
+      'AI Agents (Agentic AI)',
+      'Real-World Projects'
+    ],
+    whatsIncluded: [
+      '7-Day online interactive classes',
+      'Access to session recordings',
+      'Verified Certificate of Completion',
+    ],
+    tags: ['AI', 'Agentic AI', '7 Days Workshop', 'Online'],
+    maxAttendees: 150,
+    currentAttendees: 0,
+    originalPrice: 1499,
+    price: 1,
+    isPaid: true,
+    faqs: [
+      { question: 'Do I need prior Python knowledge?', answer: 'Basic programming knowledge is helpful, but Day 1 covers Python Foundations.' },
+      { question: 'Will I get a certificate?', answer: 'Yes, a verified certificate is provided upon completion.' },
+      { question: 'Are the sessions recorded?', answer: 'Yes, all live sessions are recorded and available for lifetime access.' },
+    ],
   },
 ];

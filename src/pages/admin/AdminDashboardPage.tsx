@@ -10,6 +10,7 @@ interface DashboardData {
   pythonAI: BootcampRegistration[];
   gitGitHub: BootcampRegistration[];
   javaAI: BootcampRegistration[];
+  agenticAI: BootcampRegistration[];
   lastSync: string;
 }
 
@@ -72,7 +73,8 @@ const AdminDashboardPage: React.FC = () => {
     (data?.genAI.length || 0) + 
     (data?.pythonAI.length || 0) + 
     (data?.gitGitHub.length || 0) + 
-    (data?.javaAI.length || 0);
+    (data?.javaAI.length || 0) +
+    (data?.agenticAI.length || 0);
 
   // Mock trend data since we don't have historical dates guaranteed in this CSV structure yet.
   // In a real app we would map over the Timestamp column.
@@ -166,6 +168,13 @@ const AdminDashboardPage: React.FC = () => {
           bgColor="bg-cyan-50"
           accent="border-cyan-200"
         />
+        <BootcampStatCard 
+          title="Agentic AI" 
+          count={data?.agenticAI.length || 0} 
+          icon={<Bot size={20} className="text-violet-600" />} 
+          bgColor="bg-violet-50"
+          accent="border-violet-200"
+        />
       </div>
 
       {/* Charts Section */}
@@ -204,6 +213,7 @@ const AdminDashboardPage: React.FC = () => {
             <HealthItem name="Python with AI" status={data?.pythonAI ? 'Connected' : 'Error'} />
             <HealthItem name="Git & GitHub" status={data?.gitGitHub ? 'Connected' : 'Error'} />
             <HealthItem name="Java with AI" status={data?.javaAI ? 'Connected' : 'Error'} />
+            <HealthItem name="Agentic AI" status={data?.agenticAI ? 'Connected' : 'Error'} />
           </div>
         </div>
       </div>

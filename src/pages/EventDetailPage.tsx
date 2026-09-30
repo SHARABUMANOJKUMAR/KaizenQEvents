@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   MapPin, Calendar, Clock,
   ChevronLeft, Users, MessageCircle, ThumbsUp, CheckCircle2,
-  BookOpen, Gift, User2, Building2
+  BookOpen, Gift, User2, Building2, HelpCircle
 } from 'lucide-react';
 import { eventService } from '../services';
 import { registrationService } from '../services/registration';
@@ -198,7 +198,7 @@ const EventDetailPage: React.FC = () => {
         ? 'Registration Closed'
         : event.status === 'Waitlist'
         ? 'Join Waitlist'
-        : 'Get Tickets'}
+        : (event.isPaid ? 'Enroll Now' : 'Get Tickets')}
     </Button>
   );
 
@@ -530,6 +530,23 @@ const EventDetailPage: React.FC = () => {
               </>
             )}
 
+            {/* FAQs */}
+            {event.faqs && event.faqs.length > 0 && (
+              <>
+                <DetailSection id="faqs" title="Frequently Asked Questions" icon={<HelpCircle size={20} />}>
+                  <div className="space-y-4">
+                    {event.faqs.map((faq, i) => (
+                      <div key={i} className="border-b border-[#E8EAED] pb-4 last:border-0 last:pb-0">
+                        <h4 className="font-bold text-[#1A1A2E] text-base mb-1">{faq.question}</h4>
+                        <p className="text-sm text-[#5F6368]">{faq.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </DetailSection>
+                <Divider />
+              </>
+            )}
+
             {/* Discussions */}
             <DetailSection id="discussions" title="Discussions" icon={<MessageCircle size={20} />}>
               {event.discussions.length > 0 ? (
@@ -562,7 +579,14 @@ const EventDetailPage: React.FC = () => {
               <div className="border border-[#E8EAED] rounded-2xl p-6 bg-white shadow-sm">
                 <h3 className="font-bold text-[#1A1A2E] mb-4">Registration</h3>
 
-
+                {event.isPaid && event.price !== undefined && (
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl font-bold text-[#1A1A2E]">₹{event.price}</span>
+                    {event.originalPrice && (
+                      <span className="text-base font-medium text-[#9AA0A6] line-through">₹{event.originalPrice}</span>
+                    )}
+                  </div>
+                )}
 
                 {renderRegisterButton(true, true)}
 
@@ -623,7 +647,11 @@ const EventDetailPage: React.FC = () => {
         <div className="flex items-center gap-3 max-w-xl mx-auto">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#1A1A2E] truncate">{event.title}</p>
-            <p className="text-xs text-[#5F6368]">{formatShortDate(event.date)}</p>
+            {event.isPaid && event.price !== undefined ? (
+              <p className="text-xs font-bold text-[#4285F4]">₹{event.price}</p>
+            ) : (
+              <p className="text-xs text-[#5F6368]">{formatShortDate(event.date)}</p>
+            )}
           </div>
           {renderRegisterButton()}
         </div>

@@ -102,6 +102,16 @@ const App: React.FC = () => {
                     />
                   } 
                 />
+                <Route 
+                  path="agentic-ai" 
+                  element={
+                    <AdminBootcampPage 
+                      title="Generative AI + Agentic AI Engineering" 
+                      fetchData={GoogleSheetsService.getAgenticAIRegistrations}
+                      fileName="agentic_ai_registrations.csv"
+                    />
+                  } 
+                />
                 <Route path="analytics" element={<AdminAnalyticsPage />} />
                 <Route path="settings" element={<AdminSettingsPage />} />
                 

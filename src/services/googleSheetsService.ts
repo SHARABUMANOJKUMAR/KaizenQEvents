@@ -7,7 +7,8 @@ const SHEET_URLS = {
   generativeAI: 'https://docs.google.com/spreadsheets/d/16eCfu21GCne7Mjtjk0qxfpbHkYqfINCG-BRUHvCyTZg/export?format=csv&gid=0',
   pythonAI: 'https://docs.google.com/spreadsheets/d/1M9PNRYV7vNb-H-q9PQND5jKydh9THJFlqXxx7gUZuq8/export?format=csv&gid=0',
   gitGitHub: 'https://docs.google.com/spreadsheets/d/1wj8RxQ17DNEnYGYJQpKl76A7-gBF9dY5nfGEnxXuwes/export?format=csv&gid=0',
-  javaAI: 'https://docs.google.com/spreadsheets/d/1Xk80UdTZmrXHOc3agRVZjTRmQMWcaW2EuMjhL72OGi4/export?format=csv&gid=0'
+  javaAI: 'https://docs.google.com/spreadsheets/d/1Xk80UdTZmrXHOc3agRVZjTRmQMWcaW2EuMjhL72OGi4/export?format=csv&gid=0',
+  agenticAI: 'https://docs.google.com/spreadsheets/d/dummy-agentic-ai-sheet-id/export?format=csv&gid=0'
 };
 
 function resolveUrl(rawUrl: string): string {
@@ -98,6 +99,7 @@ export const GoogleSheetsService = {
   getPythonAIRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.pythonAI, MOCK_BOOTCAMP_REGISTRATIONS),
   getGitGithubRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.gitGitHub, MOCK_BOOTCAMP_REGISTRATIONS),
   getJavaAIRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.javaAI, MOCK_BOOTCAMP_REGISTRATIONS),
+  getAgenticAIRegistrations: () => fetchSheetData<BootcampRegistration>(SHEET_URLS.agenticAI, MOCK_BOOTCAMP_REGISTRATIONS),
   getLogins: () => fetchSheetData<LoginActivity>(SHEET_URLS.logins, MOCK_LOGINS),
 
   
@@ -106,12 +108,13 @@ export const GoogleSheetsService = {
   
   // For the dashboard to fetch all concurrently
   getAllDashboardData: async () => {
-    const [users, genAI, pythonAI, gitGitHub, javaAI] = await Promise.all([
+    const [users, genAI, pythonAI, gitGitHub, javaAI, agenticAI] = await Promise.all([
       GoogleSheetsService.getUsers().catch(() => []),
       GoogleSheetsService.getGenerativeAIRegistrations().catch(() => []),
       GoogleSheetsService.getPythonAIRegistrations().catch(() => []),
       GoogleSheetsService.getGitGithubRegistrations().catch(() => []),
-      GoogleSheetsService.getJavaAIRegistrations().catch(() => [])
+      GoogleSheetsService.getJavaAIRegistrations().catch(() => []),
+      GoogleSheetsService.getAgenticAIRegistrations().catch(() => [])
     ]);
     
     return {
@@ -120,6 +123,7 @@ export const GoogleSheetsService = {
       pythonAI,
       gitGitHub,
       javaAI,
+      agenticAI,
       lastSync: new Date().toISOString()
     };
   }

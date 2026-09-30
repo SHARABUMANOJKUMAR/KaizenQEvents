@@ -30,6 +30,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, setIsOpen })
     { name: 'Python with AI', path: '/admin/python-ai', icon: TerminalSquare },
     { name: 'Git & GitHub', path: '/admin/git-github', icon: GitBranch },
     { name: 'Java with AI', path: '/admin/java-ai', icon: Coffee },
+    { name: 'Agentic AI', path: '/admin/agentic-ai', icon: Bot },
     { type: 'divider', name: 'Management' },
     { name: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
     { name: 'Settings', path: '/admin/settings', icon: Settings },

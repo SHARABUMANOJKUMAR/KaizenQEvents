@@ -4,7 +4,7 @@ import {
   ChevronLeft, Calendar, Clock, MapPin, CheckCircle2,
   User, Mail, Phone, GraduationCap, Building, BookOpen, KeyRound, AlertCircle
 } from 'lucide-react';
-import { eventService } from '../services';
+import { eventService, paymentService } from '../services';
 import { registrationService, type RegistrationPayload } from '../services/registration';
 import type { Event } from '../types';
 import { Button, Badge, Skeleton, EmptyState } from '../components/ui';
@@ -39,6 +39,9 @@ const EventRegisterPage: React.FC = () => {
   const [year, setYear] = useState(user?.year || '3rd Year');
   const [college, setCollege] = useState(user?.college || '');
   const [branch, setBranch] = useState(user?.branch || '');
+  const [couponCode, setCouponCode] = useState('');
+  const [couponVerified, setCouponVerified] = useState(false);
+  const [couponError, setCouponError] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -141,23 +144,109 @@ const EventRegisterPage: React.FC = () => {
       year,
       college: college.trim(),
       branch: branch.trim(),
+      couponCode: couponCode.trim(),
     };
 
     try {
-      await registrationService.submitRegistration(payload);
-      
-      // We can use the ticketId from the service instead of generating a new one locally
-      // Assuming result.message contains it, but we can also extract it from the service explicitly.
-      // Wait, let's keep local generation for now if the service doesn't return it structured, 
-      // but actually the service DOES generate it and return it in the message. 
-      // I'll extract it using a regex or just generate a new one for UI. Let's just generate a new one for UI consistency.
-      const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
-      setTicketId(randomTicket);
-      setSubmitting(false);
-      setSubmitted(true);
+      if (event.isPaid) {
+        // Check if a 100% OFF coupon is verified
+        if (couponVerified && couponCode.trim().toUpperCase() === 'KQEAG2K26') {
+          await registrationService.submitRegistration(payload);
+          const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
+          setTicketId(randomTicket);
+          setSubmitting(false);
+          setSubmitted(true);
+          return;
+        }
+
+        // Handle Payment Flow
+        const orderInfo = await paymentService.createOrder(payload);
+        
+        const options = {
+          key: 'rzp_live_TeebVffQrS2gfO', // Public API Key
+          amount: orderInfo.amount * 100,
+          currency: 'INR',
+          name: 'Kaizen Q Events',
+          description: `Registration for ${event.title}`,
+          order_id: orderInfo.orderId,
+          handler: async function (response: any) {
+            try {
+              setSubmitting(true);
+              const verifyPayload = {
+                ...payload,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                amount: orderInfo.amount
+              };
+              
+              await paymentService.verifyPayment(verifyPayload);
+              
+              // We also want to save to Firebase, but it's optional as we have it in Google Sheets.
+              // Let's just call submitRegistration here just to sync it to Firebase if we want.
+              try {
+                await registrationService.submitRegistration(payload);
+              } catch (e) {
+                // Ignore firebase errors since payment verified
+              }
+              
+              const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
+              setTicketId(randomTicket);
+              setSubmitting(false);
+              setSubmitted(true);
+            } catch (err: any) {
+              setAuthError(err.message || 'Payment verification failed. Please contact support.');
+              setSubmitting(false);
+            }
+          },
+          prefill: {
+            name: fullName,
+            email: email,
+            contact: phone,
+          },
+          theme: {
+            color: '#4285F4',
+          },
+          modal: {
+            ondismiss: function() {
+              setSubmitting(false);
+            }
+          }
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on('payment.failed', function (response: any) {
+          setSubmitting(false);
+          setAuthError(response.error.description || 'Payment failed. Please try again.');
+        });
+        rzp.open();
+
+      } else {
+        // Free Registration Flow
+        await registrationService.submitRegistration(payload);
+        
+        const randomTicket = 'KQE-' + Math.floor(100000 + Math.random() * 900000);
+        setTicketId(randomTicket);
+        setSubmitting(false);
+        setSubmitted(true);
+      }
     } catch (err: any) {
       setAuthError(err.message || 'Enrollment Failed. We couldn\'t submit your enrollment right now. Please try again.');
       setSubmitting(false);
+    }
+  };
+
+  const handleVerifyCoupon = () => {
+    setCouponError('');
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code.');
+      return;
+    }
+    if (couponCode.trim().toUpperCase() === 'KQEAG2K26') {
+      setCouponVerified(true);
+    } else {
+      setCouponVerified(false);
+      setCouponError('Invalid coupon code.');
     }
   };
 
@@ -309,8 +398,8 @@ const EventRegisterPage: React.FC = () => {
               {/* QR Code Container */}
               <div className="bg-white p-3 rounded-2xl w-48 h-48 mx-auto shadow-md flex items-center justify-center border-4 border-[#25D366]">
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-                    event.whatsappGroupUrl || 'https://chat.whatsapp.com'
+                  src={event.id === 'AGENTIC_AI' ? 'https://res.cloudinary.com/dwv8kc9vb/image/upload/v1790786082/GAKQEPC_QR_ywjoiq.jpg' : `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+                    event.whatsappGroupUrl || 'https://chat.whatsapp.com/ExRCwpN5nB0ExDkvctSzYB?s=cl&p=a&mlu=4&ilr=4'
                   )}`}
                   alt={`${event.title} WhatsApp Group QR Code`}
                   className="w-full h-full object-contain"
@@ -319,7 +408,7 @@ const EventRegisterPage: React.FC = () => {
               <p className="text-[11px] text-[#8696A0]">Scan with your phone camera or WhatsApp</p>
 
               <a
-                href={event.whatsappGroupUrl || 'https://chat.whatsapp.com'}
+                href={event.id === 'AGENTIC_AI' ? 'https://chat.whatsapp.com/ExRCwpN5nB0ExDkvctSzYB?s=cl&p=a&mlu=4&ilr=4' : (event.whatsappGroupUrl || 'https://chat.whatsapp.com/ExRCwpN5nB0ExDkvctSzYB?s=cl&p=a&mlu=4&ilr=4')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm rounded-xl shadow-lg transition-all transform hover:scale-105 w-full"
@@ -423,7 +512,7 @@ const EventRegisterPage: React.FC = () => {
                 {/* Phone Number */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
-                    Phone Number <span className="text-[#EA4335]">*</span>
+                    WhatsApp Number <span className="text-[#EA4335]">*</span>
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9AA0A6]">
@@ -552,6 +641,46 @@ const EventRegisterPage: React.FC = () => {
                   />
                 </div>
               </div>
+
+              {/* Coupon Code (Only for Paid Events) */}
+              {event.isPaid && (
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
+                    Coupon Code (Optional)
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9AA0A6]">
+                        <span className="font-bold text-lg leading-none mt-1">🏷️</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value.toUpperCase());
+                          setCouponVerified(false);
+                          setCouponError('');
+                        }}
+                        placeholder="Enter coupon code if you have one"
+                        className="w-full pl-10 pr-4 py-2.5 bg-[#F8F9FA] border border-[#E8EAED] rounded-xl text-sm font-bold text-[#1A1A2E] placeholder-[#9AA0A6] focus:outline-none focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/15 transition-all uppercase"
+                      />
+                    </div>
+                    <Button type="button" variant="secondary" onClick={handleVerifyCoupon}>
+                      Verify
+                    </Button>
+                  </div>
+                  {couponError && (
+                    <p className="text-xs text-[#EA4335] font-bold mt-1.5 flex items-center gap-1">
+                      <AlertCircle size={14} /> {couponError}
+                    </p>
+                  )}
+                  {couponVerified && (
+                    <p className="text-xs text-[#34A853] font-bold mt-1.5 flex items-center gap-1">
+                      <CheckCircle2 size={14} /> Verified Successfully! Registration is free. Click "Submit Registration" to join.
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Submit Button */}
               <div className="pt-4">

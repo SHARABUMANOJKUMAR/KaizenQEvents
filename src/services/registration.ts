@@ -13,7 +13,9 @@ export const EVENT_WEBHOOKS: Record<string, string> = {
   // Java With AI BootCamp
   'JAVA': 'https://script.google.com/macros/s/AKfycbz1T30uvSEc5TPxUjHbBvO9Fl4kBV9-bp95r82qyEr8PSwGbPfgc7-ouw6KvuH3PAEs/exec',
   // Generative AI BootCamp
-  'GENERATIVE AI': 'https://script.google.com/macros/s/AKfycbxcoxeqDzv8XUu-vYGmtTTTja_NKg5Ij8Lm5fVQ-zy-o9b9TtmH1IxeYfyltb5CeBh6/exec',
+  'GENERATIVE AI': 'https://script.google.com/macros/s/AKfycbyfQkaJ7i5Flo_W3LajRbSNH2ay53vRjAT5zKbra9uIvXtfhbrMLhU_x9Xwa2myfy43/exec',
+  // Agentic AI BootCamp
+  'AGENTIC_AI': 'https://script.google.com/macros/s/AKfycbyfQkaJ7i5Flo_W3LajRbSNH2ay53vRjAT5zKbra9uIvXtfhbrMLhU_x9Xwa2myfy43/exec',
 };
 
 export const getWebhookForTitle = (title: string): string | undefined => {
@@ -21,6 +23,7 @@ export const getWebhookForTitle = (title: string): string | undefined => {
   if (t.includes('github')) return EVENT_WEBHOOKS['GITHUB'];
   if (t.includes('python')) return EVENT_WEBHOOKS['PYTHON'];
   if (t.includes('java')) return EVENT_WEBHOOKS['JAVA'];
+  if (t.includes('agentic')) return EVENT_WEBHOOKS['AGENTIC_AI'];
   if (t.includes('generative ai')) return EVENT_WEBHOOKS['GENERATIVE AI'];
   return undefined;
 };

@@ -113,6 +113,10 @@ export interface Event {
   whatsappQrCodeUrl?: string;
   maxAttendees?: number;
   currentAttendees?: number;
+  originalPrice?: number;
+  price?: number;
+  isPaid?: boolean;
+  faqs?: { question: string; answer: string }[];
 }
 
 export interface Community {

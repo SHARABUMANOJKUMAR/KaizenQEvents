@@ -43,7 +43,7 @@ export const eventService = {
 
     // Category filter
     if (filters.category && filters.category !== 'All') {
-      result = result.filter((e) => e.category === filters.category);
+      result = result.filter((e) => e.category === filters.category || (e.tags && e.tags.includes(filters.category)));
     }
 
     // Location filter
@@ -118,3 +118,4 @@ export const organizerService = {
 
 export * from './googleSheetsService';
 export * from './adminOverrides';
+export * from './paymentService';

@@ -121,6 +121,16 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
           </div>
         </div>
 
+        {/* Pricing */}
+        {event.isPaid && event.price !== undefined && (
+          <div className="flex items-center gap-2 pt-2">
+            <span className="text-lg font-bold text-[#1A1A2E]">₹{event.price}</span>
+            {event.originalPrice && (
+              <span className="text-sm font-medium text-[#9AA0A6] line-through">₹{event.originalPrice}</span>
+            )}
+          </div>
+        )}
+
         {/* CTAs */}
         <div className="pt-2 border-t border-[#F1F3F4] flex items-center gap-2 mt-auto">
           <Button
@@ -140,7 +150,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, className }) => {
             className="flex-1 text-xs font-bold"
             rightIcon={<ArrowRight size={13} />}
           >
-            Join Bootcamp
+            {event.isPaid ? 'Enroll Now' : 'Join Bootcamp'}
           </Button>
         </div>
       </div>
