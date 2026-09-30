@@ -43,7 +43,7 @@ export const eventService = {
 
     // Category filter
     if (filters.category && filters.category !== 'All') {
-      result = result.filter((e) => e.category === filters.category || (e.tags && e.tags.includes(filters.category)));
+      result = result.filter((e) => e.category === filters.category || (e.tags && filters.category && e.tags.includes(filters.category)));
     }
 
     // Location filter
