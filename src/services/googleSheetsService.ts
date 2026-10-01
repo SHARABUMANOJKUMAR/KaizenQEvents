@@ -8,7 +8,7 @@ const SHEET_URLS = {
   pythonAI: 'https://docs.google.com/spreadsheets/d/1M9PNRYV7vNb-H-q9PQND5jKydh9THJFlqXxx7gUZuq8/export?format=csv&gid=0',
   gitGitHub: 'https://docs.google.com/spreadsheets/d/1wj8RxQ17DNEnYGYJQpKl76A7-gBF9dY5nfGEnxXuwes/export?format=csv&gid=0',
   javaAI: 'https://docs.google.com/spreadsheets/d/1Xk80UdTZmrXHOc3agRVZjTRmQMWcaW2EuMjhL72OGi4/export?format=csv&gid=0',
-  agenticAI: 'https://docs.google.com/spreadsheets/d/dummy-agentic-ai-sheet-id/export?format=csv&gid=0'
+  agenticAI: 'https://docs.google.com/spreadsheets/d/1zJF1CVJOqgjVLDEj3HiayOV1UDG4wBuFGkKpon8avk0/export?format=csv&gid=2009335807'
 };
 
 function resolveUrl(rawUrl: string): string {

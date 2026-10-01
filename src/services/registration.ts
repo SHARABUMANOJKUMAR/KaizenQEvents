@@ -89,6 +89,7 @@ export const registrationService = {
         ...findRegs(data.pythonAI, 'PYTHON', 'Python with AI Bootcamp'),
         ...findRegs(data.gitGitHub, 'GITHUB', 'Git & GitHub Bootcamp'),
         ...findRegs(data.javaAI, 'JAVA', 'Java with AI Bootcamp'),
+        ...findRegs(data.agenticAI || [], 'AGENTIC_AI', 'Generative AI + Agentic AI Engineering'),
       ];
 
       // Sort by timestamp descending
