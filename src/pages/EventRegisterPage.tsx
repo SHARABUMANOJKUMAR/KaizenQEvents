@@ -425,6 +425,16 @@ const EventRegisterPage: React.FC = () => {
               </Button>
             </div>
           </div>
+        ) : event.status === 'Closed' ? (
+          <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6 text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Bootcamp Closed</h2>
+            <p className="text-[#5F6368] mb-6">Registrations for <span className="font-semibold">{event.title}</span> are currently closed. Thank you for your interest!</p>
+            <div className="flex justify-center mt-6">
+              <Button variant="primary" onClick={() => navigate(`/events/${event.id}`)}>
+                Back to Event Details
+              </Button>
+            </div>
+          </div>
         ) : (
           /* Registration Form */
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6">
