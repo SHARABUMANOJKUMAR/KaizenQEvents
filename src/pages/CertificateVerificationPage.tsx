@@ -11,7 +11,7 @@ import {
   Copy,
   ExternalLink
 } from 'lucide-react';
-import { Button, Card, Skeleton } from '../components/ui';
+import { Button, Card } from '../components/ui';
 import { certificateService, type CertificateData } from '../services/certificateService';
 
 const normalizeGoogleDrivePdfUrl = (url?: string) => {
@@ -156,24 +156,15 @@ export const CertificateVerificationPage: React.FC = () => {
   // Loading State
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="flex flex-col items-center">
-            <Skeleton className="h-20 w-48 mb-6" />
-            <Skeleton className="h-6 w-3/4 mb-8" />
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+        <SEO title="Verifying Certificate... | Kaizen Q Events" description="Verifying certificate status." noindex={true} />
+        <Card className="max-w-md w-full text-center p-8 border-gray-200 shadow-lg">
+          <div className="flex justify-center mb-6">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
           </div>
-          <Card className="p-8">
-            <div className="space-y-6">
-              <Skeleton className="h-8 w-1/3" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-              </div>
-            </div>
-          </Card>
-        </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Verifying Certificate...</h2>
+          <p className="text-gray-600">Please wait while we securely check the authenticity of this certificate.</p>
+        </Card>
       </div>
     );
   }
@@ -324,38 +315,38 @@ export const CertificateVerificationPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-          <Button 
-            variant="primary" 
-            size="lg" 
-            leftIcon={<Download size={20} />} 
-            fullWidth
-            onClick={() => {
-              const url = pdfLinks?.downloadUrl || certificate.pdfUrl;
-              if (url) {
-                window.open(url, '_blank', 'noopener,noreferrer');
-              } else {
-                alert("Download link is currently unavailable.");
-              }
-            }}
-          >
-            Download PDF
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            leftIcon={<ExternalLink size={20} />} 
-            fullWidth
-            onClick={() => {
-              const url = pdfLinks?.viewUrl || certificate.pdfUrl;
-              if (url) {
-                window.open(url, '_blank', 'noopener,noreferrer');
-              } else {
-                alert("View link is currently unavailable.");
-              }
-            }}
-          >
-            View Full Screen
-          </Button>
+          {certificate.pdfUrl && (
+            <>
+              <Button 
+                variant="primary" 
+                size="lg" 
+                leftIcon={<Download size={20} />} 
+                fullWidth
+                onClick={() => {
+                  const url = pdfLinks?.downloadUrl || certificate.pdfUrl;
+                  if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+              >
+                Download PDF
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                leftIcon={<ExternalLink size={20} />} 
+                fullWidth
+                onClick={() => {
+                  const url = pdfLinks?.viewUrl || certificate.pdfUrl;
+                  if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+              >
+                View Full Screen
+              </Button>
+            </>
+          )}
           <Button 
             variant="secondary" 
             size="lg" 
