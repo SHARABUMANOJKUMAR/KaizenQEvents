@@ -248,6 +248,14 @@ In this hands-on masterclass, you will learn how to build AI-powered microservic
       state: 'Live Virtual Workshop',
       pincode: 'Online',
     },
+    tasks: [
+      {
+        id: 'tsk-java-001',
+        title: '🚀 All Java with AI Bootcamp Tasks',
+        description: "Complete 5 Day's hands-on Java tasks, practice the foundations, and submit your work through this link.",
+        link: 'https://www.kqeannouncements.xyz/',
+      }
+    ],
     discussions: [
       {
         id: 'dis-021',
