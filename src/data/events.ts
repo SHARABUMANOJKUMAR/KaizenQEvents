@@ -118,7 +118,7 @@ This is an interactive online live workshop — you will be writing commands, cr
 
 Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build self-reasoning AI applications capable of planning, tool usage, and real-time execution. Ideal for students and developers eager to enter the AI engineering industry.`,
     category: 'Bootcamp',
-    status: 'Open',
+    status: 'Closed',
     date: '2026-09-28',
     endDate: '2026-10-02',
     time: '06:00 PM',
