@@ -12,7 +12,7 @@ By the end of the 3 days, you will be able to confidently manage your code, coll
 
 This is an interactive online live workshop — you will be writing commands, creating repos and collaborating in real time throughout the session.`,
     category: 'Git & Open Source',
-    status: 'Open',
+    status: 'Closed',
     date: '2026-09-21',
     endDate: '2026-09-23',
     time: '06:00 PM',
