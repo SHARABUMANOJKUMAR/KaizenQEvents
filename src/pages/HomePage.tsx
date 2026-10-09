@@ -432,14 +432,16 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<EventCategory>('All');
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
 
   useEffect(() => {
     Promise.all([
       eventService.getAll(),
       communityService.getAll(),
     ]).then(([evts, coms]) => {
-      setFilteredEvents(evts.filter(e => e.id !== 'GITHUB'));
+      setUpcomingEvents(evts.filter(e => !['GITHUB', 'PYTHON', 'JAVA'].includes(e.id)));
+      setPastEvents(evts.filter(e => ['GITHUB', 'PYTHON', 'JAVA'].includes(e.id)));
       setCommunities(coms.slice(0, 4));
       setLoading(false);
     });
@@ -447,7 +449,8 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     eventService.search({ query, category }).then((evts) => {
-      setFilteredEvents(evts.filter(e => e.id !== 'GITHUB'));
+      setUpcomingEvents(evts.filter(e => !['GITHUB', 'PYTHON', 'JAVA'].includes(e.id)));
+      setPastEvents(evts.filter(e => ['GITHUB', 'PYTHON', 'JAVA'].includes(e.id)));
     });
   }, [query, category]);
 
@@ -504,9 +507,27 @@ const HomePage: React.FC = () => {
               </Button>
             }
           />
-          <EventGrid events={filteredEvents} loading={loading} skeletonCount={6} />
+          <EventGrid events={upcomingEvents} loading={loading} skeletonCount={6} />
         </div>
       </section>
+
+      {/* Past Events */}
+      {(pastEvents.length > 0 || loading) && (
+        <section className="py-14 sm:py-20 bg-[#F8F9FA] border-t border-[#E8EAED]" aria-label="Past events">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <SectionHeader
+              title="Past technology events"
+              subtitle="Explore our successfully completed bootcamps and workshops."
+              action={
+                <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={16} />} onClick={() => navigate('/events')}>
+                  View all past events
+                </Button>
+              }
+            />
+            <EventGrid events={pastEvents} loading={loading} skeletonCount={3} />
+          </div>
+        </section>
+      )}
 
       <LocationSection />
 

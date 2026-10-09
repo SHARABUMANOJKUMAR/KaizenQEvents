@@ -205,7 +205,7 @@ Learn how to utilize PyTorch, OpenAI APIs, LangChain, and LangGraph to build sel
 
 In this hands-on masterclass, you will learn how to build AI-powered microservices, implement RAG (Retrieval-Augmented Generation) in Java, and deploy enterprise-grade AI features while maintaining security, type safety, and high performance.`,
     category: 'Workshop',
-    status: 'Open',
+    status: 'Closed',
     date: '2026-10-03',
     endDate: '2026-10-07',
     time: '06:00 PM',
@@ -335,6 +335,14 @@ Discover how to fine-tune open-weights models (Llama 3, Mistral), implement adva
       state: 'Live Virtual Workshop',
       pincode: 'Online',
     },
+    tasks: [
+      {
+        id: 'tsk-genai-001',
+        title: '🚀 All Generative AI Masterclass Tasks',
+        description: "Complete 5 Day's hands-on Generative AI tasks, practice the architectures, and submit your work through this link.",
+        link: 'https://www.kqeannouncements.xyz/',
+      }
+    ],
     discussions: [
       {
         id: 'dis-023',

@@ -425,7 +425,7 @@ const EventRegisterPage: React.FC = () => {
               </Button>
             </div>
           </div>
-        ) : event.status === 'Closed' ? (
+        ) : event.status === 'Closed' && !['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) ? (
           <div className="bg-white rounded-2xl border border-[#E8EAED] shadow-sm p-6 sm:p-8 space-y-6 text-center">
             <h2 className="text-2xl font-bold text-red-600 mb-4">Bootcamp Closed</h2>
             <p className="text-[#5F6368] mb-6">Registrations for <span className="font-semibold">{event.title}</span> are currently closed. Thank you for your interest!</p>
@@ -469,7 +469,7 @@ const EventRegisterPage: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
-                <fieldset disabled={event.id === 'GITHUB'} className="space-y-5">
+                <fieldset disabled={['GITHUB', 'JAVA', 'PYTHON'].includes(event.id)} className="space-y-5">
                 {authError && (
                 <div className="p-3.5 rounded-xl text-xs flex items-start gap-2.5 bg-[#FFEBEE] text-[#C62828] border border-[#FFCDD2] transition-all">
                   <AlertCircle size={16} className="shrink-0 mt-0.5" />
@@ -694,18 +694,18 @@ const EventRegisterPage: React.FC = () => {
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
-                  type={event.id === 'GITHUB' ? "button" : "submit"}
-                  variant={event.id === 'GITHUB' ? "secondary" : "primary"}
+                  type={['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) ? "button" : "submit"}
+                  variant={['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) ? "secondary" : "primary"}
                   size="lg"
                   fullWidth
                   loading={submitting}
-                  disabled={event.id === 'GITHUB' || submitting}
+                  disabled={['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) || submitting}
                   id="submit-registration-btn"
                 >
-                  {event.id === 'GITHUB' ? 'Bootcamp Completed' : 'Submit Registration'}
+                  {['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) ? 'Registrations Closed' : 'Submit Registration'}
                 </Button>
                 <p className="text-center text-xs text-[#9AA0A6] mt-3">
-                  {event.id === 'GITHUB' 
+                  {['GITHUB', 'JAVA', 'PYTHON'].includes(event.id) 
                     ? 'Registration for this bootcamp is now closed.' 
                     : 'By registering, you agree to receive event updates & confirmation details.'}
                 </p>
