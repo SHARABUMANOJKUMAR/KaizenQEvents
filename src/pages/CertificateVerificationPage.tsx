@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { SEO } from '../components/SEO';
 import { 
   CheckCircle2, 
@@ -42,11 +42,22 @@ export const CertificateVerificationPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const certId = searchParams.get('cert');
   
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!certId);
+  const [error, setError] = useState(false);
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
   const [pdfLinks, setPdfLinks] = useState<{fileId: string; previewUrl: string; viewUrl: string; downloadUrl: string} | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
+
+  const [manualCertId, setManualCertId] = useState('');
+  const navigate = useNavigate();
+
+  const handleManualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (manualCertId.trim()) {
+      navigate(`/verify?cert=${encodeURIComponent(manualCertId.trim())}`);
+    }
+  };
 
   useEffect(() => {
     async function verifyCertificate() {
@@ -54,6 +65,10 @@ export const CertificateVerificationPage: React.FC = () => {
         setLoading(false);
         return;
       }
+
+      setLoading(true);
+      setError(false);
+      setCertificate(null);
 
       try {
         const data = await certificateService.getCertificateById(certId.trim());
@@ -71,6 +86,7 @@ export const CertificateVerificationPage: React.FC = () => {
         }
       } catch (err) {
         console.error('Verification error:', err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -137,16 +153,29 @@ export const CertificateVerificationPage: React.FC = () => {
           <div className="mx-auto w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6">
             <BadgeCheck size={32} />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Certificate Verification</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Certificate ID Required</h1>
           <p className="text-gray-600 mb-8">
-            Please provide a valid Certificate ID to verify a certificate.
+            Please scan the QR code on your certificate or enter a valid certificate ID to verify it.
           </p>
+          <form onSubmit={handleManualSubmit} className="mb-8">
+            <input 
+              type="text" 
+              placeholder="e.g. KQE-JAI-2026-0001" 
+              value={manualCertId} 
+              onChange={(e) => setManualCertId(e.target.value)} 
+              className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-center uppercase"
+              required
+            />
+            <Button type="submit" fullWidth variant="primary" disabled={loading}>
+              Verify Certificate
+            </Button>
+          </form>
           <div className="bg-gray-100 p-4 rounded-lg mb-8 text-sm text-gray-600 text-left">
             <p className="font-semibold mb-2 text-gray-700">Example URL:</p>
-            <p className="break-all font-mono">https://kaizenqevents.click/verify?cert=KQE-GH-2026-0001</p>
+            <p className="break-all font-mono">https://kaizenqevents.click/verify?cert=KQE-JAI-2026-0001</p>
           </div>
           <Link to="/">
-            <Button fullWidth variant="primary">Go to Kaizen Q Events</Button>
+            <Button fullWidth variant="outline">Go to Kaizen Q Events</Button>
           </Link>
         </Card>
       </div>
@@ -169,6 +198,28 @@ export const CertificateVerificationPage: React.FC = () => {
     );
   }
 
+  // API or Network Error State
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <SEO title="Verification Temporarily Unavailable | Kaizen Q Events" description="Certificate verification failed due to network error." noindex={true} />
+        <Card className="max-w-md w-full text-center p-8 border-orange-100 shadow-xl">
+          <div className="mx-auto w-20 h-20 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mb-6">
+            <XCircle size={40} />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Verification Temporarily Unavailable</h1>
+          <p className="text-gray-600 mb-6">
+            Please try again later. We could not complete the verification request.
+          </p>
+          <Link to="/">
+            <Button variant="outline" fullWidth leftIcon={<ArrowLeft size={18} />}>
+              Back to Kaizen Q Events
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
   // Invalid Certificate State
   if (!certificate) {
     return (
@@ -180,7 +231,7 @@ export const CertificateVerificationPage: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Certificate Not Found</h1>
           <p className="text-gray-600 mb-6">
-            We couldn't verify this certificate. Please check the Certificate ID and try again.
+            Sorry, we could not verify this certificate using the supplied certificate ID. Please check the ID or contact Kaizen Q Events for assistance.
           </p>
           <div className="bg-gray-100 rounded-lg p-4 mb-8">
             <p className="text-sm text-gray-500 uppercase tracking-wider font-semibold mb-1">Entered ID</p>

@@ -8,8 +8,9 @@ export interface CertificateData {
   pdfUrl: string;
 }
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxlZtIKCjqnijS0-Iw7GJnm70f0l4ak2OCrQrPX5AXyKYjTbJbefkUm0pGS8zXYvFhY/exec";
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbxlZtIKCjqnijS0-Iw7GJnm70f0l4ak2OCrQrPX5AXyKYjTbJbefkUm0pGS8zXYvFhY/exec";
 const PYTHON_CERT_API = "https://script.google.com/macros/s/AKfycbyH1IP4W8EcYLTbHgb7Zr9LCkScGjZsy8zkMN-kieJG8HzogK-YqSlzLsi-Llz524qqng/exec";
+const JAVA_AI_CERT_API = import.meta.env.VITE_CERTIFICATE_API_URL || "https://script.google.com/macros/s/AKfycbxTKcxuXQeLAV29FmKHvsWL76hdKweJZfnkye8EVdmG4clbMuaL2umKYlaOOFk0-UFU/exec";
 
 const fetchJSONP = (url: string): Promise<any> => {
   return new Promise((resolve, reject) => {
@@ -61,6 +62,33 @@ export const certificateService = {
           }
         } catch (fetchError) {
           console.error("fetchJSONP failed for Python cert:", fetchError);
+          throw fetchError;
+        }
+        return null;
+      }
+      
+      // Handle Java AI Certificates
+      if (certificateId.toUpperCase().startsWith("KQE-JAI-")) {
+        const url = `${JAVA_AI_CERT_API}?action=verify&cert=${encodeURIComponent(certificateId)}`;
+        try {
+          const data = await fetchJSONP(url);
+          console.log("Java AI Certificate data:", data);
+          
+          if (data && data.certificate) return data.certificate as CertificateData;
+          if (data && (data.valid || data.success || data.CertificateID || data.certificateId)) {
+            return {
+              fullName: data.fullName || data["Full Name"] || data.name || "",
+              certificateId: data.certificateId || data.CertificateID || data["Certificate ID"] || certificateId,
+              completionDate: data.completionDate || data.Date || data["Completion Date"] || "",
+              course: data.course || data.Program || data.courseName || "Java with AI Bootcamp",
+              organization: data.organization || data.IssuedBy || "Kaizen Q Events",
+              verificationUrl: data.verificationUrl || data["Verification URL"] || "",
+              pdfUrl: data.pdfUrl || data["PDF URL"] || data.pdf_url || ""
+            };
+          }
+        } catch (fetchError) {
+          console.error("fetchJSONP failed for Java AI cert:", fetchError);
+          throw fetchError;
         }
         return null;
       }
@@ -77,7 +105,7 @@ export const certificateService = {
       return null;
     } catch (err) {
       console.error("Error fetching certificate:", err);
-      return null;
+      throw err;
     }
   }
 };
